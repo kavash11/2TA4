@@ -435,7 +435,6 @@ static void MX_TIM3_Init(void)
   /* USER CODE BEGIN TIM3_Init 2 */
 
   /* USER CODE END TIM3_Init 2 */
-	HAL_TIM_Base_Start_IT(&htim3);
 
 }
 
@@ -494,7 +493,7 @@ static void MX_TIM4_Init(void)
   /* USER CODE BEGIN TIM4_Init 2 */
 
   /* USER CODE END TIM4_Init 2 */
-	HAL_TIM_OC_Start_IT(&htim4, TIM_CHANNEL_1);
+
 }
 
 /**
@@ -651,7 +650,7 @@ static void MX_GPIO_Init(void)
 
   /*Configure GPIO pin : B1_Pin */
   GPIO_InitStruct.Pin = B1_Pin;
-  GPIO_InitStruct.Mode = GPIO_MODE_IT_FALLING;
+  GPIO_InitStruct.Mode = GPIO_MODE_IT_RISING_FALLING;
   GPIO_InitStruct.Pull = GPIO_NOPULL;
   HAL_GPIO_Init(B1_GPIO_Port, &GPIO_InitStruct);
 
@@ -729,14 +728,6 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
   /* USER CODE BEGIN Callback 1 */
 
   /* USER CODE END Callback 1 */
-	if(htim->Instance==TIM3){
-		HAL_GPIO_TogglePin(GPIOG,GPIO_PIN_13);
-	}
-}
-
-void HAL_TIM_OC_DelayElapsedCallback(TIM_HandleTypeDef *htim) {
-	HAL_GPIO_TogglePin(GPIOG, GPIO_PIN_14);
-	__HAL_TIM_SET_COUNTER(htim, 0X0000);
 }
 
 /**

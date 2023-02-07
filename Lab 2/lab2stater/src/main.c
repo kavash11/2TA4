@@ -93,7 +93,7 @@ uint32_t random;
 uint16_t VirtAddVarTab[NB_OF_VAR] = {0x5555, 0x6666, 0x7777};
 uint16_t EEREAD;  //to practice reading the BESTRESULT save in the EE, for EE read/write, require uint16_t type
 
-
+uint32_t state; //Noor: variable to track the state in FSM
 
 
 
@@ -124,6 +124,7 @@ static void EXTILine1_Config(void); // configure the exti line1, for exterrnal b
   */
 int main(void)
 {
+	
  /* This sample code shows how to use STM32F4xx GPIO HAL API to toggle PG13 
      IOs (connected to LED3 on STM32F429i-Discovery board) 
     in an infinite loop.
@@ -135,8 +136,9 @@ int main(void)
        - Set NVIC Group Priority to 4
        - Global MSP (MCU Support Package) initialization
   */
+	
+	state=0; //Noor Entry state
   
-		
 	HAL_Init();
 	
 	 /* Configure the system clock to 72 MHz */
@@ -397,7 +399,7 @@ void  TIM3_Config(void)
   ----------------------------------------------------------------------- */  
   
   /* Compute the prescaler value to have TIM3 counter clock equal to 10 KHz */
-  Tim3_PrescalerValue = (uint32_t) (SystemCoreClock / 10000) - 1;
+  Tim3_PrescalerValue = (uint32_t) (SystemCoreClock / 50000) - 1; //Noor: changed denominator to make it flash faster
   
   /* Set TIM3 instance */
   Tim3_Handle.Instance = TIM3; //TIM3 is defined in stm32f429xx.h
@@ -532,8 +534,11 @@ static void EXTILine1_Config(void)  //for STM32f429_DISCO board, can not use PA1
 void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)   //see  stm32fxx_hal_tim.c for different callback function names. 
 																															//for timer 3 , Timer 3 use update event initerrupt
 {
-		if ((*htim).Instance==TIM3)    //since only one timer use this interrupt, this line is actually not needed
-			BSP_LED_Toggle(LED3);
+		if ((*htim).Instance==TIM3){    //since only one timer use this interrupt, this line is actually not needed	
+			if(state==0){	
+				BSP_LED_Toggle(LED3);
+			}
+		}
 	
 }
 
@@ -544,7 +549,7 @@ void HAL_TIM_OC_DelayElapsedCallback(TIM_HandleTypeDef * htim) //see  stm32fxx_h
 			 //BSP_LED_Toggle(LED4); 
 			OC_Count=OC_Count+1;
 			if (OC_Count==500)  {   //half second
-					BSP_LED_Toggle(LED4);	
+				//BSP_LED_Toggle(LED4);	Noor: dont want red led flashing since it indicates error when it turns on
 					OC_Count=0;		
 			}		
 		
@@ -567,6 +572,10 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
   if(GPIO_Pin == KEY_BUTTON_PIN)  //GPIO_PIN_0
   {
     				UBPressed=1;
+		if(state==0){
+			state=1; //Noor: change to state 1
+			BSP_LED_Off(LED3); //Noor: if LED was paused at ON, turn OFF
+		}
 	}
 	
 	

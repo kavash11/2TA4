@@ -116,7 +116,30 @@ static void EXTILine1_Config(void); // configure the exti line1, for exterrnal b
 
 
 /* Private functions ---------------------------------------------------------*/
-
+uint32_t get_NumOfMs(){
+	Rng_Handle.Instance=RNG;  //Everytime declare a Handle, need to assign its Instance a base address. like the timer handles.... 													
+	
+	HAL_RNG_Init(&Rng_Handle);
+	
+	//test Random number=======
+	Hal_status=HAL_RNG_GenerateRandomNumber(&Rng_Handle, &random); //HAL_RNG_GenerateRandomNumber(RNG_HandleTypeDef *hrng, uint32_t *random32bit);
+     //since the randam32bit is type of uint32_t, sometimes it may reture a negative value.
+	
+		 
+	random &=0x000001FF; // the random numberf is 32bits and is too large for this project. 
+												
+	// Noor: made it less bits to make it 512 possible inputs (9 bits)
+	random=random*2; // Noor: so that we can add it to 1.5 seconds and it would give us a val ranging between 1.5 and 2.5
+												
+	if (Hal_status==HAL_ERROR || Hal_status==HAL_TIMEOUT) // a new rng was NOT generated sucessfully;
+		 random=1000; // millisecond	
+	
+	LCD_DisplayString(9, 0, (uint8_t *)"numOfMs:");
+	LCD_DisplayString(9, 8, (uint8_t *)"         ");
+	LCD_DisplayInt(9, 8, random+1500);
+	
+	return random+1500;
+}
 /**
   * @brief  Main program
   * @param  None
@@ -138,6 +161,7 @@ int main(void)
   */
 	
 	state=0; //Noor Entry state
+
   
 	HAL_Init();
 	
@@ -218,9 +242,9 @@ int main(void)
 												
 	if (Hal_status==HAL_ERROR || Hal_status==HAL_TIMEOUT) // a new rng was NOT generated sucessfully;
 		 random=1000; // millisecond	
-	LCD_DisplayString(9, 0, (uint8_t *)"random:");
+	/*LCD_DisplayString(9, 0, (uint8_t *)"random:");
 	LCD_DisplayString(9, 8, (uint8_t *)"         ");
-	LCD_DisplayInt(9, 8, random);
+	LCD_DisplayInt(9, 8, random);*/
 
 	
 	
@@ -575,6 +599,12 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 		if(state==0){
 			state=1; //Noor: change to state 1
 			BSP_LED_Off(LED3); //Noor: if LED was paused at ON, turn OFF
+			HAL_Delay(100);
+      //If button is still pressed, go back to state 1
+			//Else
+			uint32_t numOfMs=get_NumOfMs();
+			HAL_Delay(numOfMs);
+			BSP_LED_On(LED3);
 		}
 	}
 	

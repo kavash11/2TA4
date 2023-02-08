@@ -63,7 +63,7 @@ This starter project:
 
 /* Private define ------------------------------------------------------------*/
 #define COLUMN(x) ((x) * (((sFONT *)BSP_LCD_GetFont())->Width))    //see font.h, for defining LINE(X)
-
+#define LCD_COLOR_PINK ((uint32_t)0xFFF7A8E5)
 
 /* Private macro -------------------------------------------------------------*/
 
@@ -214,12 +214,12 @@ int main(void)
 	// in 2023, this line seems to be essetial to make LCD work reliably. otherwise, LCD is not reliable. 
 	
 	
-	BSP_LCD_Clear(LCD_COLOR_CYAN);  //need this line, otherwise, the screen is ddark	
+	BSP_LCD_Clear(LCD_COLOR_PINK);  //need this line, otherwise, the screen is ddark	
 	BSP_LCD_DisplayOn();
  
 	BSP_LCD_SetFont(&Font20);  //the default font,  LCD_DEFAULT_FONT, which is defined in _lcd.h, is Font24
-	BSP_LCD_SetTextColor(LCD_COLOR_RED);
-	BSP_LCD_SetBackColor(LCD_COLOR_LIGHTGRAY);
+	BSP_LCD_SetTextColor(LCD_COLOR_BLACK);
+	BSP_LCD_SetBackColor(LCD_COLOR_PINK);
 	
 		
 	LCD_DisplayString(1, 5, (uint8_t *)"abcdefghijklmnopQRSTUVWXYZ");
@@ -551,8 +551,8 @@ static void EXTILine1_Config(void)  //for STM32f429_DISCO board, can not use PA1
   HAL_GPIO_Init(GPIOC, &GPIO_InitStructure);
 
   /* Enable and set EXTI Line0 Interrupt to the lowest priority */
-  HAL_NVIC_SetPriority(EXTI1_IRQn, 3, 0);
-  HAL_NVIC_EnableIRQ(EXTI1_IRQn);
+  NVIC_SetPriority(EXTI1_IRQn, 1);
+  NVIC_EnableIRQ(EXTI1_IRQn);
 }
 
 
@@ -635,7 +635,8 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 	
 	if(GPIO_Pin == GPIO_PIN_1)
   {
-			extern_UBPressed=1;
+				state=0;
+			
 	}
  
 }

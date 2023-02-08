@@ -3,7 +3,7 @@
 <title>Static Call Graph - [.\lab2.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image .\lab2.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 6190004: Last Updated: Wed Feb  8 15:19:14 2023
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 6190004: Last Updated: Wed Feb  8 15:33:26 2023
 <BR><P>
 <H3>Maximum Stack Usage =        196 bytes + Unknown(Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -726,7 +726,8 @@ Global Symbols
 <P><STRONG><a name="[a0]"></a>EE_ReadVariable</STRONG> (Thumb, 80 bytes, Stack size 8 bytes, hal_eeprom.o(.text.EE_ReadVariable))
 <BR><BR>[Stack]<UL><LI>Max Depth = 8<LI>Call Chain = EE_ReadVariable
 </UL>
-<BR>[Called By]<UL><LI><a href="#[a2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;EE_WriteVariable
+<BR>[Called By]<UL><LI><a href="#[b1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_GPIO_EXTI_Callback
+<LI><a href="#[a2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;EE_WriteVariable
 <LI><a href="#[9f]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;EE_Init
 <LI><a href="#[64]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
@@ -739,18 +740,19 @@ Global Symbols
 <LI><a href="#[a1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;EE_VerifyPageFullWriteVariable
 <LI><a href="#[a0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;EE_ReadVariable
 </UL>
-<BR>[Called By]<UL><LI><a href="#[64]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
+<BR>[Called By]<UL><LI><a href="#[b1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_GPIO_EXTI_Callback
+<LI><a href="#[64]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
 
 <P><STRONG><a name="[10]"></a>EXTI0_IRQHandler</STRONG> (Thumb, 6 bytes, Stack size 0 bytes, stm32f4xx_it.o(.text.EXTI0_IRQHandler))
-<BR><BR>[Stack]<UL><LI>Max Depth = 144<LI>Call Chain = EXTI0_IRQHandler &rArr; HAL_GPIO_EXTI_IRQHandler &rArr; HAL_GPIO_EXTI_Callback &rArr; LCD_DisplayString &rArr; BSP_LCD_DisplayChar
+<BR><BR>[Stack]<UL><LI>Max Depth = 144<LI>Call Chain = EXTI0_IRQHandler &rArr; HAL_GPIO_EXTI_IRQHandler &rArr; HAL_GPIO_EXTI_Callback &rArr; EE_WriteVariable &rArr; EE_VerifyPageFullWriteVariable &rArr; HAL_FLASH_Program &rArr; FLASH_WaitForLastOperation
 </UL>
 <BR>[Calls]<UL><LI><a href="#[a3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_GPIO_EXTI_IRQHandler
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> startup_stm32f429xx.o(RESET)
 </UL>
 <P><STRONG><a name="[11]"></a>EXTI1_IRQHandler</STRONG> (Thumb, 6 bytes, Stack size 0 bytes, stm32f4xx_it.o(.text.EXTI1_IRQHandler))
-<BR><BR>[Stack]<UL><LI>Max Depth = 144<LI>Call Chain = EXTI1_IRQHandler &rArr; HAL_GPIO_EXTI_IRQHandler &rArr; HAL_GPIO_EXTI_Callback &rArr; LCD_DisplayString &rArr; BSP_LCD_DisplayChar
+<BR><BR>[Stack]<UL><LI>Max Depth = 144<LI>Call Chain = EXTI1_IRQHandler &rArr; HAL_GPIO_EXTI_IRQHandler &rArr; HAL_GPIO_EXTI_Callback &rArr; EE_WriteVariable &rArr; EE_VerifyPageFullWriteVariable &rArr; HAL_FLASH_Program &rArr; FLASH_WaitForLastOperation
 </UL>
 <BR>[Calls]<UL><LI><a href="#[a3]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_GPIO_EXTI_IRQHandler
 </UL>
@@ -887,11 +889,13 @@ Global Symbols
 <BR><BR>[Called By]<UL><LI><a href="#[64]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;main
 </UL>
 
-<P><STRONG><a name="[b1]"></a>HAL_GPIO_EXTI_Callback</STRONG> (Thumb, 224 bytes, Stack size 32 bytes, main.o(.text.HAL_GPIO_EXTI_Callback))
-<BR><BR>[Stack]<UL><LI>Max Depth = 144<LI>Call Chain = HAL_GPIO_EXTI_Callback &rArr; LCD_DisplayString &rArr; BSP_LCD_DisplayChar
+<P><STRONG><a name="[b1]"></a>HAL_GPIO_EXTI_Callback</STRONG> (Thumb, 220 bytes, Stack size 32 bytes, main.o(.text.HAL_GPIO_EXTI_Callback))
+<BR><BR>[Stack]<UL><LI>Max Depth = 144<LI>Call Chain = HAL_GPIO_EXTI_Callback &rArr; EE_WriteVariable &rArr; EE_VerifyPageFullWriteVariable &rArr; HAL_FLASH_Program &rArr; FLASH_WaitForLastOperation
 </UL>
 <BR>[Calls]<UL><LI><a href="#[98]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_Delay
 <LI><a href="#[8d]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_LED_Off
+<LI><a href="#[a0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;EE_ReadVariable
+<LI><a href="#[a2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;EE_WriteVariable
 <LI><a href="#[b2]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;LCD_DisplayString
 <LI><a href="#[8e]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;BSP_LED_On
 <LI><a href="#[b4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;get_NumOfMs
@@ -901,7 +905,7 @@ Global Symbols
 </UL>
 
 <P><STRONG><a name="[a3]"></a>HAL_GPIO_EXTI_IRQHandler</STRONG> (Thumb, 22 bytes, Stack size 0 bytes, stm32f4xx_hal_gpio.o(.text.HAL_GPIO_EXTI_IRQHandler))
-<BR><BR>[Stack]<UL><LI>Max Depth = 144<LI>Call Chain = HAL_GPIO_EXTI_IRQHandler &rArr; HAL_GPIO_EXTI_Callback &rArr; LCD_DisplayString &rArr; BSP_LCD_DisplayChar
+<BR><BR>[Stack]<UL><LI>Max Depth = 144<LI>Call Chain = HAL_GPIO_EXTI_IRQHandler &rArr; HAL_GPIO_EXTI_Callback &rArr; EE_WriteVariable &rArr; EE_VerifyPageFullWriteVariable &rArr; HAL_FLASH_Program &rArr; FLASH_WaitForLastOperation
 </UL>
 <BR>[Calls]<UL><LI><a href="#[b1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_GPIO_EXTI_Callback
 </UL>
@@ -1245,7 +1249,7 @@ Global Symbols
 <BR>[Called By]<UL><LI><a href="#[f1]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;TIM4_OC_Config
 </UL>
 
-<P><STRONG><a name="[da]"></a>HAL_TIM_OC_DelayElapsedCallback</STRONG> (Thumb, 102 bytes, Stack size 0 bytes, main.o(.text.HAL_TIM_OC_DelayElapsedCallback))
+<P><STRONG><a name="[da]"></a>HAL_TIM_OC_DelayElapsedCallback</STRONG> (Thumb, 74 bytes, Stack size 0 bytes, main.o(.text.HAL_TIM_OC_DelayElapsedCallback))
 <BR><BR>[Called By]<UL><LI><a href="#[d4]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_TIM_IRQHandler
 </UL>
 
@@ -1479,7 +1483,7 @@ Global Symbols
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> ili9341.o(.data.ili9341_drv)
 </UL>
-<P><STRONG><a name="[64]"></a>main</STRONG> (Thumb, 712 bytes, Stack size 80 bytes, main.o(.text.main))
+<P><STRONG><a name="[64]"></a>main</STRONG> (Thumb, 700 bytes, Stack size 80 bytes, main.o(.text.main))
 <BR><BR>[Stack]<UL><LI>Max Depth = 196<LI>Call Chain = main &rArr; BSP_LCD_LayerDefaultInit &rArr; HAL_LTDC_ConfigLayer &rArr; LTDC_SetConfig
 </UL>
 <BR>[Calls]<UL><LI><a href="#[a0]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;EE_ReadVariable

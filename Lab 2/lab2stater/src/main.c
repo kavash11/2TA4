@@ -94,7 +94,6 @@ uint16_t VirtAddVarTab[NB_OF_VAR] = {0x5555, 0x6666, 0x7777};
 uint16_t EEREAD;  //to practice reading the BESTRESULT save in the EE, for EE read/write, require uint16_t type
 
 uint32_t state; //Noor: variable to track the state in FSM
-uint32_t reactCtrSec; //Noor: counts S time elapsed before reaction
 uint32_t reactCtrMs; //Noor: counts Ms time elapsed before reaction
 
 
@@ -162,7 +161,6 @@ int main(void)
 	
 	state=0; //Noor Entry state
 	reactCtrMs=0;
-	reactCtrSec=0;
 
   
 	HAL_Init();
@@ -575,10 +573,6 @@ void HAL_TIM_OC_DelayElapsedCallback(TIM_HandleTypeDef * htim) //see  stm32fxx_h
 			 //BSP_LED_Toggle(LED4); 
 			if(state==2){ //after every ms, a tim4 interrupt is generated, incrementing reaction counters
 			reactCtrMs=reactCtrMs+1;
-			if(reactCtrMs==1000){
-			reactCtrMs=0;
-			reactCtrSec=reactCtrSec+1;
-			}
 			}
 			OC_Count=OC_Count+1;
 			if (OC_Count==500)  {   //half second
@@ -606,11 +600,15 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
   {
     				UBPressed=1;
 		if(state==2){ //put this here so that it doesn't automatically run after the "if" down below executes
-			LCD_DisplayString(9,0,(uint8_t*)"Secs: ");
-			LCD_DisplayInt(9,6,reactCtrSec);
-			LCD_DisplayString(10,0,(uint8_t*)"Ms: ");
+			LCD_DisplayString(10,0,(uint8_t*)"Current Ms: ");
 			LCD_DisplayInt(10,4,reactCtrMs);
+			uint16_t stored = EE_ReadVariable(VirtAddVarTab[0], &EEREAD);
+			if(reactCtrMs>stored) {
+				EE_WriteVariable(VirtAddVarTab[0], reactCtrMs);
+			
 		}
+			uint16_t high_score = EE_ReadVariable(VirtAddVarTab[0], &EEREAD);
+			LCD_DisplayInt(9,4,high_score);
 		if(state==0){
 			state=1; //Noor: change to state 1
 			BSP_LED_Off(LED3); //Noor: if LED was paused at ON, turn OFF
@@ -640,6 +638,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 	}
  
 }
+
 
 /**
   * @brief  This function is executed in case of error occurrence.

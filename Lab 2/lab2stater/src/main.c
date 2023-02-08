@@ -127,7 +127,7 @@ uint32_t get_NumOfMs(){
 	Hal_status=HAL_RNG_GenerateRandomNumber(&Rng_Handle, &random); //HAL_RNG_GenerateRandomNumber(RNG_HandleTypeDef *hrng, uint32_t *random32bit);
      //since the randam32bit is type of uint32_t, sometimes it may reture a negative value.
 	
-		 
+		 //WTH IS THIS NUMBER
 	random &=0x000001FF; // the random numberf is 32bits and is too large for this project. 
 												
 	// Noor: made it less bits to make it 512 possible inputs (9 bits)
@@ -180,7 +180,7 @@ int main(void)
   BSP_LED_Init(LED3);
   BSP_LED_Init(LED4);
   BSP_LED_On(LED3);
-	BSP_LED_On(LED4);
+	//BSP_LED_On(LED4);
 	
 	
 	//Configer timer =================================
@@ -277,8 +277,8 @@ int main(void)
   while (1)
 	{	
 		//do nothing 
-		 if (UBPressed==1) 
-			BSP_LED_On(LED4); 
+			//if (UBPressed==1) 
+			//BSP_LED_On(LED4); 
 		
 		
   }

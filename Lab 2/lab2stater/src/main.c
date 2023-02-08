@@ -220,10 +220,7 @@ int main(void)
 	BSP_LCD_SetBackColor(LCD_COLOR_PINK);
 	
 		
-	LCD_DisplayString(1, 5, (uint8_t *)"abcdefghijklmnopQRSTUVWXYZ");
-	LCD_DisplayString(5, 2, (uint8_t *)"MT3TA4 Lab2 ");
-	LCD_DisplayInt(7, 6, 123456789);
-	LCD_DisplayFloat(8, 6, 12.3456789, 4);
+
 
 
  //**************test random number *********************
@@ -264,11 +261,11 @@ int main(void)
 	//LCD_DisplayInt(10, 7, 3);
 	
 	EE_ReadVariable(VirtAddVarTab[0], &EEREAD);	
-	//LCD_DisplayInt(10, 10, 4);
+	LCD_DisplayInt(3, 0, EEREAD);
 
-	LCD_DisplayString(11,0,(uint8_t *)"EE READ:");
+	/*LCD_DisplayString(11,0,(uint8_t *)"EE READ:");
 	LCD_DisplayString(11,9,(uint8_t *)"     ");	
-	LCD_DisplayInt(11, 9, EEREAD);		
+	LCD_DisplayInt(11, 9, EEREAD);	*/	
 
  
   /* Infinite loop */
@@ -600,15 +597,19 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
   {
     				UBPressed=1;
 		if(state==2){ //put this here so that it doesn't automatically run after the "if" down below executes
-			LCD_DisplayString(10,0,(uint8_t*)"Current Ms: ");
-			LCD_DisplayInt(10,4,reactCtrMs);
-			uint16_t stored = EE_ReadVariable(VirtAddVarTab[0], &EEREAD);
-			if(reactCtrMs>stored) {
+			LCD_DisplayString(8,0,(uint8_t*)"Current Ms: ");
+			LCD_DisplayInt(9,0,reactCtrMs);
+			uint16_t stored= EE_ReadVariable(VirtAddVarTab[0], &EEREAD);
+			LCD_DisplayInt(2,0,stored);
+			if(reactCtrMs<stored || stored==0) {
 				EE_WriteVariable(VirtAddVarTab[0], reactCtrMs);
+				LCD_DisplayString(1,0,(uint8_t*)"hi");
 			
 		}
-			uint16_t high_score = EE_ReadVariable(VirtAddVarTab[0], &EEREAD);
-			LCD_DisplayInt(9,4,high_score);
+			LCD_DisplayString(10,0,(uint8_t*)"High Score: ");
+			uint16_t high = EE_ReadVariable(VirtAddVarTab[0], &EEREAD);
+			LCD_DisplayInt(11,0,high);
+	}
 		if(state==0){
 			state=1; //Noor: change to state 1
 			BSP_LED_Off(LED3); //Noor: if LED was paused at ON, turn OFF
@@ -634,6 +635,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 	if(GPIO_Pin == GPIO_PIN_1)
   {
 				state=0;
+				reactCtrMs=0;
 			
 	}
  

@@ -595,15 +595,16 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 	
   if(GPIO_Pin == KEY_BUTTON_PIN)  //GPIO_PIN_0
   {
+		uint32_t reactCtrMs_temp = reactCtrMs;
     				UBPressed=1;
 		if(state==2){ //put this here so that it doesn't automatically run after the "if" down below executes
 			LCD_DisplayString(8,0,(uint8_t*)"Current Ms: ");
-			LCD_DisplayInt(9,0,reactCtrMs);
+			LCD_DisplayInt(9,0,reactCtrMs_temp);
 			uint16_t stored= EE_ReadVariable(VirtAddVarTab[0], &EEREAD);
 			LCD_DisplayInt(2,0,stored);
-			if(reactCtrMs<stored || stored==0) {
-				EE_WriteVariable(VirtAddVarTab[0], reactCtrMs);
-				LCD_DisplayString(1,0,(uint8_t*)"hi");
+			if(reactCtrMs_temp<stored || stored==0) {
+				EE_WriteVariable(VirtAddVarTab[0], reactCtrMs_temp);
+				LCD_DisplayInt(0,0,reactCtrMs_temp);
 			
 		}
 			LCD_DisplayString(10,0,(uint8_t*)"High Score: ");

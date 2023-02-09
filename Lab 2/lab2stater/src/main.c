@@ -178,7 +178,7 @@ int main(void)
   BSP_LED_Init(LED3);
   BSP_LED_Init(LED4);
   BSP_LED_On(LED3);
-	//BSP_LED_On(LED4);
+	BSP_LED_On(LED4);
 	
 	
 	//Configer timer =================================
@@ -249,19 +249,19 @@ int main(void)
 //******************* use emulated EEPROM ====================================
 
 //Unlock the Flash Program Erase controller 
-	HAL_FLASH_Unlock();
+	//HAL_FLASH_Unlock();
 	//LCD_DisplayInt(10, 1, 1);	  //!!!!!the 1, 2, 3, 4 printed here is for debuging.....to check 		
 	
 // EEPROM Init 
-	EE_Init();
+	//EE_Init();
 	//LCD_DisplayInt(10, 4, 2);
  	
 	//test EEPROM----
-	EE_WriteVariable(VirtAddVarTab[0], 300);
+	//EE_WriteVariable(VirtAddVarTab[0], 300);
 	//LCD_DisplayInt(10, 7, 3);
 	
-	EE_ReadVariable(VirtAddVarTab[0], &EEREAD);	
-	LCD_DisplayInt(3, 0, EEREAD);
+	//EE_ReadVariable(VirtAddVarTab[0], &EEREAD);	
+	//LCD_DisplayInt(3, 0, EEREAD);
 
 	/*LCD_DisplayString(11,0,(uint8_t *)"EE READ:");
 	LCD_DisplayString(11,9,(uint8_t *)"     ");	
@@ -558,6 +558,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)   //see  stm32fxx_ha
 		if ((*htim).Instance==TIM3){    //since only one timer use this interrupt, this line is actually not needed	
 			if(state==0){	
 				BSP_LED_Toggle(LED3);
+				BSP_LED_Toggle(LED4);
 			}
 		}
 	
@@ -592,38 +593,44 @@ void HAL_TIM_OC_DelayElapsedCallback(TIM_HandleTypeDef * htim) //see  stm32fxx_h
   */
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
+	uint32_t reactCtrMs_temp = reactCtrMs+250;
 	
   if(GPIO_Pin == KEY_BUTTON_PIN)  //GPIO_PIN_0
   {
-		uint32_t reactCtrMs_temp = reactCtrMs;
+		
     				UBPressed=1;
 		if(state==2){ //put this here so that it doesn't automatically run after the "if" down below executes
-			LCD_DisplayString(8,0,(uint8_t*)"Current Ms: ");
+			state =3;
+			HAL_FLASH_Unlock();
+			EE_Init();
+			LCD_DisplayString(8,0,(uint8_t*)"Reaction (ms): ");
 			LCD_DisplayInt(9,0,reactCtrMs_temp);
-			uint16_t stored= EE_ReadVariable(VirtAddVarTab[0], &EEREAD);
-			LCD_DisplayInt(2,0,stored);
-			if(reactCtrMs_temp<stored || stored==0) {
+			EE_ReadVariable(VirtAddVarTab[0], &EEREAD);
+			if(reactCtrMs_temp<EEREAD || EEREAD==0) {
 				EE_WriteVariable(VirtAddVarTab[0], reactCtrMs_temp);
-				LCD_DisplayInt(0,0,reactCtrMs_temp);
 			
 		}
-			LCD_DisplayString(10,0,(uint8_t*)"High Score: ");
-			uint16_t high = EE_ReadVariable(VirtAddVarTab[0], &EEREAD);
-			LCD_DisplayInt(11,0,high);
+		LCD_DisplayString(10,0,(uint8_t*)"Best reaction: ");
+			EE_ReadVariable(VirtAddVarTab[0], &EEREAD);
+			LCD_DisplayInt(11,0,EEREAD);
 	}
 		if(state==0){
 			state=1; //Noor: change to state 1
 			BSP_LED_Off(LED3); //Noor: if LED was paused at ON, turn OFF
+			BSP_LED_Off(LED4);
 			HAL_Delay(250);
       //If button is still pressed, go back to state 0
 			if((GPIOA->IDR & 0x1)==0x1){
+			LCD_DisplayString(1,0,(uint8_t*)"Cheating");
+			HAL_Delay(1000);
+			LCD_DisplayString(1,0,(uint8_t*)"         ");
 			state=0;
 			}
 			else{
 			uint32_t numOfMs=get_NumOfMs();
 			HAL_Delay(numOfMs);
-			state=2;
 			BSP_LED_On(LED3);
+			BSP_LED_On(LED4);
 			state=2;
 			}
 			
@@ -637,6 +644,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
   {
 				state=0;
 				reactCtrMs=0;
+				reactCtrMs_temp=0;
 			
 	}
  

@@ -95,6 +95,8 @@ uint16_t EEREAD;  //to practice reading the BESTRESULT save in the EE, for EE re
 
 uint32_t state; //Noor: variable to track the state in FSM
 uint32_t reactCtrMs; //Noor: counts Ms time elapsed before reaction
+uint32_t waitCtr; //Noor: track whether we finished waiting period (state 1)
+uint32_t desiredWait;
 
 
 
@@ -136,7 +138,7 @@ uint32_t get_NumOfMs(){
 		 random=1000; // millisecond	
 	
 	
-	
+	LCD_DisplayInt(4,0,random+1500);
 	return random+1500;
 }
 /**
@@ -161,6 +163,8 @@ int main(void)
 	
 	state=0; //Noor Entry state
 	reactCtrMs=0;
+	waitCtr=0;
+	desiredWait=0;
 
   
 	HAL_Init();
@@ -568,10 +572,32 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)   //see  stm32fxx_ha
 void HAL_TIM_OC_DelayElapsedCallback(TIM_HandleTypeDef * htim) //see  stm32fxx_hal_tim.c for different callback function names. 
 {																																//for timer4 
 		if ((*htim).Instance==TIM4) {   //be careful, every 1/1000 second there is a interrupt with the current configuration for TIM4
-			 //BSP_LED_Toggle(LED4); 
-			if(state==2){ //after every ms, a tim4 interrupt is generated, incrementing reaction counters
+			
+			//BSP_LED_Toggle(LED4); 
+			if(state==2){ //after every ms, a tim4 interrupt is generated, incrementing reaction counter
 			reactCtrMs=reactCtrMs+1;
+			
 			}
+			if(state==1){ //after every ms, a tim4 interrupt is generated, incrementing waiting counter
+				//LCD_DisplayInt(3,0,state); 
+			if(waitCtr>250 && (GPIOA->IDR & 0x1)==0x1){
+			LCD_DisplayString(1,0,(uint8_t*)"Cheating");
+			HAL_Delay(1000);
+			LCD_DisplayString(1,0,(uint8_t*)"         ");
+			reactCtrMs=0;
+			waitCtr=0;
+			state=0;
+			}
+			else{
+			waitCtr=waitCtr+1;
+			LCD_DisplayInt(0,0,waitCtr);
+			if(desiredWait<=waitCtr){
+				
+				BSP_LED_On(LED3);
+				BSP_LED_On(LED4);
+				state=2;
+			}
+			}}
 			OC_Count=OC_Count+1;
 			if (OC_Count==500)  {   //half second
 				//BSP_LED_Toggle(LED4);	Noor: dont want red led flashing since it indicates error when it turns on
@@ -593,7 +619,7 @@ void HAL_TIM_OC_DelayElapsedCallback(TIM_HandleTypeDef * htim) //see  stm32fxx_h
   */
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
-	uint32_t reactCtrMs_temp = reactCtrMs+250;
+	uint32_t reactCtrMs_temp = reactCtrMs;
 	
   if(GPIO_Pin == KEY_BUTTON_PIN)  //GPIO_PIN_0
   {
@@ -614,27 +640,28 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 			EE_ReadVariable(VirtAddVarTab[0], &EEREAD);
 			LCD_DisplayInt(11,0,EEREAD);
 	}
-		if(state==0){
+		 else if(state==0){
+			desiredWait=get_NumOfMs();
 			state=1; //Noor: change to state 1
 			BSP_LED_Off(LED3); //Noor: if LED was paused at ON, turn OFF
-			BSP_LED_Off(LED4);
-			HAL_Delay(250);
-      //If button is still pressed, go back to state 0
-			if((GPIOA->IDR & 0x1)==0x1){
+			BSP_LED_Off(LED4);}
+      
+			else if(state==1){
+			//If button is still pressed, go back to state 0
+			
 			LCD_DisplayString(1,0,(uint8_t*)"Cheating");
 			HAL_Delay(1000);
 			LCD_DisplayString(1,0,(uint8_t*)"         ");
+			reactCtrMs=0;
 			state=0;
-			}
-			else{
-			uint32_t numOfMs=get_NumOfMs();
-			HAL_Delay(numOfMs);
-			BSP_LED_On(LED3);
-			BSP_LED_On(LED4);
-			state=2;
+			
 			}
 			
-		}
+			
+			
+			
+			
+		
 		
 		
 	}
@@ -645,6 +672,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 				state=0;
 				reactCtrMs=0;
 				reactCtrMs_temp=0;
+				waitCtr=0;
 			
 	}
  

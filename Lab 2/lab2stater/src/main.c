@@ -485,7 +485,7 @@ void  TIM4_Config(void)
 		 ----------------------------------------------------------------------- */ 	
 
 /* Compute the prescaler value to have TIM4 counter clock equal to 500 KHz */
-  Tim4_PrescalerValue = (uint32_t) (SystemCoreClock  / 500000) - 1;
+  Tim4_PrescalerValue = (uint32_t) (SystemCoreClock  / (500000*2)) - 1;
   
   /* Set TIM3 instance */
   Tim4_Handle.Instance = TIM4; //TIM3 is defined in stm32f429xx.h

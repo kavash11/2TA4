@@ -134,8 +134,8 @@ uint32_t get_NumOfMs(){
 		 random=1000; // millisecond	
 	
 	
-	LCD_DisplayInt(4,0,random+1500);
-	return random+1500; //returns desired wait time in ms
+	LCD_DisplayInt(4,0,random+1500); //uncomment to display desired wait time
+	return (random+1500); //returns desired wait time in ms. Divided by two to account for time complexity that adds an extra 1 ms for each 1 ms interrupt by tim4 (making it double)
 }
 /**
   * @brief  Main program
@@ -537,7 +537,6 @@ void HAL_TIM_OC_DelayElapsedCallback(TIM_HandleTypeDef * htim) //see  stm32fxx_h
 				}
 				else{ //if there was no cheating
 				waitCtr=waitCtr+1; //increment waitCtr
-				LCD_DisplayInt(0,0,waitCtr);
 					if(desiredWait<=waitCtr){ //when desired wait time is reached by waitCtr
 						//turn on both LEDs and declare state 2
 						BSP_LED_On(LED3);
@@ -601,16 +600,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 			BSP_LED_Off(LED3); //if LED was paused at ON, turn OFF
 			BSP_LED_Off(LED4);}
       
-			else if(state==1){
-			//If button is still pressed, go back to state 0
 			
-			LCD_DisplayString(1,0,(uint8_t*)"Cheating");
-			HAL_Delay(1000);
-			LCD_DisplayString(1,0,(uint8_t*)"         ");
-			reactCtrMs=0;
-			state=0;
-			
-			}
 		
 	}
 	

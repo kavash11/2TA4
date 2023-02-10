@@ -1874,9 +1874,9 @@
       </Doc>
       <Doc>
         <Name>.\src\main.c</Name>
-        <ColumnNumber>6</ColumnNumber>
-        <TopLine>604</TopLine>
-        <CurrentLine>635</CurrentLine>
+        <ColumnNumber>2</ColumnNumber>
+        <TopLine>85</TopLine>
+        <CurrentLine>137</CurrentLine>
         <Folding>1</Folding>
         <ContractedFolders></ContractedFolders>
         <PaneID>0</PaneID>

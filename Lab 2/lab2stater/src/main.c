@@ -121,25 +121,21 @@ static void EXTILine1_Config(void); // configure the exti line1, for exterrnal b
 /* Private functions ---------------------------------------------------------*/
 uint32_t get_NumOfMs(){
 	Rng_Handle.Instance=RNG;  //Everytime declare a Handle, need to assign its Instance a base address. like the timer handles.... 													
-	
 	HAL_RNG_Init(&Rng_Handle);
-	
-	//test Random number=======
+
 	Hal_status=HAL_RNG_GenerateRandomNumber(&Rng_Handle, &random); //HAL_RNG_GenerateRandomNumber(RNG_HandleTypeDef *hrng, uint32_t *random32bit);
      //since the randam32bit is type of uint32_t, sometimes it may reture a negative value.
 	
-		 //WTH IS THIS NUMBER
-	random &=0x000001FF; // the random numberf is 32bits and is too large for this project. 
+	random &=0x000001FF; // made it less bits to make it 512 possible inputs (9 bits)
 												
-	// Noor: made it less bits to make it 512 possible inputs (9 bits)
-	random=random*2; // Noor: so that we can add it to 1.5 seconds and it would give us a val ranging between 1.5 and 2.5
+	random=random*2; // *2 so that we can add it to 1.5 seconds and it would give us a val ranging between 1.5 and 2.5
 												
 	if (Hal_status==HAL_ERROR || Hal_status==HAL_TIMEOUT) // a new rng was NOT generated sucessfully;
 		 random=1000; // millisecond	
 	
 	
 	LCD_DisplayInt(4,0,random+1500);
-	return random+1500;
+	return random+1500; //returns desired wait time in ms
 }
 /**
   * @brief  Main program
@@ -161,7 +157,8 @@ int main(void)
        - Global MSP (MCU Support Package) initialization
   */
 	
-	state=0; //Noor Entry state
+	state=0; //Entry state
+	//initializations
 	reactCtrMs=0;
 	waitCtr=0;
 	desiredWait=0;
@@ -181,7 +178,7 @@ int main(void)
   //Configure LED3 and LED4 ======================================
   BSP_LED_Init(LED3);
   BSP_LED_Init(LED4);
-  BSP_LED_On(LED3);
+  BSP_LED_On(LED3); //they both start ON
 	BSP_LED_On(LED4);
 	
 	
@@ -221,64 +218,13 @@ int main(void)
  
 	BSP_LCD_SetFont(&Font20);  //the default font,  LCD_DEFAULT_FONT, which is defined in _lcd.h, is Font24
 	BSP_LCD_SetTextColor(LCD_COLOR_BLACK);
-	BSP_LCD_SetBackColor(LCD_COLOR_PINK);
+	BSP_LCD_SetBackColor(LCD_COLOR_PINK); //makes background pink
 	
-		
-
-
-
- //**************test random number *********************
-	Rng_Handle.Instance=RNG;  //Everytime declare a Handle, need to assign its Instance a base address. like the timer handles.... 													
-	
-	HAL_RNG_Init(&Rng_Handle);
-	
-	//test Random number=======
-	Hal_status=HAL_RNG_GenerateRandomNumber(&Rng_Handle, &random); //HAL_RNG_GenerateRandomNumber(RNG_HandleTypeDef *hrng, uint32_t *random32bit);
-     //since the randam32bit is type of uint32_t, sometimes it may reture a negative value.
-	
-		 
-	random &=0x000007FF; // the random numberf is 32bits and is too large for this project. 
-												//just use  its last 10 bits.
-												//the range is 0 to 2047 for unsigned int.
-												
-	if (Hal_status==HAL_ERROR || Hal_status==HAL_TIMEOUT) // a new rng was NOT generated sucessfully;
-		 random=1000; // millisecond	
-	/*LCD_DisplayString(9, 0, (uint8_t *)"random:");
-	LCD_DisplayString(9, 8, (uint8_t *)"         ");
-	LCD_DisplayInt(9, 8, random);*/
-
-	
-	
-	
-//******************* use emulated EEPROM ====================================
-
-//Unlock the Flash Program Erase controller 
-	//HAL_FLASH_Unlock();
-	//LCD_DisplayInt(10, 1, 1);	  //!!!!!the 1, 2, 3, 4 printed here is for debuging.....to check 		
-	
-// EEPROM Init 
-	//EE_Init();
-	//LCD_DisplayInt(10, 4, 2);
- 	
-	//test EEPROM----
-	//EE_WriteVariable(VirtAddVarTab[0], 300);
-	//LCD_DisplayInt(10, 7, 3);
-	
-	//EE_ReadVariable(VirtAddVarTab[0], &EEREAD);	
-	//LCD_DisplayInt(3, 0, EEREAD);
-
-	/*LCD_DisplayString(11,0,(uint8_t *)"EE READ:");
-	LCD_DisplayString(11,9,(uint8_t *)"     ");	
-	LCD_DisplayInt(11, 9, EEREAD);	*/	
-
  
   /* Infinite loop */
   while (1)
 	{	
 		//do nothing 
-			//if (UBPressed==1) 
-			//BSP_LED_On(LED4); 
-		
 		
   }
 	
@@ -424,7 +370,7 @@ void  TIM3_Config(void)
   ----------------------------------------------------------------------- */  
   
   /* Compute the prescaler value to have TIM3 counter clock equal to 10 KHz */
-  Tim3_PrescalerValue = (uint32_t) (SystemCoreClock / 50000) - 1; //Noor: changed denominator to make it flash faster
+  Tim3_PrescalerValue = (uint32_t) (SystemCoreClock / 50000) - 1; //changed denominator to make it flash faster
   
   /* Set TIM3 instance */
   Tim3_Handle.Instance = TIM3; //TIM3 is defined in stm32f429xx.h
@@ -485,7 +431,7 @@ void  TIM4_Config(void)
 		 ----------------------------------------------------------------------- */ 	
 
 /* Compute the prescaler value to have TIM4 counter clock equal to 500 KHz */
-  Tim4_PrescalerValue = (uint32_t) (SystemCoreClock  / (500000*2)) - 1;
+  Tim4_PrescalerValue = (uint32_t) (SystemCoreClock  / (500000)) - 1; //kept it at 500000 to make it every ms
   
   /* Set TIM3 instance */
   Tim4_Handle.Instance = TIM4; //TIM3 is defined in stm32f429xx.h
@@ -560,7 +506,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)   //see  stm32fxx_ha
 																															//for timer 3 , Timer 3 use update event initerrupt
 {
 		if ((*htim).Instance==TIM3){    //since only one timer use this interrupt, this line is actually not needed	
-			if(state==0){	
+			if(state==0){	//at state 0 (first state) toggle LEDs at every tim3 interrupt
 				BSP_LED_Toggle(LED3);
 				BSP_LED_Toggle(LED4);
 			}
@@ -579,25 +525,27 @@ void HAL_TIM_OC_DelayElapsedCallback(TIM_HandleTypeDef * htim) //see  stm32fxx_h
 			
 			}
 			if(state==1){ //after every ms, a tim4 interrupt is generated, incrementing waiting counter
-				//LCD_DisplayInt(3,0,state); 
-			if(waitCtr>250 && (GPIOA->IDR & 0x1)==0x1){
-			LCD_DisplayString(1,0,(uint8_t*)"Cheating");
-			HAL_Delay(1000);
-			LCD_DisplayString(1,0,(uint8_t*)"         ");
-			reactCtrMs=0;
-			waitCtr=0;
-			state=0;
+					//LCD_DisplayInt(3,0,state); 
+				if(waitCtr>250 && (GPIOA->IDR & 0x1)==0x1){ //if button is clicked (or is still clicked) after 250 ms 
+				LCD_DisplayString(1,0,(uint8_t*)"Cheating");
+				HAL_Delay(1000); //so that the word "cheating" shows. This delay function has nothing to do with functionality, it's just for UI purposes
+				LCD_DisplayString(1,0,(uint8_t*)"         ");//clear the word "cheating"
+				//go back to first state and reset all counter variables
+				reactCtrMs=0;
+				waitCtr=0;
+				state=0;
+				}
+				else{ //if there was no cheating
+				waitCtr=waitCtr+1; //increment waitCtr
+				LCD_DisplayInt(0,0,waitCtr);
+					if(desiredWait<=waitCtr){ //when desired wait time is reached by waitCtr
+						//turn on both LEDs and declare state 2
+						BSP_LED_On(LED3);
+						BSP_LED_On(LED4);
+						state=2;
+					}
+				}
 			}
-			else{
-			waitCtr=waitCtr+1;
-			LCD_DisplayInt(0,0,waitCtr);
-			if(desiredWait<=waitCtr){
-				
-				BSP_LED_On(LED3);
-				BSP_LED_On(LED4);
-				state=2;
-			}
-			}}
 			OC_Count=OC_Count+1;
 			if (OC_Count==500)  {   //half second
 				//BSP_LED_Toggle(LED4);	Noor: dont want red led flashing since it indicates error when it turns on
@@ -619,31 +567,38 @@ void HAL_TIM_OC_DelayElapsedCallback(TIM_HandleTypeDef * htim) //see  stm32fxx_h
   */
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
-	uint32_t reactCtrMs_temp = reactCtrMs;
+	uint32_t reactCtrMs_temp = reactCtrMs; //putting reactCtrMs in a temporary variable in this callback since the original variable might change throughout the function's execution
 	
   if(GPIO_Pin == KEY_BUTTON_PIN)  //GPIO_PIN_0
   {
 		
     				UBPressed=1;
-		if(state==2){ //put this here so that it doesn't automatically run after the "if" down below executes
+		if(state==2){ //if button is pressed at state 2, declare state 3
 			state =3;
+			//display recent reaction time
+			LCD_DisplayString(8,0,(uint8_t*)"Reaction (ms): ");
+			LCD_DisplayString(9,0,(uint8_t*)"      "); //clear line
+			LCD_DisplayInt(9,0,reactCtrMs_temp);
+			//read value on eeprom and compare it to recent value
 			HAL_FLASH_Unlock();
 			EE_Init();
-			LCD_DisplayString(8,0,(uint8_t*)"Reaction (ms): ");
-			LCD_DisplayInt(9,0,reactCtrMs_temp);
+			//EE_WriteVariable(VirtAddVarTab[0], 11111); //uncomment line to make best reaction time high again in EEPROM
 			EE_ReadVariable(VirtAddVarTab[0], &EEREAD);
+			
 			if(reactCtrMs_temp<EEREAD || EEREAD==0) {
-				EE_WriteVariable(VirtAddVarTab[0], reactCtrMs_temp);
+				EE_WriteVariable(VirtAddVarTab[0], reactCtrMs_temp); //replace eeprom value with most recent value if it's bigger or if there's no value stored on eeprom
 			
 		}
+			//display best reaction time value
 		LCD_DisplayString(10,0,(uint8_t*)"Best reaction: ");
 			EE_ReadVariable(VirtAddVarTab[0], &EEREAD);
+			LCD_DisplayString(11,0,(uint8_t*)"      "); //clear line
 			LCD_DisplayInt(11,0,EEREAD);
 	}
 		 else if(state==0){
-			desiredWait=get_NumOfMs();
-			state=1; //Noor: change to state 1
-			BSP_LED_Off(LED3); //Noor: if LED was paused at ON, turn OFF
+			desiredWait=get_NumOfMs(); //get desired wait time, generated randomly
+			state=1; //declare state 1
+			BSP_LED_Off(LED3); //if LED was paused at ON, turn OFF
 			BSP_LED_Off(LED4);}
       
 			else if(state==1){
@@ -656,18 +611,11 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 			state=0;
 			
 			}
-			
-			
-			
-			
-			
-		
-		
 		
 	}
 	
 	
-	if(GPIO_Pin == GPIO_PIN_1)
+	if(GPIO_Pin == GPIO_PIN_1) //reset button: reset all variables and declare state 0
   {
 				state=0;
 				reactCtrMs=0;

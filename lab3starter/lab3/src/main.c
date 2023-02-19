@@ -57,6 +57,7 @@ I2C_HandleTypeDef  I2c3_Handle;
 RTC_HandleTypeDef RTCHandle;
 RTC_DateTypeDef RTC_DateStructure, read_RTC_DateStruct;
 RTC_TimeTypeDef RTC_TimeStructure, read_RTC_TimeStruct;
+uint32_t state; //kavya
 
 
 
@@ -88,7 +89,7 @@ static void Error_Handler(void);
 int main(void)
 {
   //the following variables are for testging I2C_EEPROM
-
+	state=0; //kavya
 	uint8_t data1 =0x67,  data2=0x68;
 	uint8_t readData=0x00;
 	char AA[34]= "efghijklmnopqstuvefghijklmnopqstuv";
@@ -266,7 +267,12 @@ int main(void)
 while (1)
   {			
 	
-		
+		HAL_RTC_GetTime(&RTCHandle, &read_RTC_TimeStruct, RTC_FORMAT_BIN); //kavya
+		LCD_DisplayString(1,0, (uint8_t *) "HH:MM:SS");
+		LCD_DisplayInt(2,0,read_RTC_TimeStruct.Hours);
+		LCD_DisplayInt(2,3,read_RTC_TimeStruct.Minutes);
+		LCD_DisplayInt(2,6,read_RTC_TimeStruct.Seconds);
+		HAL_RTC_GetDate(&RTCHandle, &read_RTC_DateStruct, RTC_FORMAT_BIN); 	
 		
 		
   } //end of while
@@ -468,9 +474,9 @@ void RTC_Config(void) {
 				} 
   
   
-				RTC_TimeStructure.Hours = 9;  
-				RTC_TimeStructure.Minutes = 19; //if use RTC_FORMAT_BCD, NEED TO SET IT AS 0x19
-				RTC_TimeStructure.Seconds = 29;
+				RTC_TimeStructure.Hours = 9;  //kavya
+				RTC_TimeStructure.Minutes = 31; //if use RTC_FORMAT_BCD, NEED TO SET IT AS 0x19
+				RTC_TimeStructure.Seconds = 50;
 				RTC_TimeStructure.TimeFormat = RTC_HOURFORMAT12_AM;
 				RTC_TimeStructure.DayLightSaving = RTC_DAYLIGHTSAVING_NONE;
 				RTC_TimeStructure.StoreOperation = RTC_STOREOPERATION_RESET;//?????/
@@ -666,15 +672,21 @@ void LCD_DisplayFloat(uint16_t LineNumber, uint16_t ColumnNumber, float Number, 
 
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
+
+	
+
 	
   if(GPIO_Pin == KEY_BUTTON_PIN)  //GPIO_PIN_0
   {
-		HAL_RTC_GetTime(&RTCHandle, &read_RTC_TimeStruct, RTC_FORMAT_BIN);
+		HAL_RTC_GetTime(&RTCHandle, &read_RTC_TimeStruct, RTC_FORMAT_BIN); //kavya
+		LCD_DisplayString(3,0, (uint8_t *) "HH:MM:SS");
+		LCD_DisplayInt(4,0,read_RTC_TimeStruct.Hours);
+		LCD_DisplayInt(4,3,read_RTC_TimeStruct.Minutes);
+		LCD_DisplayInt(4,6,read_RTC_TimeStruct.Seconds);
 		HAL_RTC_GetDate(&RTCHandle, &read_RTC_DateStruct, RTC_FORMAT_BIN); 
-	
-	//	LCD_DisplayInt(8,0,read_RTC_TimeStruct.Hours);
-		//LCD_DisplayInt(8,3,read_RTC_TimeStruct.Minutes);
-		//LCD_DisplayInt(8,6,read_RTC_TimeStruct.Seconds);
+		
+
+		
 
 		LCD_DisplayString(9,0, (uint8_t *) "WD:DD:MM:YY");
 	
@@ -682,6 +694,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 		LCD_DisplayInt(10,3, read_RTC_DateStruct.Date);
 		LCD_DisplayInt(10,6, read_RTC_DateStruct.Month);
 		LCD_DisplayInt(10,9, read_RTC_DateStruct.Year);
+		
   }
 	
 	

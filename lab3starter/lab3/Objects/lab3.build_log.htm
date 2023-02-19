@@ -5,10 +5,9 @@
 <h2>Tool Versions:</h2>
 IDE-Version: µVision V5.38.0.0
 Copyright (C) 2022 ARM Ltd and ARM Germany GmbH. All rights reserved.
-License Information: Kavya Sundaresan McMaster Univeristy Flex license: MDK Professional 5.38 (Flex) (mdk_pro) Operation stops: 16 Sep 2024
- 
+License Information: Kavya Sundaresan McMaster Univeristy Flex license: error obtaining information 
 Tool Versions:
-Toolchain:       MDK Professional 5.38 (Flex)  Version: 5.38.0.0
+Toolchain:       MDK-Lite  Version: 5.38.0.0
 Toolchain Path:  C:\Keil_v5\ARM\ARMCLANG\Bin
 C Compiler:      ArmClang.exe V6.19
 Assembler:       Armasm.exe V6.19
@@ -27,16 +26,16 @@ Project File Date:  02/18/2023
 <h2>Output:</h2>
 *** Using Compiler 'V6.19', folder: 'C:\Keil_v5\ARM\ARMCLANG\Bin'
 Build target 'lab3'
-src/main.c(592): warning: non-void function does not return a value in all control paths [-Wreturn-type]
+src/main.c(598): warning: non-void function does not return a value in all control paths [-Wreturn-type]
 }
 ^
-src/main.c(618): warning: non-void function does not return a value in all control paths [-Wreturn-type]
+src/main.c(624): warning: non-void function does not return a value in all control paths [-Wreturn-type]
 }
 ^
 2 warnings generated.
 compiling main.c...
 linking...
-Program Size: Code=21492 RO-data=11308 RW-data=100 ZI-data=1780  
+Program Size: Code=21728 RO-data=11316 RW-data=100 ZI-data=1780  
 ".\Objects\lab3.axf" - 0 Error(s), 2 Warning(s).
 
 <h2>Software Packages used:</h2>
@@ -111,16 +110,16 @@ Package Vendor: Keil
       Source file:   MDK/Boards/ST/STM32F429I-Discovery/Common/Buttons_F429Discovery.c
 
    * Component: Keil.STM32F429I-Discovery::Board Support:Components:ILI9341:1.0.2
-      Include file:  Drivers/BSP/Components/ili9341/ili9341.h
       Source file:   Drivers/BSP/Components/ili9341/ili9341.c
+      Include file:  Drivers/BSP/Components/ili9341/ili9341.h
 
    * Component: Keil.STM32F429I-Discovery::Board Support:Components:STMPE811:2.0.0
       Include file:  Drivers/BSP/Components/stmpe811/stmpe811.h
       Source file:   Drivers/BSP/Components/stmpe811/stmpe811.c
 
    * Component: Keil.STM32F429I-Discovery::Board Support:Drivers:Basic I/O:1.0.0
-      Source file:   Drivers/BSP/STM32F429I-Discovery/stm32f429i_discovery.c
       Include file:  Drivers/BSP/STM32F429I-Discovery/stm32f429i_discovery.h
+      Source file:   Drivers/BSP/STM32F429I-Discovery/stm32f429i_discovery.c
 
    * Component: Keil.STM32F429I-Discovery::Board Support:Drivers:LCD:1.0.0
       Include file:  Drivers/BSP/STM32F429I-Discovery/stm32f429i_discovery_lcd.h
@@ -134,14 +133,14 @@ Package Vendor: Keil
       Source file:   MDK/Boards/ST/STM32F429I-Discovery/Common/LED_F429Discovery.c
 
    * Component: Keil::Device:STM32Cube Framework:Classic:1.8.1
-      Include file:  MDK/Templates/Inc/main.h
-      Include file:  MDK/Templates/Inc/stm32f4xx_it.h
       Source file:   MDK/Templates/Src/main.c
-      Include file:  MDK/Templates/Inc/stm32f4xx_hal_conf.h
-      Source file:   MDK/Templates_LL/Src/main.c
-      Source file:   MDK/Templates/Src/stm32f4xx_hal_msp.c
       Include file:  MDK/Templates_LL/Inc/main.h
+      Include file:  MDK/Templates/Inc/main.h
+      Source file:   MDK/Templates/Src/stm32f4xx_hal_msp.c
+      Source file:   MDK/Templates_LL/Src/main.c
       Include file:  CMSIS/Driver/Config/RTE_Device.h
+      Include file:  MDK/Templates/Inc/stm32f4xx_hal_conf.h
+      Include file:  MDK/Templates/Inc/stm32f4xx_it.h
       Source file:   MDK/Templates/Src/stm32f4xx_it.c
 
    * Component: Keil::Device:STM32Cube HAL:Common:1.8.1
@@ -152,8 +151,8 @@ Package Vendor: Keil
       Source file:   Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_cortex.c
 
    * Component: Keil::Device:STM32Cube HAL:DMA:1.8.1
-      Source file:   Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma_ex.c
       Source file:   Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma.c
+      Source file:   Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma_ex.c
 
    * Component: Keil::Device:STM32Cube HAL:DMA2D:1.8.1
       Source file:   Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_dma2d.c
@@ -180,8 +179,8 @@ Package Vendor: Keil
       Source file:   Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rcc_ex.c
 
    * Component: Keil::Device:STM32Cube HAL:RTC:1.8.1
-      Source file:   Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rtc.c
       Source file:   Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rtc_ex.c
+      Source file:   Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_rtc.c
 
    * Component: Keil::Device:STM32Cube HAL:SDRAM:1.8.1
       Source file:   Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_sdram.c
@@ -198,12 +197,12 @@ Package Vendor: Keil
       Source file:   Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_uart.c
 
    * Component: Keil::Device:Startup:2.6.3
+      Source file:   Drivers/CMSIS/Device/ST/STM32F4xx/Source/Templates/arm/startup_stm32f429xx.s
       Source file:   MDK/Device/Source/ARM/STM32F42xxx_43xxx_OPT.s
       Include file:  Drivers/CMSIS/Device/ST/STM32F4xx/Include/stm32f4xx.h
       Source file:   MDK/Device/Source/ARM/STM32F4xx_OTP.s
-      Source file:   Drivers/CMSIS/Device/ST/STM32F4xx/Source/Templates/arm/startup_stm32f429xx.s
       Source file:   Drivers/CMSIS/Device/ST/STM32F4xx/Source/Templates/system_stm32f4xx.c
-Build Time Elapsed:  00:00:03
+Build Time Elapsed:  00:00:02
 </pre>
 </body>
 </html>

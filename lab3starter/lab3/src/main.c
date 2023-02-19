@@ -267,12 +267,7 @@ int main(void)
 while (1)
   {			
 	
-		HAL_RTC_GetTime(&RTCHandle, &read_RTC_TimeStruct, RTC_FORMAT_BIN); //kavya
-		LCD_DisplayString(1,0, (uint8_t *) "HH:MM:SS");
-		LCD_DisplayInt(2,0,read_RTC_TimeStruct.Hours);
-		LCD_DisplayInt(2,3,read_RTC_TimeStruct.Minutes);
-		LCD_DisplayInt(2,6,read_RTC_TimeStruct.Seconds);
-		HAL_RTC_GetDate(&RTCHandle, &read_RTC_DateStruct, RTC_FORMAT_BIN); 	
+
 		
 		
   } //end of while
@@ -553,7 +548,7 @@ void RTC_AlarmAConfig(void)
   }
   
 	//Enable the RTC Alarm interrupt
-//	__HAL_RTC_ALARM_ENABLE_IT(&RTCHandle,RTC_IT_ALRA);   //already in function HAL_RTC_SetAlarm_IT()
+	__HAL_RTC_ALARM_ENABLE_IT(&RTCHandle,RTC_IT_ALRA);   //already in function HAL_RTC_SetAlarm_IT()
 	
 	//Enable the RTC ALARMA peripheral.
 //	__HAL_RTC_ALARMA_ENABLE(&RTCHandle);  //already in function HAL_RTC_SetAlarm_IT()
@@ -678,7 +673,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 	
   if(GPIO_Pin == KEY_BUTTON_PIN)  //GPIO_PIN_0
   {
-		HAL_RTC_GetTime(&RTCHandle, &read_RTC_TimeStruct, RTC_FORMAT_BIN); //kavya
+		/*HAL_RTC_GetTime(&RTCHandle, &read_RTC_TimeStruct, RTC_FORMAT_BIN); //kavya
 		LCD_DisplayString(3,0, (uint8_t *) "HH:MM:SS");
 		LCD_DisplayInt(4,0,read_RTC_TimeStruct.Hours);
 		LCD_DisplayInt(4,3,read_RTC_TimeStruct.Minutes);
@@ -693,7 +688,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 		LCD_DisplayInt(10,0, read_RTC_DateStruct.WeekDay);
 		LCD_DisplayInt(10,3, read_RTC_DateStruct.Date);
 		LCD_DisplayInt(10,6, read_RTC_DateStruct.Month);
-		LCD_DisplayInt(10,9, read_RTC_DateStruct.Year);
+		LCD_DisplayInt(10,9, read_RTC_DateStruct.Year);*/
 		
   }
 	
@@ -720,7 +715,20 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 
 void HAL_RTC_AlarmAEventCallback(RTC_HandleTypeDef *hrtc)
 {
- 
+		HAL_RTC_GetTime(&RTCHandle, &RTC_TimeStructure, RTC_FORMAT_BIN); //should continuously display time but isnt
+		BSP_LCD_ClearStringLine(9);
+		BSP_LCD_ClearStringLine(10);
+		LCD_DisplayString(9,0, (uint8_t *) "HH:MM:SS");
+		LCD_DisplayInt(10,0,RTC_TimeStructure.Hours);
+		LCD_DisplayInt(10,3,RTC_TimeStructure.Minutes);
+		LCD_DisplayInt(10,6,RTC_TimeStructure.Seconds);
+	
+		HAL_RTC_GetDate(&RTCHandle,&RTC_DateStructure,RTC_FORMAT_BIN);
+		LCD_DisplayString(5,0, (uint8_t *) "WD:DD:MM:YY");
+		LCD_DisplayInt(6,0, RTC_DateStructure.WeekDay);
+ 		LCD_DisplayInt(6, 3, RTC_DateStructure.Year);
+		LCD_DisplayInt(6, 6, RTC_DateStructure.Month);
+		LCD_DisplayInt(6, 9, RTC_DateStructure.Date);
 	//RTC_TimeShow();
 	
 }

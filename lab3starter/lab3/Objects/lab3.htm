@@ -3,7 +3,7 @@
 <title>Static Call Graph - [.\Objects\lab3.axf]</title></head>
 <body><HR>
 <H1>Static Call Graph for image .\Objects\lab3.axf</H1><HR>
-<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 6190004: Last Updated: Sun Feb 19 13:41:39 2023
+<BR><P>#&#060CALLGRAPH&#062# ARM Linker, 6190004: Last Updated: Sun Feb 19 15:54:28 2023
 <BR><P>
 <H3>Maximum Stack Usage =        296 bytes + Unknown(Cycles, Untraceable Function Pointers)</H3><H3>
 Call chain for Maximum Stack Depth:</H3>
@@ -1319,7 +1319,7 @@ Global Symbols
 <P><STRONG><a name="[8]"></a>PendSV_Handler</STRONG> (Thumb, 2 bytes, Stack size 0 bytes, stm32f4xx_it.o(.text.PendSV_Handler))
 <BR>[Address Reference Count : 1]<UL><LI> startup_stm32f429xx.o(RESET)
 </UL>
-<P><STRONG><a name="[e5]"></a>RTC_AlarmAConfig</STRONG> (Thumb, 88 bytes, Stack size 48 bytes, main.o(.text.RTC_AlarmAConfig))
+<P><STRONG><a name="[e5]"></a>RTC_AlarmAConfig</STRONG> (Thumb, 80 bytes, Stack size 48 bytes, main.o(.text.RTC_AlarmAConfig))
 <BR><BR>[Stack]<UL><LI>Max Depth = 160<LI>Call Chain = RTC_AlarmAConfig &rArr; LCD_DisplayString &rArr; BSP_LCD_DisplayChar
 </UL>
 <BR>[Calls]<UL><LI><a href="#[e6]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;HAL_RTC_SetAlarm_IT
@@ -1431,7 +1431,7 @@ Global Symbols
 </UL>
 <BR>[Address Reference Count : 1]<UL><LI> ili9341.o(.data.ili9341_drv)
 </UL>
-<P><STRONG><a name="[64]"></a>main</STRONG> (Thumb, 856 bytes, Stack size 112 bytes, main.o(.text.main))
+<P><STRONG><a name="[64]"></a>main</STRONG> (Thumb, 860 bytes, Stack size 112 bytes, main.o(.text.main))
 <BR><BR>[Stack]<UL><LI>Max Depth = 296<LI>Call Chain = main &rArr; I2C_BufferWrite &rArr; I2C_PageWrite &rArr; HAL_I2C_Mem_Write &rArr; I2C_RequestMemoryWrite &rArr; I2C_WaitOnFlagUntilTimeout
 </UL>
 <BR>[Calls]<UL><LI><a href="#[e5]">&gt;&gt;</a>&nbsp;&nbsp;&nbsp;RTC_AlarmAConfig

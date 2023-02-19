@@ -4055,62 +4055,62 @@ Image Symbol Table
     [Anonymous Symbol]                       0x08003fea   Section        0  stm32f4xx_it.o(.text.NMI_Handler)
     [Anonymous Symbol]                       0x08003fec   Section        0  stm32f4xx_it.o(.text.PendSV_Handler)
     [Anonymous Symbol]                       0x08003ff0   Section        0  main.o(.text.RTC_AlarmAConfig)
-    [Anonymous Symbol]                       0x0800405c   Section        0  stm32f4xx_it.o(.text.RTC_Alarm_IRQHandler)
-    [Anonymous Symbol]                       0x08004060   Section        0  main.o(.text.RTC_Config)
-    [Anonymous Symbol]                       0x08004184   Section        0  stm32f4xx_hal_rtc.o(.text.RTC_EnterInitMode)
-    [Anonymous Symbol]                       0x080041cc   Section        0  stm32f4xx_hal_rtc.o(.text.RTC_ExitInitMode)
-    SPI_EndRxTransaction                     0x080041f5   Thumb Code    86  stm32f4xx_hal_spi.o(.text.SPI_EndRxTransaction)
-    [Anonymous Symbol]                       0x080041f4   Section        0  stm32f4xx_hal_spi.o(.text.SPI_EndRxTransaction)
-    SPI_EndRxTxTransaction                   0x0800424d   Thumb Code   102  stm32f4xx_hal_spi.o(.text.SPI_EndRxTxTransaction)
-    [Anonymous Symbol]                       0x0800424c   Section        0  stm32f4xx_hal_spi.o(.text.SPI_EndRxTxTransaction)
-    SPI_WaitFlagStateUntilTimeout            0x080042b5   Thumb Code   218  stm32f4xx_hal_spi.o(.text.SPI_WaitFlagStateUntilTimeout)
-    [Anonymous Symbol]                       0x080042b4   Section        0  stm32f4xx_hal_spi.o(.text.SPI_WaitFlagStateUntilTimeout)
-    SPIx_Init                                0x0800438f   Thumb Code   156  stm32f429i_discovery.o(.text.SPIx_Init)
-    [Anonymous Symbol]                       0x0800438e   Section        0  stm32f429i_discovery.o(.text.SPIx_Init)
-    SPIx_Write                               0x0800442b   Thumb Code    58  stm32f429i_discovery.o(.text.SPIx_Write)
-    [Anonymous Symbol]                       0x0800442a   Section        0  stm32f429i_discovery.o(.text.SPIx_Write)
-    [Anonymous Symbol]                       0x08004464   Section        0  stm32f4xx_it.o(.text.SVC_Handler)
-    [Anonymous Symbol]                       0x08004466   Section        0  stm32f4xx_it.o(.text.SysTick_Handler)
-    [Anonymous Symbol]                       0x0800446a   Section        0  system_stm32f4xx.o(.text.SystemInit)
-    [Anonymous Symbol]                       0x0800447c   Section        0  stm32f4xx_it.o(.text.TAMP_STAMP_IRQHandler)
-    [Anonymous Symbol]                       0x0800447e   Section        0  stm32f4xx_it.o(.text.TIM3_IRQHandler)
-    [Anonymous Symbol]                       0x08004480   Section        0  stm32f4xx_it.o(.text.TIM4_IRQHandler)
-    [Anonymous Symbol]                       0x08004484   Section        0  stm32f4xx_it.o(.text.UsageFault_Handler)
-    [Anonymous Symbol]                       0x08004486   Section        0  ili9341.o(.text.ili9341_DisplayOff)
-    [Anonymous Symbol]                       0x0800448c   Section        0  ili9341.o(.text.ili9341_DisplayOn)
-    [Anonymous Symbol]                       0x08004492   Section        0  ili9341.o(.text.ili9341_GetLcdPixelHeight)
-    [Anonymous Symbol]                       0x08004498   Section        0  ili9341.o(.text.ili9341_GetLcdPixelWidth)
-    [Anonymous Symbol]                       0x0800449c   Section        0  ili9341.o(.text.ili9341_Init)
-    [Anonymous Symbol]                       0x0800472e   Section        0  ili9341.o(.text.ili9341_ReadID)
-    [Anonymous Symbol]                       0x08004740   Section        0  main.o(.text.main)
-    i.__0sprintf                             0x08004b30   Section        0  printfa.o(i.__0sprintf)
-    i.__scatterload_copy                     0x08004b58   Section       14  handlers.o(i.__scatterload_copy)
-    i.__scatterload_null                     0x08004b66   Section        2  handlers.o(i.__scatterload_null)
-    i.__scatterload_zeroinit                 0x08004b68   Section       14  handlers.o(i.__scatterload_zeroinit)
-    _fp_digits                               0x08004b79   Thumb Code   366  printfa.o(i._fp_digits)
-    i._fp_digits                             0x08004b78   Section        0  printfa.o(i._fp_digits)
-    _printf_core                             0x08004cfd   Thumb Code  1744  printfa.o(i._printf_core)
-    i._printf_core                           0x08004cfc   Section        0  printfa.o(i._printf_core)
-    _printf_post_padding                     0x080053d9   Thumb Code    36  printfa.o(i._printf_post_padding)
-    i._printf_post_padding                   0x080053d8   Section        0  printfa.o(i._printf_post_padding)
-    _printf_pre_padding                      0x080053fd   Thumb Code    46  printfa.o(i._printf_pre_padding)
-    i._printf_pre_padding                    0x080053fc   Section        0  printfa.o(i._printf_pre_padding)
-    _sputc                                   0x0800542b   Thumb Code    10  printfa.o(i._sputc)
-    i._sputc                                 0x0800542a   Section        0  printfa.o(i._sputc)
-    .Lswitch.table.HAL_LTDC_SetPitch_NoReload 0x08007de0   Data          32  stm32f4xx_hal_ltdc.o(.rodata.cst32)
-    DMA_CalcBaseAndBitshift.flagBitshiftOffset 0x08007e00   Data           8  stm32f4xx_hal_dma.o(.rodata.cst8)
-    [Anonymous Symbol]                       0x08007e00   Section        0  stm32f4xx_hal_dma.o(.rodata.cst8)
-    .L.str.14                                0x08007e08   Data          15  main.o(.rodata.str1.1)
-    [Anonymous Symbol]                       0x08007e08   Section        0  main.o(.rodata.str1.1)
-    .L.str.6                                 0x08007e17   Data          12  main.o(.rodata.str1.1)
-    .L.str.8                                 0x08007e23   Data          12  main.o(.rodata.str1.1)
-    .L.str.13                                0x08007e2f   Data          16  main.o(.rodata.str1.1)
-    .L.str.10                                0x08007e3f   Data          15  main.o(.rodata.str1.1)
-    .L.str.19                                0x08007e4e   Data           3  main.o(.rodata.str1.1)
-    .L.str.11                                0x08007e51   Data          16  main.o(.rodata.str1.1)
-    .L.str.7                                 0x08007e61   Data          15  main.o(.rodata.str1.1)
-    .L.str.9                                 0x08007e70   Data          15  main.o(.rodata.str1.1)
-    .L.str.12                                0x08007e7f   Data          19  main.o(.rodata.str1.1)
+    [Anonymous Symbol]                       0x08004054   Section        0  stm32f4xx_it.o(.text.RTC_Alarm_IRQHandler)
+    [Anonymous Symbol]                       0x08004058   Section        0  main.o(.text.RTC_Config)
+    [Anonymous Symbol]                       0x0800417c   Section        0  stm32f4xx_hal_rtc.o(.text.RTC_EnterInitMode)
+    [Anonymous Symbol]                       0x080041c4   Section        0  stm32f4xx_hal_rtc.o(.text.RTC_ExitInitMode)
+    SPI_EndRxTransaction                     0x080041ed   Thumb Code    86  stm32f4xx_hal_spi.o(.text.SPI_EndRxTransaction)
+    [Anonymous Symbol]                       0x080041ec   Section        0  stm32f4xx_hal_spi.o(.text.SPI_EndRxTransaction)
+    SPI_EndRxTxTransaction                   0x08004245   Thumb Code   102  stm32f4xx_hal_spi.o(.text.SPI_EndRxTxTransaction)
+    [Anonymous Symbol]                       0x08004244   Section        0  stm32f4xx_hal_spi.o(.text.SPI_EndRxTxTransaction)
+    SPI_WaitFlagStateUntilTimeout            0x080042ad   Thumb Code   218  stm32f4xx_hal_spi.o(.text.SPI_WaitFlagStateUntilTimeout)
+    [Anonymous Symbol]                       0x080042ac   Section        0  stm32f4xx_hal_spi.o(.text.SPI_WaitFlagStateUntilTimeout)
+    SPIx_Init                                0x08004387   Thumb Code   156  stm32f429i_discovery.o(.text.SPIx_Init)
+    [Anonymous Symbol]                       0x08004386   Section        0  stm32f429i_discovery.o(.text.SPIx_Init)
+    SPIx_Write                               0x08004423   Thumb Code    58  stm32f429i_discovery.o(.text.SPIx_Write)
+    [Anonymous Symbol]                       0x08004422   Section        0  stm32f429i_discovery.o(.text.SPIx_Write)
+    [Anonymous Symbol]                       0x0800445c   Section        0  stm32f4xx_it.o(.text.SVC_Handler)
+    [Anonymous Symbol]                       0x0800445e   Section        0  stm32f4xx_it.o(.text.SysTick_Handler)
+    [Anonymous Symbol]                       0x08004462   Section        0  system_stm32f4xx.o(.text.SystemInit)
+    [Anonymous Symbol]                       0x08004474   Section        0  stm32f4xx_it.o(.text.TAMP_STAMP_IRQHandler)
+    [Anonymous Symbol]                       0x08004476   Section        0  stm32f4xx_it.o(.text.TIM3_IRQHandler)
+    [Anonymous Symbol]                       0x08004478   Section        0  stm32f4xx_it.o(.text.TIM4_IRQHandler)
+    [Anonymous Symbol]                       0x0800447c   Section        0  stm32f4xx_it.o(.text.UsageFault_Handler)
+    [Anonymous Symbol]                       0x0800447e   Section        0  ili9341.o(.text.ili9341_DisplayOff)
+    [Anonymous Symbol]                       0x08004484   Section        0  ili9341.o(.text.ili9341_DisplayOn)
+    [Anonymous Symbol]                       0x0800448a   Section        0  ili9341.o(.text.ili9341_GetLcdPixelHeight)
+    [Anonymous Symbol]                       0x08004490   Section        0  ili9341.o(.text.ili9341_GetLcdPixelWidth)
+    [Anonymous Symbol]                       0x08004494   Section        0  ili9341.o(.text.ili9341_Init)
+    [Anonymous Symbol]                       0x08004726   Section        0  ili9341.o(.text.ili9341_ReadID)
+    [Anonymous Symbol]                       0x08004738   Section        0  main.o(.text.main)
+    i.__0sprintf                             0x08004b2c   Section        0  printfa.o(i.__0sprintf)
+    i.__scatterload_copy                     0x08004b54   Section       14  handlers.o(i.__scatterload_copy)
+    i.__scatterload_null                     0x08004b62   Section        2  handlers.o(i.__scatterload_null)
+    i.__scatterload_zeroinit                 0x08004b64   Section       14  handlers.o(i.__scatterload_zeroinit)
+    _fp_digits                               0x08004b75   Thumb Code   366  printfa.o(i._fp_digits)
+    i._fp_digits                             0x08004b74   Section        0  printfa.o(i._fp_digits)
+    _printf_core                             0x08004cf9   Thumb Code  1744  printfa.o(i._printf_core)
+    i._printf_core                           0x08004cf8   Section        0  printfa.o(i._printf_core)
+    _printf_post_padding                     0x080053d5   Thumb Code    36  printfa.o(i._printf_post_padding)
+    i._printf_post_padding                   0x080053d4   Section        0  printfa.o(i._printf_post_padding)
+    _printf_pre_padding                      0x080053f9   Thumb Code    46  printfa.o(i._printf_pre_padding)
+    i._printf_pre_padding                    0x080053f8   Section        0  printfa.o(i._printf_pre_padding)
+    _sputc                                   0x08005427   Thumb Code    10  printfa.o(i._sputc)
+    i._sputc                                 0x08005426   Section        0  printfa.o(i._sputc)
+    .Lswitch.table.HAL_LTDC_SetPitch_NoReload 0x08007ddc   Data          32  stm32f4xx_hal_ltdc.o(.rodata.cst32)
+    DMA_CalcBaseAndBitshift.flagBitshiftOffset 0x08007dfc   Data           8  stm32f4xx_hal_dma.o(.rodata.cst8)
+    [Anonymous Symbol]                       0x08007dfc   Section        0  stm32f4xx_hal_dma.o(.rodata.cst8)
+    .L.str.14                                0x08007e04   Data          15  main.o(.rodata.str1.1)
+    [Anonymous Symbol]                       0x08007e04   Section        0  main.o(.rodata.str1.1)
+    .L.str.6                                 0x08007e13   Data          12  main.o(.rodata.str1.1)
+    .L.str.8                                 0x08007e1f   Data          12  main.o(.rodata.str1.1)
+    .L.str.13                                0x08007e2b   Data          16  main.o(.rodata.str1.1)
+    .L.str.10                                0x08007e3b   Data          15  main.o(.rodata.str1.1)
+    .L.str.19                                0x08007e4a   Data           3  main.o(.rodata.str1.1)
+    .L.str.11                                0x08007e4d   Data          16  main.o(.rodata.str1.1)
+    .L.str.7                                 0x08007e5d   Data          15  main.o(.rodata.str1.1)
+    .L.str.9                                 0x08007e6c   Data          15  main.o(.rodata.str1.1)
+    .L.str.12                                0x08007e7b   Data          19  main.o(.rodata.str1.1)
     ActiveLayer                              0x20000068   Data           4  stm32f429i_discovery_lcd.o(.bss.ActiveLayer)
     [Anonymous Symbol]                       0x20000068   Section        0  stm32f429i_discovery_lcd.o(.bss.ActiveLayer)
     BSP_SDRAM_Init.sdramstatus               0x2000006c   Data           1  stm32f429i_discovery_sdram.o(.bss.BSP_SDRAM_Init.sdramstatus)
@@ -4410,40 +4410,40 @@ Image Symbol Table
     MemManage_Handler                        0x08003fe9   Thumb Code     2  stm32f4xx_it.o(.text.MemManage_Handler)
     NMI_Handler                              0x08003feb   Thumb Code     2  stm32f4xx_it.o(.text.NMI_Handler)
     PendSV_Handler                           0x08003fed   Thumb Code     2  stm32f4xx_it.o(.text.PendSV_Handler)
-    RTC_AlarmAConfig                         0x08003ff1   Thumb Code    88  main.o(.text.RTC_AlarmAConfig)
-    RTC_Alarm_IRQHandler                     0x0800405d   Thumb Code     2  stm32f4xx_it.o(.text.RTC_Alarm_IRQHandler)
-    RTC_Config                               0x08004061   Thumb Code   236  main.o(.text.RTC_Config)
-    RTC_EnterInitMode                        0x08004185   Thumb Code    72  stm32f4xx_hal_rtc.o(.text.RTC_EnterInitMode)
-    RTC_ExitInitMode                         0x080041cd   Thumb Code    40  stm32f4xx_hal_rtc.o(.text.RTC_ExitInitMode)
-    SVC_Handler                              0x08004465   Thumb Code     2  stm32f4xx_it.o(.text.SVC_Handler)
-    SysTick_Handler                          0x08004467   Thumb Code     4  stm32f4xx_it.o(.text.SysTick_Handler)
-    SystemInit                               0x0800446b   Thumb Code    18  system_stm32f4xx.o(.text.SystemInit)
-    TAMP_STAMP_IRQHandler                    0x0800447d   Thumb Code     2  stm32f4xx_it.o(.text.TAMP_STAMP_IRQHandler)
-    TIM3_IRQHandler                          0x0800447f   Thumb Code     2  stm32f4xx_it.o(.text.TIM3_IRQHandler)
-    TIM4_IRQHandler                          0x08004481   Thumb Code     2  stm32f4xx_it.o(.text.TIM4_IRQHandler)
-    UsageFault_Handler                       0x08004485   Thumb Code     2  stm32f4xx_it.o(.text.UsageFault_Handler)
-    ili9341_DisplayOff                       0x08004487   Thumb Code     6  ili9341.o(.text.ili9341_DisplayOff)
-    ili9341_DisplayOn                        0x0800448d   Thumb Code     6  ili9341.o(.text.ili9341_DisplayOn)
-    ili9341_GetLcdPixelHeight                0x08004493   Thumb Code     6  ili9341.o(.text.ili9341_GetLcdPixelHeight)
-    ili9341_GetLcdPixelWidth                 0x08004499   Thumb Code     4  ili9341.o(.text.ili9341_GetLcdPixelWidth)
-    ili9341_Init                             0x0800449d   Thumb Code   658  ili9341.o(.text.ili9341_Init)
-    ili9341_ReadID                           0x0800472f   Thumb Code    18  ili9341.o(.text.ili9341_ReadID)
-    main                                     0x08004741   Thumb Code   856  main.o(.text.main)
-    __0sprintf                               0x08004b31   Thumb Code    34  printfa.o(i.__0sprintf)
-    __1sprintf                               0x08004b31   Thumb Code     0  printfa.o(i.__0sprintf)
-    __2sprintf                               0x08004b31   Thumb Code     0  printfa.o(i.__0sprintf)
-    __c89sprintf                             0x08004b31   Thumb Code     0  printfa.o(i.__0sprintf)
-    sprintf                                  0x08004b31   Thumb Code     0  printfa.o(i.__0sprintf)
-    __scatterload_copy                       0x08004b59   Thumb Code    14  handlers.o(i.__scatterload_copy)
-    __scatterload_null                       0x08004b67   Thumb Code     2  handlers.o(i.__scatterload_null)
-    __scatterload_zeroinit                   0x08004b69   Thumb Code    14  handlers.o(i.__scatterload_zeroinit)
-    AHBPrescTable                            0x08005434   Data          16  system_stm32f4xx.o(.rodata.AHBPrescTable)
-    APBPrescTable                            0x08005444   Data           8  system_stm32f4xx.o(.rodata.APBPrescTable)
-    Font20_Table                             0x0800544c   Data        3800  stm32f429i_discovery_lcd.o(.rodata.Font20_Table)
-    Font24_Table                             0x08006324   Data        6840  stm32f429i_discovery_lcd.o(.rodata.Font24_Table)
-    GPIO_PIN                                 0x08007ddc   Data           4  stm32f429i_discovery.o(.rodata.GPIO_PIN)
-    Region$$Table$$Base                      0x08007e94   Number         0  anon$$obj.o(Region$$Table)
-    Region$$Table$$Limit                     0x08007eb4   Number         0  anon$$obj.o(Region$$Table)
+    RTC_AlarmAConfig                         0x08003ff1   Thumb Code    80  main.o(.text.RTC_AlarmAConfig)
+    RTC_Alarm_IRQHandler                     0x08004055   Thumb Code     2  stm32f4xx_it.o(.text.RTC_Alarm_IRQHandler)
+    RTC_Config                               0x08004059   Thumb Code   236  main.o(.text.RTC_Config)
+    RTC_EnterInitMode                        0x0800417d   Thumb Code    72  stm32f4xx_hal_rtc.o(.text.RTC_EnterInitMode)
+    RTC_ExitInitMode                         0x080041c5   Thumb Code    40  stm32f4xx_hal_rtc.o(.text.RTC_ExitInitMode)
+    SVC_Handler                              0x0800445d   Thumb Code     2  stm32f4xx_it.o(.text.SVC_Handler)
+    SysTick_Handler                          0x0800445f   Thumb Code     4  stm32f4xx_it.o(.text.SysTick_Handler)
+    SystemInit                               0x08004463   Thumb Code    18  system_stm32f4xx.o(.text.SystemInit)
+    TAMP_STAMP_IRQHandler                    0x08004475   Thumb Code     2  stm32f4xx_it.o(.text.TAMP_STAMP_IRQHandler)
+    TIM3_IRQHandler                          0x08004477   Thumb Code     2  stm32f4xx_it.o(.text.TIM3_IRQHandler)
+    TIM4_IRQHandler                          0x08004479   Thumb Code     2  stm32f4xx_it.o(.text.TIM4_IRQHandler)
+    UsageFault_Handler                       0x0800447d   Thumb Code     2  stm32f4xx_it.o(.text.UsageFault_Handler)
+    ili9341_DisplayOff                       0x0800447f   Thumb Code     6  ili9341.o(.text.ili9341_DisplayOff)
+    ili9341_DisplayOn                        0x08004485   Thumb Code     6  ili9341.o(.text.ili9341_DisplayOn)
+    ili9341_GetLcdPixelHeight                0x0800448b   Thumb Code     6  ili9341.o(.text.ili9341_GetLcdPixelHeight)
+    ili9341_GetLcdPixelWidth                 0x08004491   Thumb Code     4  ili9341.o(.text.ili9341_GetLcdPixelWidth)
+    ili9341_Init                             0x08004495   Thumb Code   658  ili9341.o(.text.ili9341_Init)
+    ili9341_ReadID                           0x08004727   Thumb Code    18  ili9341.o(.text.ili9341_ReadID)
+    main                                     0x08004739   Thumb Code   860  main.o(.text.main)
+    __0sprintf                               0x08004b2d   Thumb Code    34  printfa.o(i.__0sprintf)
+    __1sprintf                               0x08004b2d   Thumb Code     0  printfa.o(i.__0sprintf)
+    __2sprintf                               0x08004b2d   Thumb Code     0  printfa.o(i.__0sprintf)
+    __c89sprintf                             0x08004b2d   Thumb Code     0  printfa.o(i.__0sprintf)
+    sprintf                                  0x08004b2d   Thumb Code     0  printfa.o(i.__0sprintf)
+    __scatterload_copy                       0x08004b55   Thumb Code    14  handlers.o(i.__scatterload_copy)
+    __scatterload_null                       0x08004b63   Thumb Code     2  handlers.o(i.__scatterload_null)
+    __scatterload_zeroinit                   0x08004b65   Thumb Code    14  handlers.o(i.__scatterload_zeroinit)
+    AHBPrescTable                            0x08005430   Data          16  system_stm32f4xx.o(.rodata.AHBPrescTable)
+    APBPrescTable                            0x08005440   Data           8  system_stm32f4xx.o(.rodata.APBPrescTable)
+    Font20_Table                             0x08005448   Data        3800  stm32f429i_discovery_lcd.o(.rodata.Font20_Table)
+    Font24_Table                             0x08006320   Data        6840  stm32f429i_discovery_lcd.o(.rodata.Font24_Table)
+    GPIO_PIN                                 0x08007dd8   Data           4  stm32f429i_discovery.o(.rodata.GPIO_PIN)
+    Region$$Table$$Base                      0x08007e90   Number         0  anon$$obj.o(Region$$Table)
+    Region$$Table$$Limit                     0x08007eb0   Number         0  anon$$obj.o(Region$$Table)
     BUTTON_PORT                              0x20000000   Data           4  stm32f429i_discovery.o(.data.BUTTON_PORT)
     Font20                                   0x20000004   Data           8  stm32f429i_discovery_lcd.o(.data.Font20)
     Font24                                   0x2000000c   Data           8  stm32f429i_discovery_lcd.o(.data.Font24)
@@ -4471,9 +4471,9 @@ Memory Map of the image
 
   Image Entry point : 0x080001ad
 
-  Load Region LR_IROM1 (Base: 0x08000000, Size: 0x00007f20, Max: 0x00200000, ABSOLUTE)
+  Load Region LR_IROM1 (Base: 0x08000000, Size: 0x00007f18, Max: 0x00200000, ABSOLUTE)
 
-    Execution Region ER_IROM1 (Exec base: 0x08000000, Load base: 0x08000000, Size: 0x00007eb4, Max: 0x00200000, ABSOLUTE)
+    Execution Region ER_IROM1 (Exec base: 0x08000000, Load base: 0x08000000, Size: 0x00007eb0, Max: 0x00200000, ABSOLUTE)
 
     Exec Addr    Load Addr    Size         Type   Attr      Idx    E Section Name        Object
 
@@ -4634,82 +4634,82 @@ Memory Map of the image
     0x08003fea   0x08003fea   0x00000002   Code   RO           81    .text.NMI_Handler   stm32f4xx_it.o
     0x08003fec   0x08003fec   0x00000002   Code   RO           95    .text.PendSV_Handler  stm32f4xx_it.o
     0x08003fee   0x08003fee   0x00000002   PAD
-    0x08003ff0   0x08003ff0   0x0000006c   Code   RO           31    .text.RTC_AlarmAConfig  main.o
-    0x0800405c   0x0800405c   0x00000002   Code   RO          113    .text.RTC_Alarm_IRQHandler  stm32f4xx_it.o
-    0x0800405e   0x0800405e   0x00000002   PAD
-    0x08004060   0x08004060   0x00000124   Code   RO           29    .text.RTC_Config    main.o
-    0x08004184   0x08004184   0x00000048   Code   RO         1143    .text.RTC_EnterInitMode  stm32f4xx_hal_rtc.o
-    0x080041cc   0x080041cc   0x00000028   Code   RO         1145    .text.RTC_ExitInitMode  stm32f4xx_hal_rtc.o
-    0x080041f4   0x080041f4   0x00000056   Code   RO         1355    .text.SPI_EndRxTransaction  stm32f4xx_hal_spi.o
-    0x0800424a   0x0800424a   0x00000002   PAD
-    0x0800424c   0x0800424c   0x00000066   Code   RO         1347    .text.SPI_EndRxTxTransaction  stm32f4xx_hal_spi.o
-    0x080042b2   0x080042b2   0x00000002   PAD
-    0x080042b4   0x080042b4   0x000000da   Code   RO         1353    .text.SPI_WaitFlagStateUntilTimeout  stm32f4xx_hal_spi.o
-    0x0800438e   0x0800438e   0x0000009c   Code   RO          243    .text.SPIx_Init     stm32f429i_discovery.o
-    0x0800442a   0x0800442a   0x0000003a   Code   RO          247    .text.SPIx_Write    stm32f429i_discovery.o
-    0x08004464   0x08004464   0x00000002   Code   RO           91    .text.SVC_Handler   stm32f4xx_it.o
-    0x08004466   0x08004466   0x00000004   Code   RO           97    .text.SysTick_Handler  stm32f4xx_it.o
-    0x0800446a   0x0800446a   0x00000012   Code   RO         1983    .text.SystemInit    system_stm32f4xx.o
-    0x0800447c   0x0800447c   0x00000002   Code   RO          115    .text.TAMP_STAMP_IRQHandler  stm32f4xx_it.o
-    0x0800447e   0x0800447e   0x00000002   Code   RO          105    .text.TIM3_IRQHandler  stm32f4xx_it.o
-    0x08004480   0x08004480   0x00000002   Code   RO          107    .text.TIM4_IRQHandler  stm32f4xx_it.o
-    0x08004482   0x08004482   0x00000002   PAD
-    0x08004484   0x08004484   0x00000002   Code   RO           89    .text.UsageFault_Handler  stm32f4xx_it.o
-    0x08004486   0x08004486   0x00000006   Code   RO          130    .text.ili9341_DisplayOff  ili9341.o
-    0x0800448c   0x0800448c   0x00000006   Code   RO          128    .text.ili9341_DisplayOn  ili9341.o
-    0x08004492   0x08004492   0x00000006   Code   RO          134    .text.ili9341_GetLcdPixelHeight  ili9341.o
-    0x08004498   0x08004498   0x00000004   Code   RO          132    .text.ili9341_GetLcdPixelWidth  ili9341.o
-    0x0800449c   0x0800449c   0x00000292   Code   RO          124    .text.ili9341_Init  ili9341.o
-    0x0800472e   0x0800472e   0x00000012   Code   RO          126    .text.ili9341_ReadID  ili9341.o
-    0x08004740   0x08004740   0x000003f0   Code   RO           23    .text.main          main.o
-    0x08004b30   0x08004b30   0x00000028   Code   RO         2239    i.__0sprintf        mc_w.l(printfa.o)
-    0x08004b58   0x08004b58   0x0000000e   Code   RO         2322    i.__scatterload_copy  mc_w.l(handlers.o)
-    0x08004b66   0x08004b66   0x00000002   Code   RO         2323    i.__scatterload_null  mc_w.l(handlers.o)
-    0x08004b68   0x08004b68   0x0000000e   Code   RO         2324    i.__scatterload_zeroinit  mc_w.l(handlers.o)
-    0x08004b76   0x08004b76   0x00000002   PAD
-    0x08004b78   0x08004b78   0x00000184   Code   RO         2244    i._fp_digits        mc_w.l(printfa.o)
-    0x08004cfc   0x08004cfc   0x000006dc   Code   RO         2245    i._printf_core      mc_w.l(printfa.o)
-    0x080053d8   0x080053d8   0x00000024   Code   RO         2246    i._printf_post_padding  mc_w.l(printfa.o)
-    0x080053fc   0x080053fc   0x0000002e   Code   RO         2247    i._printf_pre_padding  mc_w.l(printfa.o)
-    0x0800542a   0x0800542a   0x0000000a   Code   RO         2249    i._sputc            mc_w.l(printfa.o)
-    0x08005434   0x08005434   0x00000010   Data   RO         1988    .rodata.AHBPrescTable  system_stm32f4xx.o
-    0x08005444   0x08005444   0x00000008   Data   RO         1989    .rodata.APBPrescTable  system_stm32f4xx.o
-    0x0800544c   0x0800544c   0x00000ed8   Data   RO          395    .rodata.Font20_Table  stm32f429i_discovery_lcd.o
-    0x08006324   0x08006324   0x00001ab8   Data   RO          393    .rodata.Font24_Table  stm32f429i_discovery_lcd.o
-    0x08007ddc   0x08007ddc   0x00000004   Data   RO          280    .rodata.GPIO_PIN    stm32f429i_discovery.o
-    0x08007de0   0x08007de0   0x00000020   Data   RO         1002    .rodata.cst32       stm32f4xx_hal_ltdc.o
-    0x08007e00   0x08007e00   0x00000008   Data   RO          627    .rodata.cst8        stm32f4xx_hal_dma.o
-    0x08007e08   0x08007e08   0x0000008a   Data   RO           50    .rodata.str1.1      main.o
-    0x08007e92   0x08007e92   0x00000002   PAD
-    0x08007e94   0x08007e94   0x00000020   Data   RO         2321    Region$$Table       anon$$obj.o
+    0x08003ff0   0x08003ff0   0x00000064   Code   RO           31    .text.RTC_AlarmAConfig  main.o
+    0x08004054   0x08004054   0x00000002   Code   RO          113    .text.RTC_Alarm_IRQHandler  stm32f4xx_it.o
+    0x08004056   0x08004056   0x00000002   PAD
+    0x08004058   0x08004058   0x00000124   Code   RO           29    .text.RTC_Config    main.o
+    0x0800417c   0x0800417c   0x00000048   Code   RO         1143    .text.RTC_EnterInitMode  stm32f4xx_hal_rtc.o
+    0x080041c4   0x080041c4   0x00000028   Code   RO         1145    .text.RTC_ExitInitMode  stm32f4xx_hal_rtc.o
+    0x080041ec   0x080041ec   0x00000056   Code   RO         1355    .text.SPI_EndRxTransaction  stm32f4xx_hal_spi.o
+    0x08004242   0x08004242   0x00000002   PAD
+    0x08004244   0x08004244   0x00000066   Code   RO         1347    .text.SPI_EndRxTxTransaction  stm32f4xx_hal_spi.o
+    0x080042aa   0x080042aa   0x00000002   PAD
+    0x080042ac   0x080042ac   0x000000da   Code   RO         1353    .text.SPI_WaitFlagStateUntilTimeout  stm32f4xx_hal_spi.o
+    0x08004386   0x08004386   0x0000009c   Code   RO          243    .text.SPIx_Init     stm32f429i_discovery.o
+    0x08004422   0x08004422   0x0000003a   Code   RO          247    .text.SPIx_Write    stm32f429i_discovery.o
+    0x0800445c   0x0800445c   0x00000002   Code   RO           91    .text.SVC_Handler   stm32f4xx_it.o
+    0x0800445e   0x0800445e   0x00000004   Code   RO           97    .text.SysTick_Handler  stm32f4xx_it.o
+    0x08004462   0x08004462   0x00000012   Code   RO         1983    .text.SystemInit    system_stm32f4xx.o
+    0x08004474   0x08004474   0x00000002   Code   RO          115    .text.TAMP_STAMP_IRQHandler  stm32f4xx_it.o
+    0x08004476   0x08004476   0x00000002   Code   RO          105    .text.TIM3_IRQHandler  stm32f4xx_it.o
+    0x08004478   0x08004478   0x00000002   Code   RO          107    .text.TIM4_IRQHandler  stm32f4xx_it.o
+    0x0800447a   0x0800447a   0x00000002   PAD
+    0x0800447c   0x0800447c   0x00000002   Code   RO           89    .text.UsageFault_Handler  stm32f4xx_it.o
+    0x0800447e   0x0800447e   0x00000006   Code   RO          130    .text.ili9341_DisplayOff  ili9341.o
+    0x08004484   0x08004484   0x00000006   Code   RO          128    .text.ili9341_DisplayOn  ili9341.o
+    0x0800448a   0x0800448a   0x00000006   Code   RO          134    .text.ili9341_GetLcdPixelHeight  ili9341.o
+    0x08004490   0x08004490   0x00000004   Code   RO          132    .text.ili9341_GetLcdPixelWidth  ili9341.o
+    0x08004494   0x08004494   0x00000292   Code   RO          124    .text.ili9341_Init  ili9341.o
+    0x08004726   0x08004726   0x00000012   Code   RO          126    .text.ili9341_ReadID  ili9341.o
+    0x08004738   0x08004738   0x000003f4   Code   RO           23    .text.main          main.o
+    0x08004b2c   0x08004b2c   0x00000028   Code   RO         2239    i.__0sprintf        mc_w.l(printfa.o)
+    0x08004b54   0x08004b54   0x0000000e   Code   RO         2322    i.__scatterload_copy  mc_w.l(handlers.o)
+    0x08004b62   0x08004b62   0x00000002   Code   RO         2323    i.__scatterload_null  mc_w.l(handlers.o)
+    0x08004b64   0x08004b64   0x0000000e   Code   RO         2324    i.__scatterload_zeroinit  mc_w.l(handlers.o)
+    0x08004b72   0x08004b72   0x00000002   PAD
+    0x08004b74   0x08004b74   0x00000184   Code   RO         2244    i._fp_digits        mc_w.l(printfa.o)
+    0x08004cf8   0x08004cf8   0x000006dc   Code   RO         2245    i._printf_core      mc_w.l(printfa.o)
+    0x080053d4   0x080053d4   0x00000024   Code   RO         2246    i._printf_post_padding  mc_w.l(printfa.o)
+    0x080053f8   0x080053f8   0x0000002e   Code   RO         2247    i._printf_pre_padding  mc_w.l(printfa.o)
+    0x08005426   0x08005426   0x0000000a   Code   RO         2249    i._sputc            mc_w.l(printfa.o)
+    0x08005430   0x08005430   0x00000010   Data   RO         1988    .rodata.AHBPrescTable  system_stm32f4xx.o
+    0x08005440   0x08005440   0x00000008   Data   RO         1989    .rodata.APBPrescTable  system_stm32f4xx.o
+    0x08005448   0x08005448   0x00000ed8   Data   RO          395    .rodata.Font20_Table  stm32f429i_discovery_lcd.o
+    0x08006320   0x08006320   0x00001ab8   Data   RO          393    .rodata.Font24_Table  stm32f429i_discovery_lcd.o
+    0x08007dd8   0x08007dd8   0x00000004   Data   RO          280    .rodata.GPIO_PIN    stm32f429i_discovery.o
+    0x08007ddc   0x08007ddc   0x00000020   Data   RO         1002    .rodata.cst32       stm32f4xx_hal_ltdc.o
+    0x08007dfc   0x08007dfc   0x00000008   Data   RO          627    .rodata.cst8        stm32f4xx_hal_dma.o
+    0x08007e04   0x08007e04   0x0000008a   Data   RO           50    .rodata.str1.1      main.o
+    0x08007e8e   0x08007e8e   0x00000002   PAD
+    0x08007e90   0x08007e90   0x00000020   Data   RO         2321    Region$$Table       anon$$obj.o
 
 
-    Execution Region RW_IRAM1 (Exec base: 0x20000000, Load base: 0x08007eb8, Size: 0x00000740, Max: 0x00030000, ABSOLUTE)
+    Execution Region RW_IRAM1 (Exec base: 0x20000000, Load base: 0x08007eb0, Size: 0x00000740, Max: 0x00030000, ABSOLUTE)
 
     Exec Addr    Load Addr    Size         Type   Attr      Idx    E Section Name        Object
 
-    0x20000000   0x08007eb8   0x00000004   Data   RW          281    .data.BUTTON_PORT   stm32f429i_discovery.o
-    0x20000004   0x08007ebc   0x00000008   Data   RW          396    .data.Font20        stm32f429i_discovery_lcd.o
-    0x2000000c   0x08007ec4   0x00000008   Data   RW          394    .data.Font24        stm32f429i_discovery_lcd.o
-    0x20000014   0x08007ecc   0x00000008   Data   RW          279    .data.GPIO_PORT     stm32f429i_discovery.o
-    0x2000001c   0x08007ed4   0x00000004   Data   RW          285    .data.SpixTimeout   stm32f429i_discovery.o
-    0x20000020   0x08007ed8   0x00000004   Data   RW         1987    .data.SystemCoreClock  system_stm32f4xx.o
-    0x20000024   0x08007edc   0x00000038   Data   RW          142    .data.ili9341_drv   ili9341.o
-    0x2000005c   0x08007f14   0x00000002   Data   RW           47    .data.memLocation   main.o
-    0x2000005e   0x08007f16   0x00000001   Data   RW          547    .data.uwTickFreq    stm32f4xx_hal.o
-    0x2000005f   0x08007f17   0x00000001   PAD
-    0x20000060   0x08007f18   0x00000004   Data   RW          546    .data.uwTickPrio    stm32f4xx_hal.o
-    0x20000064   0x08007f1c   0x00000004   PAD
+    0x20000000   0x08007eb0   0x00000004   Data   RW          281    .data.BUTTON_PORT   stm32f429i_discovery.o
+    0x20000004   0x08007eb4   0x00000008   Data   RW          396    .data.Font20        stm32f429i_discovery_lcd.o
+    0x2000000c   0x08007ebc   0x00000008   Data   RW          394    .data.Font24        stm32f429i_discovery_lcd.o
+    0x20000014   0x08007ec4   0x00000008   Data   RW          279    .data.GPIO_PORT     stm32f429i_discovery.o
+    0x2000001c   0x08007ecc   0x00000004   Data   RW          285    .data.SpixTimeout   stm32f429i_discovery.o
+    0x20000020   0x08007ed0   0x00000004   Data   RW         1987    .data.SystemCoreClock  system_stm32f4xx.o
+    0x20000024   0x08007ed4   0x00000038   Data   RW          142    .data.ili9341_drv   ili9341.o
+    0x2000005c   0x08007f0c   0x00000002   Data   RW           47    .data.memLocation   main.o
+    0x2000005e   0x08007f0e   0x00000001   Data   RW          547    .data.uwTickFreq    stm32f4xx_hal.o
+    0x2000005f   0x08007f0f   0x00000001   PAD
+    0x20000060   0x08007f10   0x00000004   Data   RW          546    .data.uwTickPrio    stm32f4xx_hal.o
+    0x20000064   0x08007f14   0x00000004   PAD
     0x20000068        -       0x00000004   Zero   RW          407    .bss.ActiveLayer    stm32f429i_discovery_lcd.o
     0x2000006c        -       0x00000001   Zero   RW          437    .bss.BSP_SDRAM_Init.sdramstatus  stm32f429i_discovery_sdram.o
-    0x2000006d   0x08007f1c   0x00000003   PAD
+    0x2000006d   0x08007f14   0x00000003   PAD
     0x20000070        -       0x00000060   Zero   RW          441    .bss.BSP_SDRAM_MspInit.dmaHandle  stm32f429i_discovery_sdram.o
     0x200000d0        -       0x00000010   Zero   RW          440    .bss.Command        stm32f429i_discovery_sdram.o
     0x200000e0        -       0x00000040   Zero   RW          408    .bss.Dma2dHandler   stm32f429i_discovery_lcd.o
     0x20000120        -       0x00000018   Zero   RW          406    .bss.DrawProp       stm32f429i_discovery_lcd.o
     0x20000138        -       0x00000054   Zero   RW           49    .bss.I2c3_Handle    main.o
     0x2000018c        -       0x00000001   Zero   RW          286    .bss.Is_LCD_IO_Initialized  stm32f429i_discovery.o
-    0x2000018d   0x08007f1c   0x00000003   PAD
+    0x2000018d   0x08007f14   0x00000003   PAD
     0x20000190        -       0x00000004   Zero   RW          405    .bss.LcdDrv         stm32f429i_discovery_lcd.o
     0x20000194        -       0x000000a8   Zero   RW          403    .bss.LtdcHandler    stm32f429i_discovery_lcd.o
     0x2000023c        -       0x00000030   Zero   RW          404    .bss.PeriphClkInitStruct  stm32f429i_discovery_lcd.o
@@ -4719,7 +4719,7 @@ Memory Map of the image
     0x20000318        -       0x0000001c   Zero   RW          439    .bss.Timing         stm32f429i_discovery_sdram.o
     0x20000334        -       0x00000004   Zero   RW           48    .bss.state          main.o
     0x20000338        -       0x00000001   Zero   RW           14    .bss.status         i2c_at24c64.o
-    0x20000339   0x08007f1c   0x00000003   PAD
+    0x20000339   0x08007f14   0x00000003   PAD
     0x2000033c        -       0x00000004   Zero   RW          548    .bss.uwTick         stm32f4xx_hal.o
     0x20000340        -       0x00000400   Zero   RW         1973    STACK               startup_stm32f429xx.o
 
@@ -4733,7 +4733,7 @@ Image component sizes
 
        798          0          0          0          1       9970   i2c_at24c64.o
        698          0          0         56          0       5704   ili9341.o
-      1514        228        138          2        120      15480   main.o
+      1510        228        138          2        120      15482   main.o
         36          8        428          0       1024        900   startup_stm32f429xx.o
        820          0          4         16         89      16699   stm32f429i_discovery.o
       1518          0      10640         16        312      33250   stm32f429i_discovery_lcd.o
@@ -4758,7 +4758,7 @@ Image component sizes
         18          0         24          4          0       2835   system_stm32f4xx.o
 
     ----------------------------------------------------------------------
-     17422        244      11308        100       1756     292106   Object Totals
+     17418        244      11308        100       1756     292108   Object Totals
          0          0         32          0          0          0   (incl. Generated)
         48          0          2          1         13          0   (incl. Padding)
 
@@ -4812,15 +4812,15 @@ Image component sizes
 
       Code (inc. data)   RO Data    RW Data    ZI Data      Debug   
 
-     21128        346      11308        100       1756     292694   Grand Totals
-     21128        346      11308        100       1756     292694   ELF Image Totals
-     21128        346      11308        100          0          0   ROM Totals
+     21124        346      11308        100       1756     292696   Grand Totals
+     21124        346      11308        100       1756     292696   ELF Image Totals
+     21124        346      11308        100          0          0   ROM Totals
 
 ==============================================================================
 
-    Total RO  Size (Code + RO Data)                32436 (  31.68kB)
+    Total RO  Size (Code + RO Data)                32432 (  31.67kB)
     Total RW  Size (RW Data + ZI Data)              1856 (   1.81kB)
-    Total ROM Size (Code + RO Data + RW Data)      32536 (  31.77kB)
+    Total ROM Size (Code + RO Data + RW Data)      32532 (  31.77kB)
 
 ==============================================================================
 

@@ -226,7 +226,7 @@ int main(void)
 		LCD_DisplayString(1, 0, (uint8_t *)"Testing RTC...");
 	
 	
-		RTC_DateStructure.Month=11;
+		/*RTC_DateStructure.Month=11;
 		RTC_DateStructure.WeekDay=1;   //what will happen if the date/weekday is not correct?
 		RTC_DateStructure.Date=11;
 		RTC_DateStructure.Year=11; //2012???  how about 1912?
@@ -236,18 +236,18 @@ int main(void)
 	
 		RTC_TimeStructure.Hours=11;
 		RTC_TimeStructure.Minutes=11;   
-		RTC_TimeStructure.Seconds=11;
+		RTC_TimeStructure.Seconds=11;*/
 		
-		HAL_RTC_SetTime(&RTCHandle, &RTC_TimeStructure, RTC_FORMAT_BIN);
+		//HAL_RTC_SetTime(&RTCHandle, &RTC_TimeStructure, RTC_FORMAT_BIN);
 	
 		
 		//Read from RTC
-		HAL_RTC_GetTime(&RTCHandle, &read_RTC_TimeStruct, RTC_FORMAT_BIN);
-		HAL_RTC_GetDate(&RTCHandle, &read_RTC_DateStruct, RTC_FORMAT_BIN); 
+		//HAL_RTC_GetTime(&RTCHandle, &read_RTC_TimeStruct, RTC_FORMAT_BIN);
+		//HAL_RTC_GetDate(&RTCHandle, &read_RTC_DateStruct, RTC_FORMAT_BIN); 
 		//NOTE from the UM1725 : You must call HAL_RTC_GetDate() after HAL_RTC_GetTime() to unlock the values in the higher order 
 		//calendar shadow register ....		
 	
-		LCD_DisplayString(3,0, (uint8_t *) "HH:MM:SS");
+		/*LCD_DisplayString(3,0, (uint8_t *) "HH:MM:SS");
 	
 		LCD_DisplayInt(4,0,read_RTC_TimeStruct.Hours);
 		LCD_DisplayInt(4,3,read_RTC_TimeStruct.Minutes);
@@ -259,7 +259,7 @@ int main(void)
 		LCD_DisplayInt(7,3, read_RTC_DateStruct.Date);
 		LCD_DisplayInt(7,6, read_RTC_DateStruct.Month);
 		LCD_DisplayInt(7,9, read_RTC_DateStruct.Year);
- 
+ */
 	
 	
 	/* Infinite loop */
@@ -669,7 +669,19 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 	
   if(GPIO_Pin == KEY_BUTTON_PIN)  //GPIO_PIN_0
   {
-		
+		HAL_RTC_GetTime(&RTCHandle, &read_RTC_TimeStruct, RTC_FORMAT_BIN);
+		HAL_RTC_GetDate(&RTCHandle, &read_RTC_DateStruct, RTC_FORMAT_BIN); 
+	
+	//	LCD_DisplayInt(8,0,read_RTC_TimeStruct.Hours);
+		//LCD_DisplayInt(8,3,read_RTC_TimeStruct.Minutes);
+		//LCD_DisplayInt(8,6,read_RTC_TimeStruct.Seconds);
+
+		LCD_DisplayString(9,0, (uint8_t *) "WD:DD:MM:YY");
+	
+		LCD_DisplayInt(10,0, read_RTC_DateStruct.WeekDay);
+		LCD_DisplayInt(10,3, read_RTC_DateStruct.Date);
+		LCD_DisplayInt(10,6, read_RTC_DateStruct.Month);
+		LCD_DisplayInt(10,9, read_RTC_DateStruct.Year);
   }
 	
 	

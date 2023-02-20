@@ -55,7 +55,7 @@
 
 /* Private variables ---------------------------------------------------------*/
 
-
+extern RTC_HandleTypeDef RTCHandle;
 /* Private function prototypes -----------------------------------------------*/
 /* Private functions ---------------------------------------------------------*/
 
@@ -228,7 +228,7 @@ void I2C3_ER_IRQHandler(void)
 
 void RTC_Alarm_IRQHandler(void)
 {
-  //HAL_RTC_AlarmIRQHandler(&RTCHandle);
+  HAL_RTC_AlarmIRQHandler(&RTCHandle);
 	
 }
 

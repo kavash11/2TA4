@@ -99,7 +99,7 @@ int main(void)
 	uint32_t EE_status;
 
 	
-	/* STM32F4xx HAL library initialization:
+	 /*STM32F4xx HAL library initialization:
        - Configure the Flash prefetch, instruction and Data caches
        - Configure the Systick to generate an interrupt each 1 msec
        - Set NVIC Group Priority to 4
@@ -134,12 +134,12 @@ int main(void)
 	
 
 	
-	I2C_Init(&I2c3_Handle);
+	//I2C_Init(&I2c3_Handle);
 
 
 //*********************Testing I2C EEPROM------------------
 
-	LCD_DisplayString(4, 2, (uint8_t *)"MT2TA4 LAB 3");
+	/*LCD_DisplayString(4, 2, (uint8_t *)"MT2TA4 LAB 3");
 	LCD_DisplayString(6, 0, (uint8_t *)"Testing I2C & EEPROM....");
 		
 	HAL_Delay(2000);   //display for 1 second
@@ -213,7 +213,7 @@ int main(void)
 	HAL_Delay(2000);  //display for 4 seconds
 
 	
-	
+	*/
 	//configure real-time clock
 	RTC_Config();
 		
@@ -221,13 +221,13 @@ int main(void)
 	
 	
  //test realtime clock	
-    BSP_LCD_Clear(LCD_COLOR_WHITE);
+  /*  BSP_LCD_Clear(LCD_COLOR_WHITE);
 		HAL_Delay(10);   
 		//otherwise, the following line will have trouble to display. 1. while cannot delay too long.??? 
 		LCD_DisplayString(1, 0, (uint8_t *)"Testing RTC...");
 	
 	
-		/*RTC_DateStructure.Month=11;
+		RTC_DateStructure.Month=11;
 		RTC_DateStructure.WeekDay=1;   //what will happen if the date/weekday is not correct?
 		RTC_DateStructure.Date=11;
 		RTC_DateStructure.Year=11; //2012???  how about 1912?
@@ -556,7 +556,6 @@ void RTC_AlarmAConfig(void)
 	__HAL_RTC_ALARM_CLEAR_FLAG(&RTCHandle, RTC_FLAG_ALRAF); //need it? !!!!, without it, sometimes(SOMETIMES, when first time to use the alarm interrupt)
 																			//the interrupt handler will not work!!! 		
 	
-
 	
 		//need to set/enable the NVIC for RTC_Alarm_IRQn!!!!
 	HAL_NVIC_EnableIRQ(RTC_Alarm_IRQn);   
@@ -691,8 +690,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 		LCD_DisplayInt(10,9, read_RTC_DateStruct.Year);*/
 		
   }
-	
-	
+
 	if(GPIO_Pin == GPIO_PIN_1)
   {
 		
@@ -706,8 +704,8 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 		
 	} //end of if PIN_2	
 	
-	
 }
+
 
 
 
@@ -729,6 +727,10 @@ void HAL_RTC_AlarmAEventCallback(RTC_HandleTypeDef *hrtc)
  		LCD_DisplayInt(6, 3, RTC_DateStructure.Year);
 		LCD_DisplayInt(6, 6, RTC_DateStructure.Month);
 		LCD_DisplayInt(6, 9, RTC_DateStructure.Date);
+		if((GPIOA->IDR & 0x1)!=0x1){
+			BSP_LCD_ClearStringLine(5);
+			BSP_LCD_ClearStringLine(6);
+		}
 	//RTC_TimeShow();
 	
 }

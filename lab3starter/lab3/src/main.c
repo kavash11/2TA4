@@ -468,9 +468,9 @@ void RTC_Config(void) {
 				}
 	
 	//3. init the time and date
-				RTC_DateStructure.Year = 15;
+				RTC_DateStructure.Date = 15;
 				RTC_DateStructure.Month = RTC_MONTH_DECEMBER;
-				RTC_DateStructure.Date = 18; //if use RTC_FORMAT_BCD, NEED TO SET IT AS 0x18 for the 18th.
+				RTC_DateStructure.Year = 18; //if use RTC_FORMAT_BCD, NEED TO SET IT AS 0x18 for the 18th.
 				RTC_DateStructure.WeekDay = RTC_WEEKDAY_FRIDAY; //???  if the real weekday is not correct for the given date, still set as 
 																												//what is specified here.
 				
@@ -718,8 +718,59 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 
 	if(GPIO_Pin == GPIO_PIN_2)
   {
-
-	
+		if (state==1) { //set week day
+			if (RTC_DateStructure.WeekDay==7) {
+				RTC_DateStructure.WeekDay=1;
+			}
+			else {
+				RTC_DateStructure.WeekDay+=1;
+			}						
+		}
+		else	if (state==2) { //ACCOUNT FOR 30, 31 AND LEAP YEAR DATES
+			if (RTC_DateStructure.Date==30) {
+				RTC_DateStructure.Date=1;
+			}
+			else {
+				RTC_DateStructure.Date+=1;
+			}		
+		}
+		else	if (state==3) { //set month
+			if (RTC_DateStructure.Month==12) {
+				RTC_DateStructure.Month=1;
+			}
+			else {
+				RTC_DateStructure.Month+=1;
+			}		
+		}
+		else	if (state==4) { //set year
+			RTC_DateStructure.Year+=1;	//DO WE NEED TO BE ABLE TO DECREMENT YEAR (WHAT'S MAX YEAR)
+		}
+		else	if (state==5) { //set hour
+			if (RTC_TimeStructure.Hours==24) {
+				RTC_TimeStructure.Hours=1;
+			}
+			else {
+				RTC_TimeStructure.Hours+=1;
+			}		
+		}
+		else	if (state==6) { //set minutes
+			if (RTC_TimeStructure.Minutes==60) {
+				RTC_TimeStructure.Minutes=1;
+			}
+			else {
+				RTC_TimeStructure.Minutes+=1;
+			}		
+		}
+		else	if (state==7) { //set seconds
+			if (RTC_TimeStructure.Seconds==60) {
+				RTC_TimeStructure.Seconds=1;
+			}
+			else {
+				RTC_TimeStructure.Seconds+=1;
+			}		
+		}
+		HAL_RTC_SetDate(&RTCHandle, &RTC_DateStructure, RTC_FORMAT_BIN);	
+		HAL_RTC_SetTime(&RTCHandle, &RTC_TimeStructure, RTC_FORMAT_BIN);	
 	}//end of if PIN_2	
 }
 
@@ -740,9 +791,9 @@ void HAL_RTC_AlarmAEventCallback(RTC_HandleTypeDef *hrtc)
 		HAL_RTC_GetDate(&RTCHandle,&RTC_DateStructure,RTC_FORMAT_BIN);
 		LCD_DisplayString(5,0, (uint8_t *) "WD:DD:MM:YY");
 		LCD_DisplayInt(6,0, RTC_DateStructure.WeekDay);
- 		LCD_DisplayInt(6, 3, RTC_DateStructure.Year);
+ 		LCD_DisplayInt(6, 9, RTC_DateStructure.Year);
 		LCD_DisplayInt(6, 6, RTC_DateStructure.Month);
-		LCD_DisplayInt(6, 9, RTC_DateStructure.Date);
+		LCD_DisplayInt(6, 3, RTC_DateStructure.Date);
 		if((GPIOA->IDR & 0x1)!=0x1){
 			BSP_LCD_ClearStringLine(5);
 			BSP_LCD_ClearStringLine(6);

@@ -98,7 +98,7 @@ int main(void)
 	uint8_t readMatch=1;
 	uint32_t EE_status;
 
-	
+
 	 /*STM32F4xx HAL library initialization:
        - Configure the Flash prefetch, instruction and Data caches
        - Configure the Systick to generate an interrupt each 1 msec
@@ -218,7 +218,8 @@ int main(void)
 	RTC_Config();
 		
 	RTC_AlarmAConfig();
-	
+	ExtBtn1_Config(); //config extern buttons kavya
+	ExtBtn2_Config();		
 	
  //test realtime clock	
   /*  BSP_LCD_Clear(LCD_COLOR_WHITE);
@@ -361,7 +362,7 @@ static void SystemClock_Config(void)
  * external pushbuttons and configure them so that you will handle
  * them through external interrupts.
  */
-void ExtBtn1_Config(void)     // for GPIO C pin 1
+void ExtBtn1_Config(void)     // for GPIO C pin 1 (used to select what time component to set kavya)
 // can only use PA0, PB0... to PA4, PB4 .... because only  only  EXTI0, ...EXTI4,on which the 
 	//mentioned pins are mapped to, are connected INDIVIDUALLY to NVIC. the others are grouped! 
 		//see stm32f4xx.h, there is EXTI0_IRQn...EXTI4_IRQn, EXTI15_10_IRQn defined
@@ -374,7 +375,7 @@ void ExtBtn1_Config(void)     // for GPIO C pin 1
   /* Configure PA0 pin as input floating */
   GPIO_InitStructure.Mode =  GPIO_MODE_IT_FALLING;
   GPIO_InitStructure.Pull =GPIO_PULLUP;
-  GPIO_InitStructure.Pin = GPIO_PIN_1;
+  GPIO_InitStructure.Pin = GPIO_PIN_1; //assigning button 1 to PC1 kavya
 	//GPIO_InitStructure.Speed=GPIO_SPEED_LOW;
   HAL_GPIO_Init(GPIOC, &GPIO_InitStructure);
 
@@ -386,10 +387,21 @@ void ExtBtn1_Config(void)     // for GPIO C pin 1
   HAL_NVIC_EnableIRQ(EXTI1_IRQn);
 }
 
-void ExtBtn2_Config(void){  //**********PD2.***********
+void ExtBtn2_Config(void){  //**********PD2.*********** (use to set time kavya)
 
-	//
-	
+  GPIO_InitTypeDef   GPIO_InitStructure;
+
+  /* Enable GPIOB clock */
+  __HAL_RCC_GPIOC_CLK_ENABLE();
+  /* Configure PA0 pin as input floating */
+  GPIO_InitStructure.Mode =  GPIO_MODE_IT_FALLING;
+  GPIO_InitStructure.Pull =GPIO_PULLUP;
+  GPIO_InitStructure.Pin = GPIO_PIN_2; //assigning button 2 to PC2 kavya
+	//GPIO_InitStructure.Speed=GPIO_SPEED_LOW;
+  HAL_GPIO_Init(GPIOC, &GPIO_InitStructure);
+
+	//__HAL_GPIO_EXTI_CLEAR_IT(GPIO_PIN_1);   //is defined the same as the __HAL_GPIO_EXTI_CLEAR_FLAG(GPIO_PIN_1); ---check the hal_gpio.h
+	__HAL_GPIO_EXTI_CLEAR_FLAG(GPIO_PIN_2);	
 	
 	
 	
@@ -691,21 +703,25 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 		
   }
 
-	if(GPIO_Pin == GPIO_PIN_1)
+	if(GPIO_Pin == GPIO_PIN_1) //sets state (chooses what time value to set)
   {
-		
+		if (state==7) {
+			state=0;
+		}
+		else {
+			state+=1;
+			BSP_LCD_ClearStringLine(11);
+			LCD_DisplayInt(11,0, state);		
 			
-
+		}
 	}  //end of PIN_1
 
 	if(GPIO_Pin == GPIO_PIN_2)
   {
 
-		
-	} //end of if PIN_2	
 	
+	}//end of if PIN_2	
 }
-
 
 
 

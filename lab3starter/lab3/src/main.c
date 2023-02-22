@@ -710,15 +710,23 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 		}
 		else {
 			state+=1;
-			BSP_LCD_ClearStringLine(11);
-			LCD_DisplayInt(11,0, state);		
-			
+			if (state==0) {BSP_LCD_ClearStringLine(1); LCD_DisplayString(1,0,(uint8_t *)"Display times");}
+			else if (state==1) {BSP_LCD_ClearStringLine(1); LCD_DisplayString(1,0,(uint8_t *)"Change year");}
+			else if (state==2) {BSP_LCD_ClearStringLine(1); LCD_DisplayString(1,0,(uint8_t *)"Change month");}
+			else if (state==3) {BSP_LCD_ClearStringLine(1); LCD_DisplayString(1,0,(uint8_t *)"Change date");}
+			else if (state==4) {BSP_LCD_ClearStringLine(1); LCD_DisplayString(1,0,(uint8_t *)"Change week day");}
+			else if (state==5) {BSP_LCD_ClearStringLine(1); LCD_DisplayString(1,0,(uint8_t *)"Change hour");}
+			else if (state==6) {BSP_LCD_ClearStringLine(1); LCD_DisplayString(1,0,(uint8_t *)"Change minutes");}
+			else if (state==7) {BSP_LCD_ClearStringLine(1); LCD_DisplayString(1,0,(uint8_t *)"Change seconds");}				
 		}
 	}  //end of PIN_1
 
-	if(GPIO_Pin == GPIO_PIN_2)
+	if(GPIO_Pin == GPIO_PIN_2) //	DO I NEED TO DISPLAY THINGS IN STRING KAVYA
   {
-		if (state==1) { //set year
+		if (state==0) { //displaying eeprom values in idle state
+		
+		}
+		else if (state==1) { //set year
 			RTC_DateStructure.Year+=1;	//DO WE NEED TO BE ABLE TO DECREMENT YEAR (WHAT'S MAX YEAR)
 					
 		}
@@ -731,7 +739,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 			}		
 
 		}
-		else	if (state==3) { //set date ACCOUNT FOR FEB LEAP YEAR KAVYA
+		else	if (state==3) { //set date
 			RTC_DateStructure.Date+=1;
 			if (RTC_DateStructure.Month == 1 || RTC_DateStructure.Month == 3 || RTC_DateStructure.Month == 5 || RTC_DateStructure.Month == 7 || RTC_DateStructure.Month == 8 || RTC_DateStructure.Month == 10 || RTC_DateStructure.Month == 12) {	
 				if (RTC_DateStructure.Date==32) { //for 31 dayed months
@@ -742,7 +750,13 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 				if (RTC_DateStructure.Date==31) { //for 30 dayed months
 					RTC_DateStructure.Date=1;
 				}			
-			}		
+			}
+			else if(RTC_DateStructure.Month ==2 && RTC_DateStructure.Year%4==0 && RTC_DateStructure.Date==30) { //leap year feb
+				RTC_DateStructure.Date=1;
+			}
+			else if (RTC_DateStructure.Month ==2 && RTC_DateStructure.Year%4!=0 && RTC_DateStructure.Date==29) { //non leap year feb
+				RTC_DateStructure.Date=1;
+			}				
 		}
 		
 		else	if (state==4) { //set weekday
@@ -788,13 +802,14 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 
 void HAL_RTC_AlarmAEventCallback(RTC_HandleTypeDef *hrtc)
 {
+		LCD_DisplayString(2,0, (uint8_t *) "Current date and time");
 		HAL_RTC_GetTime(&RTCHandle, &RTC_TimeStructure, RTC_FORMAT_BIN); //should continuously display time but isnt
-		BSP_LCD_ClearStringLine(9);
-		BSP_LCD_ClearStringLine(10);
-		LCD_DisplayString(9,0, (uint8_t *) "HH:MM:SS");
-		LCD_DisplayInt(10,0,RTC_TimeStructure.Hours);
-		LCD_DisplayInt(10,3,RTC_TimeStructure.Minutes);
-		LCD_DisplayInt(10,6,RTC_TimeStructure.Seconds);
+		BSP_LCD_ClearStringLine(3);
+		BSP_LCD_ClearStringLine(4);
+		LCD_DisplayString(3,0, (uint8_t *) "HH:MM:SS");
+		LCD_DisplayInt(4,0,RTC_TimeStructure.Hours);
+		LCD_DisplayInt(4,3,RTC_TimeStructure.Minutes);
+		LCD_DisplayInt(4,6,RTC_TimeStructure.Seconds);
 	
 		HAL_RTC_GetDate(&RTCHandle,&RTC_DateStructure,RTC_FORMAT_BIN);
 		LCD_DisplayString(5,0, (uint8_t *) "WD:DD:MM:YY");

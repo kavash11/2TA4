@@ -707,11 +707,11 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
   {
 		if (state==7) {
 			state=0;
+			BSP_LCD_ClearStringLine(1); LCD_DisplayString(1,0,(uint8_t *)"                ");
 		}
 		else {
 			state+=1;
-			if (state==0) {BSP_LCD_ClearStringLine(1); LCD_DisplayString(1,0,(uint8_t *)"Display times");}
-			else if (state==1) {BSP_LCD_ClearStringLine(1); LCD_DisplayString(1,0,(uint8_t *)"Change year");}
+			if (state==1) {BSP_LCD_ClearStringLine(1); LCD_DisplayString(1,0,(uint8_t *)"Change year");}
 			else if (state==2) {BSP_LCD_ClearStringLine(1); LCD_DisplayString(1,0,(uint8_t *)"Change month");}
 			else if (state==3) {BSP_LCD_ClearStringLine(1); LCD_DisplayString(1,0,(uint8_t *)"Change date");}
 			else if (state==4) {BSP_LCD_ClearStringLine(1); LCD_DisplayString(1,0,(uint8_t *)"Change week day");}

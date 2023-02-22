@@ -718,32 +718,40 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 
 	if(GPIO_Pin == GPIO_PIN_2)
   {
-		if (state==1) { //set week day
-			if (RTC_DateStructure.WeekDay==7) {
-				RTC_DateStructure.WeekDay=1;
-			}
-			else {
-				RTC_DateStructure.WeekDay+=1;
-			}						
+		if (state==1) { //set year
+			RTC_DateStructure.Year+=1;	//DO WE NEED TO BE ABLE TO DECREMENT YEAR (WHAT'S MAX YEAR)
+					
 		}
-		else	if (state==2) { //ACCOUNT FOR 30, 31 AND LEAP YEAR DATES
-			if (RTC_DateStructure.Date==30) {
-				RTC_DateStructure.Date=1;
-			}
-			else {
-				RTC_DateStructure.Date+=1;
-			}		
-		}
-		else	if (state==3) { //set month
+		else	if (state==2) { //set month
 			if (RTC_DateStructure.Month==12) {
 				RTC_DateStructure.Month=1;
 			}
 			else {
 				RTC_DateStructure.Month+=1;
 			}		
+
 		}
-		else	if (state==4) { //set year
-			RTC_DateStructure.Year+=1;	//DO WE NEED TO BE ABLE TO DECREMENT YEAR (WHAT'S MAX YEAR)
+		else	if (state==3) { //set date ACCOUNT FOR FEB LEAP YEAR KAVYA
+			RTC_DateStructure.Date+=1;
+			if (RTC_DateStructure.Month == 1 || RTC_DateStructure.Month == 3 || RTC_DateStructure.Month == 5 || RTC_DateStructure.Month == 7 || RTC_DateStructure.Month == 8 || RTC_DateStructure.Month == 10 || RTC_DateStructure.Month == 12) {	
+				if (RTC_DateStructure.Date==32) { //for 31 dayed months
+					RTC_DateStructure.Date=1;
+				}
+			}
+			else if (RTC_DateStructure.Month == 4 || RTC_DateStructure.Month == 6 || RTC_DateStructure.Month == 9 || RTC_DateStructure.Month == 11) {
+				if (RTC_DateStructure.Date==31) { //for 30 dayed months
+					RTC_DateStructure.Date=1;
+				}			
+			}		
+		}
+		
+		else	if (state==4) { //set weekday
+			if (RTC_DateStructure.WeekDay==7) {
+				RTC_DateStructure.WeekDay=1;
+			}
+			else {
+				RTC_DateStructure.WeekDay+=1;
+			}	
 		}
 		else	if (state==5) { //set hour
 			if (RTC_TimeStructure.Hours==24) {

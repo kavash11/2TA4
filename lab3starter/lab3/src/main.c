@@ -139,7 +139,7 @@ int main(void)
 
 //*********************Testing I2C EEPROM------------------
 
-	/*LCD_DisplayString(4, 2, (uint8_t *)"MT2TA4 LAB 3");
+	LCD_DisplayString(4, 2, (uint8_t *)"MT2TA4 LAB 3");
 	LCD_DisplayString(6, 0, (uint8_t *)"Testing I2C & EEPROM....");
 		
 	HAL_Delay(2000);   //display for 1 second
@@ -213,7 +213,7 @@ int main(void)
 	HAL_Delay(2000);  //display for 4 seconds
 
 	
-	*/
+	
 	//configure real-time clock
 	RTC_Config();
 		
@@ -392,13 +392,13 @@ void ExtBtn2_Config(void){  //**********PD2.*********** (use to set time kavya)
   GPIO_InitTypeDef   GPIO_InitStructure;
 
   /* Enable GPIOB clock */
-  __HAL_RCC_GPIOC_CLK_ENABLE();
+  __HAL_RCC_GPIOD_CLK_ENABLE();
   /* Configure PA0 pin as input floating */
   GPIO_InitStructure.Mode =  GPIO_MODE_IT_FALLING;
   GPIO_InitStructure.Pull =GPIO_PULLUP;
-  GPIO_InitStructure.Pin = GPIO_PIN_2; //assigning button 2 to PC2 kavya
+  GPIO_InitStructure.Pin = GPIO_PIN_2; //assigning button 2 to PD2 kavya
 	//GPIO_InitStructure.Speed=GPIO_SPEED_LOW;
-  HAL_GPIO_Init(GPIOC, &GPIO_InitStructure);
+  HAL_GPIO_Init(GPIOD, &GPIO_InitStructure);
 
 	//__HAL_GPIO_EXTI_CLEAR_IT(GPIO_PIN_1);   //is defined the same as the __HAL_GPIO_EXTI_CLEAR_FLAG(GPIO_PIN_1); ---check the hal_gpio.h
 	__HAL_GPIO_EXTI_CLEAR_FLAG(GPIO_PIN_2);	
@@ -678,29 +678,24 @@ void LCD_DisplayFloat(uint16_t LineNumber, uint16_t ColumnNumber, float Number, 
 
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
-
 	
 
 	
   if(GPIO_Pin == KEY_BUTTON_PIN)  //GPIO_PIN_0
   {
-		/*HAL_RTC_GetTime(&RTCHandle, &read_RTC_TimeStruct, RTC_FORMAT_BIN); //kavya
-		LCD_DisplayString(3,0, (uint8_t *) "HH:MM:SS");
-		LCD_DisplayInt(4,0,read_RTC_TimeStruct.Hours);
-		LCD_DisplayInt(4,3,read_RTC_TimeStruct.Minutes);
-		LCD_DisplayInt(4,6,read_RTC_TimeStruct.Seconds);
-		HAL_RTC_GetDate(&RTCHandle, &read_RTC_DateStruct, RTC_FORMAT_BIN); 
+		uint32_t tempsec=I2C_ByteRead(&I2c3_Handle,EEPROM_ADDRESS, memLocation); //temporarily save stored time
+		uint32_t tempmin=I2C_ByteRead(&I2c3_Handle,EEPROM_ADDRESS, memLocation+1);
+		uint32_t temphour=I2C_ByteRead(&I2c3_Handle,EEPROM_ADDRESS, memLocation+2);
+		
+		I2C_ByteWrite(&I2c3_Handle,EEPROM_ADDRESS, memLocation , RTC_TimeStructure.Seconds); //write latest time to eeprom
+		I2C_ByteWrite(&I2c3_Handle,EEPROM_ADDRESS, memLocation+1 , RTC_TimeStructure.Minutes);
+		I2C_ByteWrite(&I2c3_Handle,EEPROM_ADDRESS, memLocation+2 , RTC_TimeStructure.Hours);
+		
+		I2C_ByteWrite(&I2c3_Handle,EEPROM_ADDRESS, memLocation+3, tempsec); //write temp time to eeprom
+		I2C_ByteWrite(&I2c3_Handle,EEPROM_ADDRESS, memLocation+4 , tempmin);
+		I2C_ByteWrite(&I2c3_Handle,EEPROM_ADDRESS, memLocation+5 , temphour);	
 		
 
-		
-
-		LCD_DisplayString(9,0, (uint8_t *) "WD:DD:MM:YY");
-	
-		LCD_DisplayInt(10,0, read_RTC_DateStruct.WeekDay);
-		LCD_DisplayInt(10,3, read_RTC_DateStruct.Date);
-		LCD_DisplayInt(10,6, read_RTC_DateStruct.Month);
-		LCD_DisplayInt(10,9, read_RTC_DateStruct.Year);*/
-		
   }
 
 	if(GPIO_Pin == GPIO_PIN_1) //sets state (chooses what time value to set)
@@ -724,7 +719,29 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 	if(GPIO_Pin == GPIO_PIN_2) //	DO I NEED TO DISPLAY THINGS IN STRING KAVYA
   {
 		if (state==0) { //displaying eeprom values in idle state
-		
+			uint32_t latestsec=I2C_ByteRead(&I2c3_Handle,EEPROM_ADDRESS, memLocation); //latest time
+			uint32_t latestmin=I2C_ByteRead(&I2c3_Handle,EEPROM_ADDRESS, memLocation+1);
+			uint32_t latesthour=I2C_ByteRead(&I2c3_Handle,EEPROM_ADDRESS, memLocation+2);
+			BSP_LCD_ClearStringLine(7);
+			BSP_LCD_ClearStringLine(8);			
+			BSP_LCD_ClearStringLine(9);
+			LCD_DisplayString(7,0, (uint8_t *) "Latest time");
+			LCD_DisplayString(8,0, (uint8_t *) "HH:MM:SS");
+			LCD_DisplayInt(9,0,latesthour);
+			LCD_DisplayInt(9,3,latestmin);
+			LCD_DisplayInt(9,6,latestsec);
+			
+			uint32_t twosec=I2C_ByteRead(&I2c3_Handle,EEPROM_ADDRESS, memLocation+3); //2nd latest time
+			uint32_t twomin=I2C_ByteRead(&I2c3_Handle,EEPROM_ADDRESS, memLocation+4);
+			uint32_t twohour=I2C_ByteRead(&I2c3_Handle,EEPROM_ADDRESS, memLocation+5);	
+			BSP_LCD_ClearStringLine(10);
+			BSP_LCD_ClearStringLine(11);			
+			BSP_LCD_ClearStringLine(12);
+			LCD_DisplayString(10,0, (uint8_t *) "Second latest time");
+			LCD_DisplayString(11,0, (uint8_t *) "HH:MM:SS");
+			LCD_DisplayInt(12,0,twohour);
+			LCD_DisplayInt(12,3,twomin);
+			LCD_DisplayInt(12,6,twosec);			
 		}
 		else if (state==1) { //set year
 			RTC_DateStructure.Year+=1;	//DO WE NEED TO BE ABLE TO DECREMENT YEAR (WHAT'S MAX YEAR)

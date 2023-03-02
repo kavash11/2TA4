@@ -720,7 +720,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 
 	if(GPIO_Pin == GPIO_PIN_2) //	DO I NEED TO DISPLAY THINGS IN STRING KAVYA
   {
-		if (state==0 && display==0) { //displaying eeprom values in idle state
+		if (state==0 && display==0) { //displaying eeprom values in idle state on button press
 			uint32_t latestsec=I2C_ByteRead(&I2c3_Handle,EEPROM_ADDRESS, memLocation); //latest time
 			uint32_t latestmin=I2C_ByteRead(&I2c3_Handle,EEPROM_ADDRESS, memLocation+1);
 			uint32_t latesthour=I2C_ByteRead(&I2c3_Handle,EEPROM_ADDRESS, memLocation+2);
@@ -746,7 +746,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 			LCD_DisplayInt(12,6,twosec);	
 			display+=1;
 		}
-		else if (state ==0 && display==1) {
+		else if (state ==0 && display==1) { //clearing LCD display on 2nd button press
 			BSP_LCD_ClearStringLine(7);
 			BSP_LCD_ClearStringLine(8);			
 			BSP_LCD_ClearStringLine(9);			

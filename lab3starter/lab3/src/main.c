@@ -58,6 +58,7 @@ RTC_HandleTypeDef RTCHandle;
 RTC_DateTypeDef RTC_DateStructure, read_RTC_DateStruct;
 RTC_TimeTypeDef RTC_TimeStructure, read_RTC_TimeStruct;
 uint32_t state; //kavya
+uint32_t display; //kavya
 
 
 
@@ -90,6 +91,7 @@ int main(void)
 {
   //the following variables are for testging I2C_EEPROM
 	state=0; //kavya
+	display=0; //kavya
 	uint8_t data1 =0x67,  data2=0x68;
 	uint8_t readData=0x00;
 	char AA[34]= "efghijklmnopqstuvefghijklmnopqstuv";
@@ -139,7 +141,7 @@ int main(void)
 
 //*********************Testing I2C EEPROM------------------
 
-	LCD_DisplayString(4, 2, (uint8_t *)"MT2TA4 LAB 3");
+	/*LCD_DisplayString(4, 2, (uint8_t *)"MT2TA4 LAB 3");
 	LCD_DisplayString(6, 0, (uint8_t *)"Testing I2C & EEPROM....");
 		
 	HAL_Delay(2000);   //display for 1 second
@@ -149,11 +151,11 @@ int main(void)
 	HAL_Delay(5);   //have trouble to clear line 6 if there is no Delay!!??
 	BSP_LCD_ClearStringLine(6);
 	HAL_Delay(5);
-	BSP_LCD_ClearStringLine(7);
+	BSP_LCD_ClearStringLine(7);*/
 	
 
 
-	EE_status=I2C_ByteWrite(&I2c3_Handle,EEPROM_ADDRESS, memLocation , data1);
+	/*EE_status=I2C_ByteWrite(&I2c3_Handle,EEPROM_ADDRESS, memLocation , data1);
 	if (EE_status==HAL_OK)
 			LCD_DisplayString(0, 0, (uint8_t *)"w data1 in EE OK");
 	else
@@ -208,7 +210,7 @@ int main(void)
 	if (readMatch==0)
 				LCD_DisplayString(15, 0, (uint8_t *)"rd buffer mismatch");
 	else 
-				LCD_DisplayString(15, 0, (uint8_t *)"rd EE buffer OK");
+				LCD_DisplayString(15, 0, (uint8_t *)"rd EE buffer OK");*/
 
 	HAL_Delay(2000);  //display for 4 seconds
 
@@ -718,7 +720,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 
 	if(GPIO_Pin == GPIO_PIN_2) //	DO I NEED TO DISPLAY THINGS IN STRING KAVYA
   {
-		if (state==0) { //displaying eeprom values in idle state
+		if (state==0 && display==0) { //displaying eeprom values in idle state
 			uint32_t latestsec=I2C_ByteRead(&I2c3_Handle,EEPROM_ADDRESS, memLocation); //latest time
 			uint32_t latestmin=I2C_ByteRead(&I2c3_Handle,EEPROM_ADDRESS, memLocation+1);
 			uint32_t latesthour=I2C_ByteRead(&I2c3_Handle,EEPROM_ADDRESS, memLocation+2);
@@ -741,7 +743,17 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 			LCD_DisplayString(11,0, (uint8_t *) "HH:MM:SS");
 			LCD_DisplayInt(12,0,twohour);
 			LCD_DisplayInt(12,3,twomin);
-			LCD_DisplayInt(12,6,twosec);			
+			LCD_DisplayInt(12,6,twosec);	
+			display+=1;
+		}
+		else if (state ==0 && display==1) {
+			BSP_LCD_ClearStringLine(7);
+			BSP_LCD_ClearStringLine(8);			
+			BSP_LCD_ClearStringLine(9);			
+			BSP_LCD_ClearStringLine(10);
+			BSP_LCD_ClearStringLine(11);			
+			BSP_LCD_ClearStringLine(12);
+			display=0;
 		}
 		else if (state==1) { //set year
 			RTC_DateStructure.Year+=1;	//DO WE NEED TO BE ABLE TO DECREMENT YEAR (WHAT'S MAX YEAR)

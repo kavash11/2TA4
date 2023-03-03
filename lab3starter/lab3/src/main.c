@@ -85,7 +85,7 @@ static void Error_Handler(void);
 void displayZeroPadded3(uint16_t LineNumber, uint16_t ColumnNumber, uint32_t num1, uint32_t num2, uint32_t num3){
 	char str[9]; 
 
-	sprintf(str, "%01d:%01d:%01d", num1,num2,num3); 
+	sprintf(str, "%02d:%02d:%02d", num1,num2,num3); 
 	LCD_DisplayString(LineNumber, ColumnNumber, (uint8_t *)str);
 	
 	return;
@@ -855,10 +855,10 @@ void HAL_RTC_AlarmAEventCallback(RTC_HandleTypeDef *hrtc)
 		BSP_LCD_ClearStringLine(3);
 		BSP_LCD_ClearStringLine(4);
 		LCD_DisplayString(3,0, (uint8_t *) "HH:MM:SS");
-		LCD_DisplayInt(4,0,RTC_TimeStructure.Hours);
+		/*LCD_DisplayInt(4,0,RTC_TimeStructure.Hours);
 		LCD_DisplayInt(4,3,RTC_TimeStructure.Minutes);
-		LCD_DisplayInt(4,6,RTC_TimeStructure.Seconds);
-		displayZeroPadded4(4,0,RTC_TimeStructure.Hours,RTC_TimeStructure.Minutes,RTC_TimeStructure.Seconds);
+		LCD_DisplayInt(4,6,RTC_TimeStructure.Seconds);*/
+		displayZeroPadded3(4,0,RTC_TimeStructure.Hours,RTC_TimeStructure.Minutes,RTC_TimeStructure.Seconds);
 	
 		HAL_RTC_GetDate(&RTCHandle,&RTC_DateStructure,RTC_FORMAT_BIN);
 		LCD_DisplayString(5,0, (uint8_t *) "WD:DD:MM:YY");

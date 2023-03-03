@@ -81,6 +81,7 @@ static void SystemClock_Config(void);
 static void Error_Handler(void);
 
 /* Private functions ---------------------------------------------------------*/
+//Noor
 void displayZeroPadded3(uint16_t LineNumber, uint16_t ColumnNumber, uint32_t num1, uint32_t num2, uint32_t num3){
 	char str[9]; 
 
@@ -91,6 +92,7 @@ void displayZeroPadded3(uint16_t LineNumber, uint16_t ColumnNumber, uint32_t num
 
 }
 void displayZeroPadded4(uint16_t LineNumber, uint16_t ColumnNumber, uint32_t num1, uint32_t num2, uint32_t num3, uint32_t num4){
+	//to do the WD thing as a string of 3 letters, make char str of size 13 instead of 12 and you turn the first %01d into a %s and you pass the 3-char day variable instead of num1
 	char str[12]; 
 
 	sprintf(str, "%01d:%01d:%01d:%01d", num1,num2,num3,num4); 

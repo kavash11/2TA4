@@ -118,6 +118,9 @@ int main(void)
 	int i;
 	uint8_t readMatch=1;
 	uint32_t EE_status;
+	
+	
+	I2C_ByteWrite(&I2c3_Handle,EEPROM_ADDRESS, memLocation , memLocation); //Noor: idk why this works but it wont work without it
 
 
 	 /*STM32F4xx HAL library initialization:
@@ -704,7 +707,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 	
   if(GPIO_Pin == KEY_BUTTON_PIN)  //GPIO_PIN_0
   {
-		uint32_t tempsec=I2C_ByteRead(&I2c3_Handle,EEPROM_ADDRESS, memLocation); //temporarily save stored time
+		/*uint32_t tempsec=I2C_ByteRead(&I2c3_Handle,EEPROM_ADDRESS, memLocation); //temporarily save stored time
 		uint32_t tempmin=I2C_ByteRead(&I2c3_Handle,EEPROM_ADDRESS, memLocation+1);
 		uint32_t temphour=I2C_ByteRead(&I2c3_Handle,EEPROM_ADDRESS, memLocation+2);
 		
@@ -714,7 +717,18 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 		
 		I2C_ByteWrite(&I2c3_Handle,EEPROM_ADDRESS, memLocation+3, tempsec); //write temp time to eeprom
 		I2C_ByteWrite(&I2c3_Handle,EEPROM_ADDRESS, memLocation+4 , tempmin);
-		I2C_ByteWrite(&I2c3_Handle,EEPROM_ADDRESS, memLocation+5 , temphour);	
+		I2C_ByteWrite(&I2c3_Handle,EEPROM_ADDRESS, memLocation+5 , temphour);	*/
+		
+		uint16_t lastLoc=I2C_ByteRead(&I2c3_Handle,EEPROM_ADDRESS, memLocation); //get first byte in eeprom, which is last location with data
+		
+		I2C_ByteWrite(&I2c3_Handle,EEPROM_ADDRESS, lastLoc+1 , RTC_TimeStructure.Seconds); //write latest time to eeprom
+		I2C_ByteWrite(&I2c3_Handle,EEPROM_ADDRESS, lastLoc+2 , RTC_TimeStructure.Minutes);
+		I2C_ByteWrite(&I2c3_Handle,EEPROM_ADDRESS, lastLoc+3 , RTC_TimeStructure.Hours);
+		
+		LCD_DisplayInt(0,0,lastLoc);
+		
+		I2C_ByteWrite(&I2c3_Handle,EEPROM_ADDRESS, memLocation , lastLoc+3); //write new mem location to eeprom
+		
 		
 
   }
@@ -740,9 +754,10 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 	if(GPIO_Pin == GPIO_PIN_2) //	DO I NEED TO DISPLAY THINGS IN STRING KAVYA
   {
 		if (state==0 && display==0) { //displaying eeprom values in idle state on button press
-			uint32_t latestsec=I2C_ByteRead(&I2c3_Handle,EEPROM_ADDRESS, memLocation); //latest time
-			uint32_t latestmin=I2C_ByteRead(&I2c3_Handle,EEPROM_ADDRESS, memLocation+1);
-			uint32_t latesthour=I2C_ByteRead(&I2c3_Handle,EEPROM_ADDRESS, memLocation+2);
+			uint16_t lastLoc=I2C_ByteRead(&I2c3_Handle,EEPROM_ADDRESS, memLocation); //get first byte in eeprom, which is last location with data
+			uint32_t latestsec=I2C_ByteRead(&I2c3_Handle,EEPROM_ADDRESS, lastLoc-2); //latest time
+			uint32_t latestmin=I2C_ByteRead(&I2c3_Handle,EEPROM_ADDRESS, lastLoc-1);
+			uint32_t latesthour=I2C_ByteRead(&I2c3_Handle,EEPROM_ADDRESS, lastLoc);
 			BSP_LCD_ClearStringLine(7);
 			BSP_LCD_ClearStringLine(8);			
 			BSP_LCD_ClearStringLine(9);
@@ -753,9 +768,9 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 			LCD_DisplayInt(9,6,latestsec);*/
 			displayZeroPadded3(9,0,latesthour,latestmin,latestsec);
 			
-			uint32_t twosec=I2C_ByteRead(&I2c3_Handle,EEPROM_ADDRESS, memLocation+3); //2nd latest time
-			uint32_t twomin=I2C_ByteRead(&I2c3_Handle,EEPROM_ADDRESS, memLocation+4);
-			uint32_t twohour=I2C_ByteRead(&I2c3_Handle,EEPROM_ADDRESS, memLocation+5);	
+			uint32_t twosec=I2C_ByteRead(&I2c3_Handle,EEPROM_ADDRESS, lastLoc-5); //2nd latest time
+			uint32_t twomin=I2C_ByteRead(&I2c3_Handle,EEPROM_ADDRESS, lastLoc-4);
+			uint32_t twohour=I2C_ByteRead(&I2c3_Handle,EEPROM_ADDRESS, lastLoc-3);	
 			BSP_LCD_ClearStringLine(10);
 			BSP_LCD_ClearStringLine(11);			
 			BSP_LCD_ClearStringLine(12);

@@ -748,9 +748,10 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 			BSP_LCD_ClearStringLine(9);
 			LCD_DisplayString(7,0, (uint8_t *) "Latest time");
 			LCD_DisplayString(8,0, (uint8_t *) "HH:MM:SS");
-			LCD_DisplayInt(9,0,latesthour);
+			/*LCD_DisplayInt(9,0,latesthour);
 			LCD_DisplayInt(9,3,latestmin);
-			LCD_DisplayInt(9,6,latestsec);
+			LCD_DisplayInt(9,6,latestsec);*/
+			displayZeroPadded3(9,0,latesthour,latestmin,latestsec);
 			
 			uint32_t twosec=I2C_ByteRead(&I2c3_Handle,EEPROM_ADDRESS, memLocation+3); //2nd latest time
 			uint32_t twomin=I2C_ByteRead(&I2c3_Handle,EEPROM_ADDRESS, memLocation+4);
@@ -760,9 +761,10 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 			BSP_LCD_ClearStringLine(12);
 			LCD_DisplayString(10,0, (uint8_t *) "Second latest time");
 			LCD_DisplayString(11,0, (uint8_t *) "HH:MM:SS");
-			LCD_DisplayInt(12,0,twohour);
+			/*LCD_DisplayInt(12,0,twohour);
 			LCD_DisplayInt(12,3,twomin);
-			LCD_DisplayInt(12,6,twosec);	
+			LCD_DisplayInt(12,6,twosec);*/
+			displayZeroPadded3(12,0,twohour,twomin,twosec);
 			display+=1;
 		}
 		else if (state ==0 && display==1) { //clearing LCD display on 2nd button press

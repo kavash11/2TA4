@@ -59,7 +59,7 @@ RTC_DateTypeDef RTC_DateStructure, read_RTC_DateStruct;
 RTC_TimeTypeDef RTC_TimeStructure, read_RTC_TimeStruct;
 uint32_t state; //kavya
 uint32_t display; //kavya
-
+char* weekdays[] = {"Mon","Tue","Wed","Thu","Fri","Sat","Sun"};
 
 
 HAL_StatusTypeDef Hal_status;  //HAL_ERROR, HAL_TIMEOUT, HAL_OK, of HAL_BUSY 
@@ -93,9 +93,10 @@ void displayZeroPadded3(uint16_t LineNumber, uint16_t ColumnNumber, uint32_t num
 }
 void displayZeroPadded4(uint16_t LineNumber, uint16_t ColumnNumber, uint32_t num1, uint32_t num2, uint32_t num3, uint32_t num4){
 	//to do the WD thing as a string of 3 letters, make char str of size 13 instead of 12 and you turn the first %01d into a %s and you pass the 3-char day variable instead of num1
-	char str[12]; 
+	char str[13]; 
+	
 
-	sprintf(str, "%01d:%01d:%01d:%01d", num1,num2,num3,num4); 
+	sprintf(str, "%s:%01d:%01d:%01d", weekdays[num1-1],num2,num3,num4); 
 	LCD_DisplayString(LineNumber, ColumnNumber, (uint8_t *)str);
 	
 	return;
@@ -118,6 +119,7 @@ int main(void)
 	int i;
 	uint8_t readMatch=1;
 	uint32_t EE_status;
+	
 	
 	
 	I2C_ByteWrite(&I2c3_Handle,EEPROM_ADDRESS, memLocation , memLocation); //Noor: idk why this works but it wont work without it

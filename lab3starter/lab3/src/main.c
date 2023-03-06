@@ -741,8 +741,6 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 		I2C_ByteWrite(&I2c3_Handle,EEPROM_ADDRESS, lastLoc+2 , RTC_TimeStructure.Minutes);
 		I2C_ByteWrite(&I2c3_Handle,EEPROM_ADDRESS, lastLoc+3 , RTC_TimeStructure.Hours);
 		
-		LCD_DisplayInt(0,5,lastLoc);
-		
 		I2C_ByteWrite(&I2c3_Handle,EEPROM_ADDRESS, memLocation , lastLoc+3); //write new mem location to eeprom
 		
 		
@@ -772,6 +770,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
   {
 		if (state==0 && display==0) { //displaying eeprom values in idle state on button press
 			uint32_t lastLoc=I2C_ByteRead(&I2c3_Handle,EEPROM_ADDRESS, memLocation); //get first byte in eeprom, which is last location with data
+			//I2C_ByteWrite(&I2c3_Handle,EEPROM_ADDRESS, memLocation , lastLoc); //write new mem location to eeprom
 			uint32_t latestsec=I2C_ByteRead(&I2c3_Handle,EEPROM_ADDRESS, byteIndexer(lastLoc-2)); //latest time
 			uint32_t latestmin=I2C_ByteRead(&I2c3_Handle,EEPROM_ADDRESS, byteIndexer(lastLoc-1));
 			uint32_t latesthour=I2C_ByteRead(&I2c3_Handle,EEPROM_ADDRESS, lastLoc);

@@ -66,7 +66,7 @@ HAL_StatusTypeDef Hal_status;  //HAL_ERROR, HAL_TIMEOUT, HAL_OK, of HAL_BUSY
 
 
 //memory location to write to in the device
-__IO uint16_t memLocation = 0x000A; //pick any location within range
+__IO uint16_t memLocation = 0x0000; //pick any location within range
 
 char lcd_buffer[14];
 
@@ -122,7 +122,7 @@ int main(void)
 	
 	
 	
-	I2C_ByteWrite(&I2c3_Handle,EEPROM_ADDRESS, memLocation , memLocation); //Noor: idk why this works but it wont work without it
+	I2C_ByteWrite(&I2c3_Handle,EEPROM_ADDRESS, memLocation , 0); //Noor: idk why this works but it wont work without it
 
 
 	 /*STM32F4xx HAL library initialization:

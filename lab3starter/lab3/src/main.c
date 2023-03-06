@@ -721,7 +721,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 		I2C_ByteWrite(&I2c3_Handle,EEPROM_ADDRESS, memLocation+4 , tempmin);
 		I2C_ByteWrite(&I2c3_Handle,EEPROM_ADDRESS, memLocation+5 , temphour);	*/
 		
-		uint16_t lastLoc=I2C_ByteRead(&I2c3_Handle,EEPROM_ADDRESS, memLocation); //get first byte in eeprom, which is last location with data
+		uint32_t lastLoc=I2C_ByteRead(&I2c3_Handle,EEPROM_ADDRESS, memLocation); //get first byte in eeprom, which is last location with data
 		
 		I2C_ByteWrite(&I2c3_Handle,EEPROM_ADDRESS, lastLoc+1 , RTC_TimeStructure.Seconds); //write latest time to eeprom
 		I2C_ByteWrite(&I2c3_Handle,EEPROM_ADDRESS, lastLoc+2 , RTC_TimeStructure.Minutes);
@@ -737,19 +737,20 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 
 	if(GPIO_Pin == GPIO_PIN_1) //sets state (chooses what time value to set)
   {
-		if (state==7) {
+		if (state==8) {
 			state=0;
 			BSP_LCD_ClearStringLine(1); LCD_DisplayString(1,0,(uint8_t *)"                ");
 		}
 		else {
 			state+=1;
-			if (state==1) {BSP_LCD_ClearStringLine(1); LCD_DisplayString(1,0,(uint8_t *)"Change year");}
-			else if (state==2) {BSP_LCD_ClearStringLine(1); LCD_DisplayString(1,0,(uint8_t *)"Change month");}
-			else if (state==3) {BSP_LCD_ClearStringLine(1); LCD_DisplayString(1,0,(uint8_t *)"Change date");}
-			else if (state==4) {BSP_LCD_ClearStringLine(1); LCD_DisplayString(1,0,(uint8_t *)"Change week day");}
-			else if (state==5) {BSP_LCD_ClearStringLine(1); LCD_DisplayString(1,0,(uint8_t *)"Change hour");}
-			else if (state==6) {BSP_LCD_ClearStringLine(1); LCD_DisplayString(1,0,(uint8_t *)"Change minutes");}
-			else if (state==7) {BSP_LCD_ClearStringLine(1); LCD_DisplayString(1,0,(uint8_t *)"Change seconds");}				
+			if (state==1) {BSP_LCD_ClearStringLine(1); LCD_DisplayString(1,0,(uint8_t *)"Change year (+)");}
+			else if (state==2) {BSP_LCD_ClearStringLine(1); LCD_DisplayString(1,0,(uint8_t *)"Change year (-)");}
+			else if (state==3) {BSP_LCD_ClearStringLine(1); LCD_DisplayString(1,0,(uint8_t *)"Change month");}
+			else if (state==4) {BSP_LCD_ClearStringLine(1); LCD_DisplayString(1,0,(uint8_t *)"Change date");}
+			else if (state==5) {BSP_LCD_ClearStringLine(1); LCD_DisplayString(1,0,(uint8_t *)"Change week day");}
+			else if (state==6) {BSP_LCD_ClearStringLine(1); LCD_DisplayString(1,0,(uint8_t *)"Change hour");}
+			else if (state==7) {BSP_LCD_ClearStringLine(1); LCD_DisplayString(1,0,(uint8_t *)"Change minutes");}
+			else if (state==8) {BSP_LCD_ClearStringLine(1); LCD_DisplayString(1,0,(uint8_t *)"Change seconds");}				
 		}
 	}  //end of PIN_1
 
@@ -793,11 +794,15 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 			BSP_LCD_ClearStringLine(12);
 			display=0;
 		}
-		else if (state==1) { //set year
+		else if (state==1) { //set year - INCREASE
 			RTC_DateStructure.Year+=1;	//DO WE NEED TO BE ABLE TO DECREMENT YEAR (WHAT'S MAX YEAR)
 					
 		}
-		else	if (state==2) { //set month
+		else if (state==2) { //set year - DECREASE
+			RTC_DateStructure.Year-=1;	//DO WE NEED TO BE ABLE TO DECREMENT YEAR (WHAT'S MAX YEAR)
+					
+		}
+		else	if (state==3) { //set month
 			if (RTC_DateStructure.Month==12) {
 				RTC_DateStructure.Month=1;
 			}
@@ -806,7 +811,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 			}		
 
 		}
-		else	if (state==3) { //set date
+		else	if (state==4) { //set date
 			RTC_DateStructure.Date+=1;
 			if (RTC_DateStructure.Month == 1 || RTC_DateStructure.Month == 3 || RTC_DateStructure.Month == 5 || RTC_DateStructure.Month == 7 || RTC_DateStructure.Month == 8 || RTC_DateStructure.Month == 10 || RTC_DateStructure.Month == 12) {	
 				if (RTC_DateStructure.Date==32) { //for 31 dayed months
@@ -826,7 +831,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 			}				
 		}
 		
-		else	if (state==4) { //set weekday
+		else	if (state==5) { //set weekday
 			if (RTC_DateStructure.WeekDay==7) {
 				RTC_DateStructure.WeekDay=1;
 			}
@@ -834,7 +839,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 				RTC_DateStructure.WeekDay+=1;
 			}	
 		}
-		else	if (state==5) { //set hour
+		else	if (state==6) { //set hour
 			if (RTC_TimeStructure.Hours==24) {
 				RTC_TimeStructure.Hours=1;
 			}
@@ -842,7 +847,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 				RTC_TimeStructure.Hours+=1;
 			}		
 		}
-		else	if (state==6) { //set minutes
+		else	if (state==7) { //set minutes
 			if (RTC_TimeStructure.Minutes==60) {
 				RTC_TimeStructure.Minutes=1;
 			}
@@ -850,7 +855,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 				RTC_TimeStructure.Minutes+=1;
 			}		
 		}
-		else	if (state==7) { //set seconds
+		else	if (state==8) { //set seconds
 			if (RTC_TimeStructure.Seconds==60) {
 				RTC_TimeStructure.Seconds=1;
 			}

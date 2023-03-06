@@ -102,6 +102,17 @@ void displayZeroPadded4(uint16_t LineNumber, uint16_t ColumnNumber, uint32_t num
 	return;
 
 }
+
+uint8_t byteIndexer(uint8_t num){
+	if(num<0){
+		return 255+num;
+	}
+	else{
+		return num;
+	}
+
+
+}
 /**
   * @brief  Main program
   * @param  None
@@ -722,13 +733,15 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 		I2C_ByteWrite(&I2c3_Handle,EEPROM_ADDRESS, memLocation+5 , temphour);	*/
 		
 		uint32_t lastLoc=I2C_ByteRead(&I2c3_Handle,EEPROM_ADDRESS, memLocation); //get first byte in eeprom, which is last location with data
-		if(lastLoc>=255){lastLoc=0;}
+		LCD_DisplayInt(0,0,lastLoc);
+		
+		if(lastLoc>=255){lastLoc=memLocation;}
 		
 		I2C_ByteWrite(&I2c3_Handle,EEPROM_ADDRESS, lastLoc+1 , RTC_TimeStructure.Seconds); //write latest time to eeprom
 		I2C_ByteWrite(&I2c3_Handle,EEPROM_ADDRESS, lastLoc+2 , RTC_TimeStructure.Minutes);
 		I2C_ByteWrite(&I2c3_Handle,EEPROM_ADDRESS, lastLoc+3 , RTC_TimeStructure.Hours);
 		
-		LCD_DisplayInt(0,0,lastLoc);
+		LCD_DisplayInt(0,5,lastLoc);
 		
 		I2C_ByteWrite(&I2c3_Handle,EEPROM_ADDRESS, memLocation , lastLoc+3); //write new mem location to eeprom
 		
@@ -759,8 +772,8 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
   {
 		if (state==0 && display==0) { //displaying eeprom values in idle state on button press
 			uint32_t lastLoc=I2C_ByteRead(&I2c3_Handle,EEPROM_ADDRESS, memLocation); //get first byte in eeprom, which is last location with data
-			uint32_t latestsec=I2C_ByteRead(&I2c3_Handle,EEPROM_ADDRESS, lastLoc-2); //latest time
-			uint32_t latestmin=I2C_ByteRead(&I2c3_Handle,EEPROM_ADDRESS, lastLoc-1);
+			uint32_t latestsec=I2C_ByteRead(&I2c3_Handle,EEPROM_ADDRESS, byteIndexer(lastLoc-2)); //latest time
+			uint32_t latestmin=I2C_ByteRead(&I2c3_Handle,EEPROM_ADDRESS, byteIndexer(lastLoc-1));
 			uint32_t latesthour=I2C_ByteRead(&I2c3_Handle,EEPROM_ADDRESS, lastLoc);
 			BSP_LCD_ClearStringLine(7);
 			BSP_LCD_ClearStringLine(8);			
@@ -772,9 +785,9 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 			LCD_DisplayInt(9,6,latestsec);*/
 			displayZeroPadded3(9,0,latesthour,latestmin,latestsec);
 			
-			uint32_t twosec=I2C_ByteRead(&I2c3_Handle,EEPROM_ADDRESS, lastLoc-5); //2nd latest time
-			uint32_t twomin=I2C_ByteRead(&I2c3_Handle,EEPROM_ADDRESS, lastLoc-4);
-			uint32_t twohour=I2C_ByteRead(&I2c3_Handle,EEPROM_ADDRESS, lastLoc-3);	
+			uint32_t twosec=I2C_ByteRead(&I2c3_Handle,EEPROM_ADDRESS, byteIndexer(lastLoc-5)); //2nd latest time
+			uint32_t twomin=I2C_ByteRead(&I2c3_Handle,EEPROM_ADDRESS, byteIndexer(lastLoc-4));
+			uint32_t twohour=I2C_ByteRead(&I2c3_Handle,EEPROM_ADDRESS, byteIndexer(lastLoc-3));	
 			BSP_LCD_ClearStringLine(10);
 			BSP_LCD_ClearStringLine(11);			
 			BSP_LCD_ClearStringLine(12);

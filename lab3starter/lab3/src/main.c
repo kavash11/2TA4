@@ -722,6 +722,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 		I2C_ByteWrite(&I2c3_Handle,EEPROM_ADDRESS, memLocation+5 , temphour);	*/
 		
 		uint32_t lastLoc=I2C_ByteRead(&I2c3_Handle,EEPROM_ADDRESS, memLocation); //get first byte in eeprom, which is last location with data
+		if(lastLoc>=255){lastLoc=0;}
 		
 		I2C_ByteWrite(&I2c3_Handle,EEPROM_ADDRESS, lastLoc+1 , RTC_TimeStructure.Seconds); //write latest time to eeprom
 		I2C_ByteWrite(&I2c3_Handle,EEPROM_ADDRESS, lastLoc+2 , RTC_TimeStructure.Minutes);
@@ -757,7 +758,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 	if(GPIO_Pin == GPIO_PIN_2) //	DO I NEED TO DISPLAY THINGS IN STRING KAVYA
   {
 		if (state==0 && display==0) { //displaying eeprom values in idle state on button press
-			uint16_t lastLoc=I2C_ByteRead(&I2c3_Handle,EEPROM_ADDRESS, memLocation); //get first byte in eeprom, which is last location with data
+			uint32_t lastLoc=I2C_ByteRead(&I2c3_Handle,EEPROM_ADDRESS, memLocation); //get first byte in eeprom, which is last location with data
 			uint32_t latestsec=I2C_ByteRead(&I2c3_Handle,EEPROM_ADDRESS, lastLoc-2); //latest time
 			uint32_t latestmin=I2C_ByteRead(&I2c3_Handle,EEPROM_ADDRESS, lastLoc-1);
 			uint32_t latesthour=I2C_ByteRead(&I2c3_Handle,EEPROM_ADDRESS, lastLoc);

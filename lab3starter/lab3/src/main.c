@@ -733,7 +733,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 		I2C_ByteWrite(&I2c3_Handle,EEPROM_ADDRESS, memLocation+5 , temphour);	*/
 		
 		uint32_t lastLoc=I2C_ByteRead(&I2c3_Handle,EEPROM_ADDRESS, memLocation); //get first byte in eeprom, which is last location with data
-		LCD_DisplayInt(0,0,lastLoc);
+		//LCD_DisplayInt(0,0,lastLoc); uncomment to display last virtual location used (in bytes)
 		
 		if(lastLoc>=255){lastLoc=memLocation;}
 		

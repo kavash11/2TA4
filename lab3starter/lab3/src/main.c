@@ -57,8 +57,8 @@ I2C_HandleTypeDef  I2c3_Handle;
 RTC_HandleTypeDef RTCHandle;
 RTC_DateTypeDef RTC_DateStructure, read_RTC_DateStruct;
 RTC_TimeTypeDef RTC_TimeStructure, read_RTC_TimeStruct;
-uint32_t state; //kavya
-uint32_t display; //kavya
+uint32_t state; //variable to keep track of the state (what is being changed)
+uint32_t display; //Variable to keep track of whether eeprom values are being displayed in the idle state
 char* weekdays[] = {"Mon","Tue","Wed","Thu","Fri","Sat","Sun"};
 
 
@@ -81,7 +81,8 @@ static void SystemClock_Config(void);
 static void Error_Handler(void);
 
 /* Private functions ---------------------------------------------------------*/
-//Noor
+
+//Adds zero's where necessary to 3 numbers in n1:n2:n3 format and displays the numbers to the screen
 void displayZeroPadded3(uint16_t LineNumber, uint16_t ColumnNumber, uint32_t num1, uint32_t num2, uint32_t num3){
 	char str[9]; 
 
@@ -91,6 +92,8 @@ void displayZeroPadded3(uint16_t LineNumber, uint16_t ColumnNumber, uint32_t num
 	return;
 
 }
+
+//Adds zero's where necessary to 4 numbers in n1:n2:n3:n4 format and displays and the numbers to the screen
 void displayZeroPadded4(uint16_t LineNumber, uint16_t ColumnNumber, uint32_t num1, uint32_t num2, uint32_t num3, uint32_t num4){
 	//to do the WD thing as a string of 3 letters, make char str of size 13 instead of 12 and you turn the first %01d into a %s and you pass the 3-char day variable instead of num1
 	char str[13]; 
@@ -121,8 +124,8 @@ uint8_t byteIndexer(uint8_t num){
 int main(void)
 {
   //the following variables are for testging I2C_EEPROM
-	state=0; //kavya
-	display=0; //kavya
+	state=0; //Setting the default state to idle
+	display=0; //Setting the default to not display the eeprom data
 	uint8_t data1 =0x67,  data2=0x68;
 	uint8_t readData=0x00;
 	char AA[34]= "efghijklmnopqstuvefghijklmnopqstuv";
@@ -133,7 +136,7 @@ int main(void)
 	
 	
 	
-	I2C_ByteWrite(&I2c3_Handle,EEPROM_ADDRESS, memLocation , 0); //Noor: idk why this works but it wont work without it
+	I2C_ByteWrite(&I2c3_Handle,EEPROM_ADDRESS, memLocation , 0); 
 
 
 	 /*STM32F4xx HAL library initialization:
@@ -255,7 +258,7 @@ int main(void)
 	RTC_Config();
 		
 	RTC_AlarmAConfig();
-	ExtBtn1_Config(); //config extern buttons kavya
+	ExtBtn1_Config(); //config extern buttons 
 	ExtBtn2_Config();		
 	
  //test realtime clock	
@@ -360,10 +363,10 @@ static void SystemClock_Config(void)
   RCC_OscInitStruct.HSEState = RCC_HSE_ON;
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
   RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
-  RCC_OscInitStruct.PLL.PLLM = 8; //kavya
-  RCC_OscInitStruct.PLL.PLLN = 360; //kavya
+  RCC_OscInitStruct.PLL.PLLM = 8; 
+  RCC_OscInitStruct.PLL.PLLN = 360; 
   RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV2;
-  RCC_OscInitStruct.PLL.PLLQ = 7; //kavya
+  RCC_OscInitStruct.PLL.PLLQ = 7; 
   if(HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
   {
     Error_Handler();
@@ -377,8 +380,8 @@ static void SystemClock_Config(void)
   RCC_ClkInitStruct.ClockType = (RCC_CLOCKTYPE_SYSCLK | RCC_CLOCKTYPE_HCLK | RCC_CLOCKTYPE_PCLK1 | RCC_CLOCKTYPE_PCLK2);
   RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
   RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
-  RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV4;  //kavya
-  RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV2; //kavya  
+  RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV4; 
+  RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV2;  
   if(HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_5) != HAL_OK)
   {
     Error_Handler();
@@ -399,7 +402,7 @@ static void SystemClock_Config(void)
  * external pushbuttons and configure them so that you will handle
  * them through external interrupts.
  */
-void ExtBtn1_Config(void)     // for GPIO C pin 1 (used to select what time component to set kavya)
+void ExtBtn1_Config(void)     // for GPIO C pin 1 (used to select what time component to set)
 // can only use PA0, PB0... to PA4, PB4 .... because only  only  EXTI0, ...EXTI4,on which the 
 	//mentioned pins are mapped to, are connected INDIVIDUALLY to NVIC. the others are grouped! 
 		//see stm32f4xx.h, there is EXTI0_IRQn...EXTI4_IRQn, EXTI15_10_IRQn defined
@@ -412,7 +415,7 @@ void ExtBtn1_Config(void)     // for GPIO C pin 1 (used to select what time comp
   /* Configure PA0 pin as input floating */
   GPIO_InitStructure.Mode =  GPIO_MODE_IT_FALLING;
   GPIO_InitStructure.Pull =GPIO_PULLUP;
-  GPIO_InitStructure.Pin = GPIO_PIN_1; //assigning button 1 to PC1 kavya
+  GPIO_InitStructure.Pin = GPIO_PIN_1; //assigning button 1 to PC1 
 	//GPIO_InitStructure.Speed=GPIO_SPEED_LOW;
   HAL_GPIO_Init(GPIOC, &GPIO_InitStructure);
 
@@ -424,7 +427,7 @@ void ExtBtn1_Config(void)     // for GPIO C pin 1 (used to select what time comp
   HAL_NVIC_EnableIRQ(EXTI1_IRQn);
 }
 
-void ExtBtn2_Config(void){  //**********PD2.*********** (use to set time kavya)
+void ExtBtn2_Config(void){  //**********PD2.*********** (use to set time)
 
   GPIO_InitTypeDef   GPIO_InitStructure;
 
@@ -433,7 +436,7 @@ void ExtBtn2_Config(void){  //**********PD2.*********** (use to set time kavya)
   /* Configure PA0 pin as input floating */
   GPIO_InitStructure.Mode =  GPIO_MODE_IT_FALLING;
   GPIO_InitStructure.Pull =GPIO_PULLUP;
-  GPIO_InitStructure.Pin = GPIO_PIN_2; //assigning button 2 to PD2 kavya
+  GPIO_InitStructure.Pin = GPIO_PIN_2; //assigning button 2 to PD2 
 	//GPIO_InitStructure.Speed=GPIO_SPEED_LOW;
   HAL_GPIO_Init(GPIOD, &GPIO_InitStructure);
 
@@ -518,12 +521,12 @@ void RTC_Config(void) {
 				} 
   
   
-				RTC_TimeStructure.Hours = 9;  //kavya
+				RTC_TimeStructure.Hours = 9;  //Setting the default time to 9:31:50
 				RTC_TimeStructure.Minutes = 31; //if use RTC_FORMAT_BCD, NEED TO SET IT AS 0x19
 				RTC_TimeStructure.Seconds = 50;
 				RTC_TimeStructure.TimeFormat = RTC_HOURFORMAT12_AM;
 				RTC_TimeStructure.DayLightSaving = RTC_DAYLIGHTSAVING_NONE;
-				RTC_TimeStructure.StoreOperation = RTC_STOREOPERATION_RESET;//?????/
+				RTC_TimeStructure.StoreOperation = RTC_STOREOPERATION_RESET;
 				
 				if(HAL_RTC_SetTime(&RTCHandle,&RTC_TimeStructure,RTC_FORMAT_BIN) != HAL_OK)   //BIN format is better
 																																					//before, must set in BCD format and read in BIN format!!
@@ -719,42 +722,28 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 
 	
   if(GPIO_Pin == KEY_BUTTON_PIN)  //GPIO_PIN_0
-  {
-		/*uint32_t tempsec=I2C_ByteRead(&I2c3_Handle,EEPROM_ADDRESS, memLocation); //temporarily save stored time
-		uint32_t tempmin=I2C_ByteRead(&I2c3_Handle,EEPROM_ADDRESS, memLocation+1);
-		uint32_t temphour=I2C_ByteRead(&I2c3_Handle,EEPROM_ADDRESS, memLocation+2);
-		
-		I2C_ByteWrite(&I2c3_Handle,EEPROM_ADDRESS, memLocation , RTC_TimeStructure.Seconds); //write latest time to eeprom
-		I2C_ByteWrite(&I2c3_Handle,EEPROM_ADDRESS, memLocation+1 , RTC_TimeStructure.Minutes);
-		I2C_ByteWrite(&I2c3_Handle,EEPROM_ADDRESS, memLocation+2 , RTC_TimeStructure.Hours);
-		
-		I2C_ByteWrite(&I2c3_Handle,EEPROM_ADDRESS, memLocation+3, tempsec); //write temp time to eeprom
-		I2C_ByteWrite(&I2c3_Handle,EEPROM_ADDRESS, memLocation+4 , tempmin);
-		I2C_ByteWrite(&I2c3_Handle,EEPROM_ADDRESS, memLocation+5 , temphour);	*/
-		
+  {		
 		uint32_t lastLoc=I2C_ByteRead(&I2c3_Handle,EEPROM_ADDRESS, memLocation); //get first byte in eeprom, which is last location with data
-		//LCD_DisplayInt(0,0,lastLoc); uncomment to display last virtual location used (in bytes)
 		
 		if(lastLoc>=255){lastLoc=memLocation;}
+		LCD_DisplayString(0,0,(uint8_t*)"   ");
+		LCD_DisplayInt(0,0,lastLoc);
 		
 		I2C_ByteWrite(&I2c3_Handle,EEPROM_ADDRESS, lastLoc+1 , RTC_TimeStructure.Seconds); //write latest time to eeprom
 		I2C_ByteWrite(&I2c3_Handle,EEPROM_ADDRESS, lastLoc+2 , RTC_TimeStructure.Minutes);
 		I2C_ByteWrite(&I2c3_Handle,EEPROM_ADDRESS, lastLoc+3 , RTC_TimeStructure.Hours);
 		
 		I2C_ByteWrite(&I2c3_Handle,EEPROM_ADDRESS, memLocation , lastLoc+3); //write new mem location to eeprom
-		
-		
-
   }
 
 	if(GPIO_Pin == GPIO_PIN_1) //sets state (chooses what time value to set)
   {
-		if (state==8) {
+		if (state==8) { //resetting the value of the state to 0 when it's at the max value
 			state=0;
 			BSP_LCD_ClearStringLine(1); LCD_DisplayString(1,0,(uint8_t *)"                ");
 		}
 		else {
-			state+=1;
+			state+=1; //incrementing through the states and displaying the new value external button 2 changes
 			if (state==1) {BSP_LCD_ClearStringLine(1); LCD_DisplayString(1,0,(uint8_t *)"Change year (+)");}
 			else if (state==2) {BSP_LCD_ClearStringLine(1); LCD_DisplayString(1,0,(uint8_t *)"Change year (-)");}
 			else if (state==3) {BSP_LCD_ClearStringLine(1); LCD_DisplayString(1,0,(uint8_t *)"Change month");}
@@ -766,22 +755,18 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 		}
 	}  //end of PIN_1
 
-	if(GPIO_Pin == GPIO_PIN_2) //	DO I NEED TO DISPLAY THINGS IN STRING KAVYA
+	if(GPIO_Pin == GPIO_PIN_2)
   {
 		if (state==0 && display==0) { //displaying eeprom values in idle state on button press
 			uint32_t lastLoc=I2C_ByteRead(&I2c3_Handle,EEPROM_ADDRESS, memLocation); //get first byte in eeprom, which is last location with data
-			//I2C_ByteWrite(&I2c3_Handle,EEPROM_ADDRESS, memLocation , lastLoc); //write new mem location to eeprom
 			uint32_t latestsec=I2C_ByteRead(&I2c3_Handle,EEPROM_ADDRESS, byteIndexer(lastLoc-2)); //latest time
 			uint32_t latestmin=I2C_ByteRead(&I2c3_Handle,EEPROM_ADDRESS, byteIndexer(lastLoc-1));
 			uint32_t latesthour=I2C_ByteRead(&I2c3_Handle,EEPROM_ADDRESS, lastLoc);
-			BSP_LCD_ClearStringLine(7);
+			BSP_LCD_ClearStringLine(7);//clear the LCD of anything that was previously there
 			BSP_LCD_ClearStringLine(8);			
 			BSP_LCD_ClearStringLine(9);
-			LCD_DisplayString(7,0, (uint8_t *) "Latest time");
+			LCD_DisplayString(7,0, (uint8_t *) "Latest time");//display the latest button press time
 			LCD_DisplayString(8,0, (uint8_t *) "HH:MM:SS");
-			/*LCD_DisplayInt(9,0,latesthour);
-			LCD_DisplayInt(9,3,latestmin);
-			LCD_DisplayInt(9,6,latestsec);*/
 			displayZeroPadded3(9,0,latesthour,latestmin,latestsec);
 			
 			uint32_t twosec=I2C_ByteRead(&I2c3_Handle,EEPROM_ADDRESS, byteIndexer(lastLoc-5)); //2nd latest time
@@ -792,9 +777,6 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 			BSP_LCD_ClearStringLine(12);
 			LCD_DisplayString(10,0, (uint8_t *) "Second latest time");
 			LCD_DisplayString(11,0, (uint8_t *) "HH:MM:SS");
-			/*LCD_DisplayInt(12,0,twohour);
-			LCD_DisplayInt(12,3,twomin);
-			LCD_DisplayInt(12,6,twosec);*/
 			displayZeroPadded3(12,0,twohour,twomin,twosec);
 			display+=1;
 		}
@@ -808,11 +790,11 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 			display=0;
 		}
 		else if (state==1) { //set year - INCREASE
-			RTC_DateStructure.Year+=1;	//DO WE NEED TO BE ABLE TO DECREMENT YEAR (WHAT'S MAX YEAR)
+			RTC_DateStructure.Year+=1;	
 					
 		}
 		else if (state==2) { //set year - DECREASE
-			RTC_DateStructure.Year-=1;	//DO WE NEED TO BE ABLE TO DECREMENT YEAR (WHAT'S MAX YEAR)
+			RTC_DateStructure.Year-=1;	
 					
 		}
 		else	if (state==3) { //set month
@@ -888,23 +870,16 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 void HAL_RTC_AlarmAEventCallback(RTC_HandleTypeDef *hrtc)
 {
 		LCD_DisplayString(2,0, (uint8_t *) "Current date and time");
-		HAL_RTC_GetTime(&RTCHandle, &RTC_TimeStructure, RTC_FORMAT_BIN); //should continuously display time but isnt
-		BSP_LCD_ClearStringLine(3);
+		HAL_RTC_GetTime(&RTCHandle, &RTC_TimeStructure, RTC_FORMAT_BIN); //Gets the current time
+		BSP_LCD_ClearStringLine(3); //clears the LCD
 		BSP_LCD_ClearStringLine(4);
-		LCD_DisplayString(3,0, (uint8_t *) "HH:MM:SS");
-		/*LCD_DisplayInt(4,0,RTC_TimeStructure.Hours);
-		LCD_DisplayInt(4,3,RTC_TimeStructure.Minutes);
-		LCD_DisplayInt(4,6,RTC_TimeStructure.Seconds);*/
+		LCD_DisplayString(3,0, (uint8_t *) "HH:MM:SS");//displays current time
 		displayZeroPadded3(4,0,RTC_TimeStructure.Hours,RTC_TimeStructure.Minutes,RTC_TimeStructure.Seconds);
 	
-		HAL_RTC_GetDate(&RTCHandle,&RTC_DateStructure,RTC_FORMAT_BIN);
+		HAL_RTC_GetDate(&RTCHandle,&RTC_DateStructure,RTC_FORMAT_BIN); //Gets the date
 		LCD_DisplayString(5,0, (uint8_t *) "WD:DD:MM:YY");
-		/*LCD_DisplayInt(6,0, RTC_DateStructure.WeekDay);
- 		LCD_DisplayInt(6, 9, RTC_DateStructure.Year);
-		LCD_DisplayInt(6, 6, RTC_DateStructure.Month);
-		LCD_DisplayInt(6, 3, RTC_DateStructure.Date);*/
 		displayZeroPadded4(6,0,RTC_DateStructure.WeekDay,RTC_DateStructure.Date,RTC_DateStructure.Month,RTC_DateStructure.Year);
-		if((GPIOA->IDR & 0x1)!=0x1){
+		if((GPIOA->IDR & 0x1)!=0x1){ //if the user button is not being pressed, the screen is cleared
 			BSP_LCD_ClearStringLine(5);
 			BSP_LCD_ClearStringLine(6);
 		}

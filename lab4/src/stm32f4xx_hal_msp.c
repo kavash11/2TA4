@@ -67,7 +67,7 @@
   * @retval None
   */
 
-/*
+
 void HAL_TIM_Base_MspInit (TIM_HandleTypeDef *htim)
 {
   //Enable peripherals and GPIO Clocks 
@@ -82,7 +82,7 @@ __HAL_RCC_TIM3_CLK_ENABLE(); //this is defined in stm32f4xx_hal_rcc.h
 	HAL_NVIC_EnableIRQ(TIM3_IRQn);
 }
 
-*/
+
 
 void HAL_TIM_OC_MspInit(TIM_HandleTypeDef *htim)
 { 
@@ -90,7 +90,7 @@ void HAL_TIM_OC_MspInit(TIM_HandleTypeDef *htim)
  __HAL_RCC_TIM4_CLK_ENABLE();
     
   //Configure the NVIC for TIMx 
-	HAL_NVIC_SetPriority(TIM4_IRQn, 2, 0);
+	HAL_NVIC_SetPriority(TIM4_IRQn, 0, 2); //KAVYA
   
   // Enable the TIM global Interrupt 
 	HAL_NVIC_EnableIRQ(TIM4_IRQn);
@@ -100,7 +100,7 @@ void HAL_TIM_OC_MspInit(TIM_HandleTypeDef *htim)
 
 
 
-void HAL_TIM_PWM_MspInit(TIM_HandleTypeDef *htim)
+void HAL_TIM_PWM_MspInit(TIM_HandleTypeDef *htim) //ADD A TONNE OF STUFF
 {
 	//		as for which GPIO pin has to be used for TIM3 alternative functions, refer to the use manualf for Discovery board---UM1472 User Manual , stm32f4discovery
 	//		Major pins for TIM3 AF: PA6_TIM3_CH1, PA7--TIM3_CH2(also as TIM14_CH1),  PB0--TIM3_CH3, PB1--TIM3_CH4, PB4--TIM3_CH1,PB5--TIM3_CH2.  PC6--TIM3_CH1,
@@ -121,7 +121,7 @@ void HAL_TIM_PWM_MspInit(TIM_HandleTypeDef *htim)
 }
 
 
-void HAL_ADC_MspInit(ADC_HandleTypeDef* hadc)
+void HAL_ADC_MspInit(ADC_HandleTypeDef* hadc) //aADD A BUNCH OF STUFF
 {
   GPIO_InitTypeDef          GPIO_InitStruct;
   static DMA_HandleTypeDef  hdma_adc;
@@ -134,17 +134,16 @@ void HAL_ADC_MspInit(ADC_HandleTypeDef* hadc)
 	 /*##-1- Enable peripherals and GPIO Clocks #################################*/
   /* Enable GPIO clock */
   
-///__HAL_RCC_GPIOC_CLK_ENABLE();   // for ADC3_IN13, the pin is PC3
+	__HAL_RCC_GPIOC_CLK_ENABLE();   // for ADC3_IN13, the pin is PC3
 
   /* ADC3 Periph clock enable */
  
-//  /__HAL_RCC_ADC3_CLK_ENABLE();
+	__HAL_RCC_ADC3_CLK_ENABLE();
   
 	
 	/* Enable DMA2 clock */
   
-//	__HAL_RCC_DMA2_CLK_ENABLE();
-  
+	__HAL_RCC_DMA2_CLK_ENABLE();
 	
 	
 // more settings, Please follow the example project for ACD_DMA.	
@@ -177,8 +176,7 @@ void HAL_ADC_MspDeInit(ADC_HandleTypeDef *hadc)
    __HAL_RCC_ADC_FORCE_RESET();
   __HAL_RCC_ADC_RELEASE_RESET();
 
-  // more settings, please follow the example project
-
+  // more settings, please follow the example project 
 
 
 

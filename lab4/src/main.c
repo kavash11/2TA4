@@ -78,7 +78,10 @@ double measuredTemp;
 
 void  LEDs_Config(void);
 
+void ADC_DMA_Config(void);
 
+void ExtBtn1_Config(void);
+void ExtBtn2_Config(void);
 
 
 void LCD_DisplayString(uint16_t LineNumber, uint16_t ColumnNumber, uint8_t *ptr);
@@ -86,6 +89,7 @@ void LCD_DisplayInt(uint16_t LineNumber, uint16_t ColumnNumber, int Number);
 void LCD_DisplayFloat(uint16_t LineNumber, uint16_t ColumnNumber, float Number, int DigitAfterDecimalPoint);
 
 void TIM3_PWM_Config(void);
+
 static void SystemClock_Config(void);
 static void Error_Handler(void);
 

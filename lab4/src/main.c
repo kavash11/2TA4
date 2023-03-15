@@ -32,8 +32,11 @@
 
 
 ADC_HandleTypeDef    AdcHandle;
-__IO uint16_t ADC3ConvertedValue=0;
+TIM_HandleTypeDef Tim3_Handle, Tim4_Handle;
+TIM_OC_InitTypeDef Tim4_OCInitStructure, Tim3_OCInitStructure;
 
+__IO uint16_t ADC3ConvertedValue=0;
+__IO uint16_t uhADCxConvertedValue = 0;
 
  volatile double  setPoint=23.5;  //NOTE: if declare as float, when +0.5, the compiler will give warning:
 															//"single_precision perand implicitly converted to double-precision"
@@ -82,12 +85,13 @@ void LCD_DisplayString(uint16_t LineNumber, uint16_t ColumnNumber, uint8_t *ptr)
 void LCD_DisplayInt(uint16_t LineNumber, uint16_t ColumnNumber, int Number);
 void LCD_DisplayFloat(uint16_t LineNumber, uint16_t ColumnNumber, float Number, int DigitAfterDecimalPoint);
 
-
+void TIM3_PWM_Config(void);
 static void SystemClock_Config(void);
 static void Error_Handler(void);
 
 int main(void){
-	
+
+	ADC_ChannelConfTypeDef sConfig;
 		/* STM32F4xx HAL library initialization:
        - Configure the Flash prefetch, instruction and Data caches
        - Configure the Systick to generate an interrupt each 1 msec
@@ -99,6 +103,52 @@ int main(void){
 	
 	
 		SystemClock_Config();
+	  BSP_LED_Init(LED3);
+		BSP_LED_Init(LED4);
+	
+	  AdcHandle.Instance          = ADCx;
+  
+  AdcHandle.Init.ClockPrescaler = ADC_CLOCKPRESCALER_PCLK_DIV2;
+  AdcHandle.Init.Resolution = ADC_RESOLUTION_12B;
+  AdcHandle.Init.ScanConvMode = DISABLE;
+  AdcHandle.Init.ContinuousConvMode = ENABLE;
+  AdcHandle.Init.DiscontinuousConvMode = DISABLE;
+  AdcHandle.Init.NbrOfDiscConversion = 0;
+  AdcHandle.Init.ExternalTrigConvEdge = ADC_EXTERNALTRIGCONVEDGE_NONE;
+  AdcHandle.Init.ExternalTrigConv = ADC_EXTERNALTRIGCONV_T1_CC1;
+  AdcHandle.Init.DataAlign = ADC_DATAALIGN_RIGHT;
+  AdcHandle.Init.NbrOfConversion = 1;
+  AdcHandle.Init.DMAContinuousRequests = ENABLE;
+  AdcHandle.Init.EOCSelection = DISABLE;
+      
+  if(HAL_ADC_Init(&AdcHandle) != HAL_OK)
+  {
+    /* Initialization Error */
+    Error_Handler(); 
+  }
+  
+  /*##-2- Configure ADC regular channel ######################################*/  
+  sConfig.Channel = ADCx_CHANNEL;
+  sConfig.Rank = 1;
+  sConfig.SamplingTime = ADC_SAMPLETIME_3CYCLES;
+  sConfig.Offset = 0;
+  
+  if(HAL_ADC_ConfigChannel(&AdcHandle, &sConfig) != HAL_OK)
+  {
+    /* Channel Configuration Error */
+    Error_Handler(); 
+  }
+
+  /*##-3- Start the conversion process and enable interrupt ##################*/
+  /* Note: Considering IT occurring after each number of ADC conversions      */
+  /*       (IT by DMA end of transfer), select sampling time and ADC clock    */
+  /*       with sufficient duration to not create an overhead situation in    */
+  /*        IRQHandler. */ 
+  if(HAL_ADC_Start_DMA(&AdcHandle, (uint32_t*)&uhADCxConvertedValue, 1) != HAL_OK)
+  {
+    /* Start Conversation Error */
+    Error_Handler(); 
+  }
 		
 		HAL_InitTick(0x0000); // set systick's priority to the highest.
 	
@@ -195,10 +245,10 @@ static void SystemClock_Config(void)
   RCC_OscInitStruct.HSEState = RCC_HSE_ON;
   RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
   RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
-  RCC_OscInitStruct.PLL.PLLM = 4;
-  RCC_OscInitStruct.PLL.PLLN = 72;
+  RCC_OscInitStruct.PLL.PLLM = 8;
+  RCC_OscInitStruct.PLL.PLLN = 360;
   RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV2;
-  RCC_OscInitStruct.PLL.PLLQ = 3;
+  RCC_OscInitStruct.PLL.PLLQ = 7;
   if(HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
   {
     Error_Handler();

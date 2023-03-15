@@ -31,7 +31,7 @@
 
 
 
-
+ADC_HandleTypeDef    AdcHandle;
 __IO uint16_t ADC3ConvertedValue=0;
 
 

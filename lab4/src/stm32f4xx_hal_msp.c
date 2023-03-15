@@ -42,6 +42,10 @@
   * @{
   */
 
+/** @defgroup ADC_RegularConversion_DMA
+  * @{
+  */
+	
 /** @defgroup HAL_MSP
   * @brief HAL MSP module.
   * @{
@@ -63,7 +67,7 @@
   *        This function configures the hardware resources used in this example: 
   *           - Peripheral's clock enable
   *           - Peripheral's GPIO Configuration  
-  * @param htim: TIM handle pointer
+  * @param huart: UART handle pointer
   * @retval None
   */
 
@@ -116,6 +120,67 @@ void HAL_TIM_PWM_MspInit(TIM_HandleTypeDef *htim) //ADD A TONNE OF STUFF
     
   // configuration for GPIO pin for PWM
   
+  //- Enable peripherals and GPIO Clocks 
+  __HAL_RCC_TIM3_CLK_ENABLE();
+    
+	
+	
+  // Enable GPIO Port Clocks 
+  __HAL_RCC_GPIOA_CLK_ENABLE(); //for PinA7  and PinA6for Channel 2
+  
+    
+  // Common configuration for all channels 
+  GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+  GPIO_InitStruct.Pull = GPIO_PULLUP;
+  GPIO_InitStruct.Speed = GPIO_SPEED_HIGH; //???? 50MHz, 25Mhz...don't know what is the critics to select pin speed.
+  
+	
+		//for Channel 1
+	GPIO_InitStruct.Alternate = GPIO_AF2_TIM3;//as for which AF, see table "alternate function mapping" in datasheet
+																					//for stm32f429i-disco, see table 12 on page 73 (for pin PA7) in document
+																					//DocID024030 Rev 7--datasheet for stm32f427xx--stm32f429xx
+	
+	//all the four channels of TIM3's alternate function are AF2.  
+	
+	
+	
+	GPIO_InitStruct.Pin = GPIO_PIN_6;
+  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+	
+		 
+  // for Channel 2 output   
+  GPIO_InitStruct.Pin = GPIO_PIN_7;    //TIM3 AF2 is for TIM3's CH1, CH2 and CH3 and CH4
+  HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+	
+	
+	
+
+	//the AF2 of TIM3-CH3 and TIM3-CH4 are mapped to PB0 and PB1
+	
+	 // Enable GPIO Port Clocks 
+/*  __HAL_RCC_GPIOB_CLK_ENABLE(); //for PinB0 and PB1  and PinA6for Channel 2
+	
+	GPIO_InitStruct.Pin = GPIO_PIN_0;    //TIM3 AF2 is for TIM3's CH1, CH2 and CH3 and CH4
+  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+	
+	GPIO_InitStruct.Pin = GPIO_PIN_1;    //TIM3 AF2 is for TIM3's CH1, CH2 and CH3 and CH4
+  HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+*/
+
+
+	
+	//the AF2 of TIM3-CH3 and TIM3-CH4 are also mapped to PC9 and PC9
+	
+	 // Enable GPIO Port Clocks 
+  __HAL_RCC_GPIOC_CLK_ENABLE(); //for PinB0 and PB1  and PinA6for Channel 2
+	
+	GPIO_InitStruct.Pin = GPIO_PIN_8;    //TIM3 AF2 is for TIM3's CH1, CH2 and CH3 and CH4
+  HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+	
+	GPIO_InitStruct.Pin = GPIO_PIN_9;    //TIM3 AF2 is for TIM3's CH1, CH2 and CH3 and CH4
+  HAL_GPIO_Init(GPIOC, &GPIO_InitStruct);
+	
+	
 
 
 }
@@ -123,8 +188,8 @@ void HAL_TIM_PWM_MspInit(TIM_HandleTypeDef *htim) //ADD A TONNE OF STUFF
 
 void HAL_ADC_MspInit(ADC_HandleTypeDef* hadc) //aADD A BUNCH OF STUFF
 {
-  GPIO_InitTypeDef          GPIO_InitStruct;
-  static DMA_HandleTypeDef  hdma_adc;
+ // GPIO_InitTypeDef          GPIO_InitStruct;
+  //static DMA_HandleTypeDef  hdma_adc;
   
 	//as for which GPIO pin has to be used for ADC, refer to datasheet for stm32f427xx/stm32f429xx, (table10 on P51 in DocID024030 Rev 7)
 	//		Major pins for ADC: PA1--ADC123_IN1, PA2--ADC123_IN2, PA3---ADC123_IN3,            PA4--ADC12_IN4, PA5--ADC12_IN5,....PA7--ADC12_IN7.
@@ -134,22 +199,65 @@ void HAL_ADC_MspInit(ADC_HandleTypeDef* hadc) //aADD A BUNCH OF STUFF
 	 /*##-1- Enable peripherals and GPIO Clocks #################################*/
   /* Enable GPIO clock */
   
-	__HAL_RCC_GPIOC_CLK_ENABLE();   // for ADC3_IN13, the pin is PC3
+	//__HAL_RCC_GPIOC_CLK_ENABLE();   // for ADC3_IN13, the pin is PC3
 
   /* ADC3 Periph clock enable */
  
-	__HAL_RCC_ADC3_CLK_ENABLE();
+	//__HAL_RCC_ADC3_CLK_ENABLE();
   
 	
 	/* Enable DMA2 clock */
   
-	__HAL_RCC_DMA2_CLK_ENABLE();
+	//__HAL_RCC_DMA2_CLK_ENABLE();
 	
 	
 // more settings, Please follow the example project for ACD_DMA.	
 	
 	
+	GPIO_InitTypeDef          GPIO_InitStruct;
+  static DMA_HandleTypeDef  hdma_adc;
+  
+  /*##-1- Enable peripherals and GPIO Clocks #################################*/
+  /* Enable GPIO clock */
+  ADCx_CHANNEL_GPIO_CLK_ENABLE();
+  /* ADC3 Periph clock enable */
+  ADCx_CLK_ENABLE();
+  /* Enable DMA2 clock */
+  DMAx_CLK_ENABLE(); 
+  
+  /*##-2- Configure peripheral GPIO ##########################################*/ 
+  /* ADC3 Channel8 GPIO pin configuration */
+  GPIO_InitStruct.Pin = ADCx_CHANNEL_PIN;
+  GPIO_InitStruct.Mode = GPIO_MODE_ANALOG;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  HAL_GPIO_Init(ADCx_CHANNEL_GPIO_PORT, &GPIO_InitStruct);
+  
+  /*##-3- Configure the DMA streams ##########################################*/
+  /* Set the parameters to be configured */
+  hdma_adc.Instance = ADCx_DMA_STREAM;
+  
+  hdma_adc.Init.Channel  = ADCx_DMA_CHANNEL;
+  hdma_adc.Init.Direction = DMA_PERIPH_TO_MEMORY;
+  hdma_adc.Init.PeriphInc = DMA_PINC_DISABLE;
+  hdma_adc.Init.MemInc = DMA_MINC_ENABLE;
+  hdma_adc.Init.PeriphDataAlignment = DMA_PDATAALIGN_WORD;
+  hdma_adc.Init.MemDataAlignment = DMA_MDATAALIGN_WORD;
+  hdma_adc.Init.Mode = DMA_CIRCULAR;
+  hdma_adc.Init.Priority = DMA_PRIORITY_HIGH;
+  hdma_adc.Init.FIFOMode = DMA_FIFOMODE_DISABLE;         
+  hdma_adc.Init.FIFOThreshold = DMA_FIFO_THRESHOLD_HALFFULL;
+  hdma_adc.Init.MemBurst = DMA_MBURST_SINGLE;
+  hdma_adc.Init.PeriphBurst = DMA_PBURST_SINGLE; 
 
+  HAL_DMA_Init(&hdma_adc);
+    
+  /* Associate the initialized DMA handle to the the ADC handle */
+  __HAL_LINKDMA(hadc, DMA_Handle, hdma_adc);
+
+  /*##-4- Configure the NVIC for DMA #########################################*/
+  /* NVIC configuration for DMA transfer complete interrupt */
+  HAL_NVIC_SetPriority(ADCx_DMA_IRQn, 0, 0);   
+  HAL_NVIC_EnableIRQ(ADCx_DMA_IRQn);
 	
   
 	
@@ -170,19 +278,30 @@ void HAL_ADC_MspInit(ADC_HandleTypeDef* hadc) //aADD A BUNCH OF STUFF
   */
 void HAL_ADC_MspDeInit(ADC_HandleTypeDef *hadc)
 {
-  static DMA_HandleTypeDef  hdma_adc;
+  //static DMA_HandleTypeDef  hdma_adc;
   
   /*##-1- Reset peripherals ##################################################*/
-   __HAL_RCC_ADC_FORCE_RESET();
-  __HAL_RCC_ADC_RELEASE_RESET();
+  /* __HAL_RCC_ADC_FORCE_RESET();
+  __HAL_RCC_ADC_RELEASE_RESET();*/
 
   // more settings, please follow the example project 
 
+	 static DMA_HandleTypeDef  hdma_adc;
+  
+  /*##-1- Reset peripherals ##################################################*/
+  ADCx_FORCE_RESET();
+  ADCx_RELEASE_RESET();
 
-
-
-
-
+  /*##-2- Disable peripherals and GPIO Clocks ################################*/
+  /* De-initialize the ADC3 Channel8 GPIO pin */
+  HAL_GPIO_DeInit(ADCx_CHANNEL_GPIO_PORT, ADCx_CHANNEL_PIN);
+  
+  /*##-3- Disable the DMA Streams ############################################*/
+  /* De-Initialize the DMA Stream associate to transmission process */
+  HAL_DMA_DeInit(&hdma_adc); 
+    
+  /*##-4- Disable the NVIC for DMA ###########################################*/
+  HAL_NVIC_DisableIRQ(ADCx_DMA_IRQn);
 
 
 }

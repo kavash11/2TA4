@@ -321,6 +321,60 @@ static void Error_Handler(void)
   }
 }
 
+/**
+ * Use this function to configure the GPIO to handle input from
+ * external pushbuttons and configure them so that you will handle
+ * them through external interrupts.
+ */
+void ExtBtn1_Config(void)     // for GPIO C pin 1 (used to select what time component to set)
+// can only use PA0, PB0... to PA4, PB4 .... because only  only  EXTI0, ...EXTI4,on which the 
+	//mentioned pins are mapped to, are connected INDIVIDUALLY to NVIC. the others are grouped! 
+		//see stm32f4xx.h, there is EXTI0_IRQn...EXTI4_IRQn, EXTI15_10_IRQn defined
+{
+  GPIO_InitTypeDef   GPIO_InitStructure;
+
+  /* Enable GPIOB clock */
+  __HAL_RCC_GPIOC_CLK_ENABLE();
+  
+  /* Configure PA0 pin as input floating */
+  GPIO_InitStructure.Mode =  GPIO_MODE_IT_FALLING;
+  GPIO_InitStructure.Pull =GPIO_PULLUP;
+  GPIO_InitStructure.Pin = GPIO_PIN_1; //assigning button 1 to PC1 
+	//GPIO_InitStructure.Speed=GPIO_SPEED_LOW;
+  HAL_GPIO_Init(GPIOC, &GPIO_InitStructure);
+
+	//__HAL_GPIO_EXTI_CLEAR_IT(GPIO_PIN_1);   //is defined the same as the __HAL_GPIO_EXTI_CLEAR_FLAG(GPIO_PIN_1); ---check the hal_gpio.h
+	__HAL_GPIO_EXTI_CLEAR_FLAG(GPIO_PIN_1);// after moving the chunk of code in the GPIO_EXTI callback from _it.c (before these chunks are in _it.c)
+																					//the program "freezed" when start, suspect there is a interupt pending bit there. Clearing it solve the problem.
+  /* Enable and set EXTI Line0 Interrupt to the lowest priority */
+  HAL_NVIC_SetPriority(EXTI1_IRQn, 3, 0);
+  HAL_NVIC_EnableIRQ(EXTI1_IRQn);
+}
+
+void ExtBtn2_Config(void){  //**********PD2.*********** (use to set time)
+
+  GPIO_InitTypeDef   GPIO_InitStructure;
+
+  /* Enable GPIOB clock */
+  __HAL_RCC_GPIOD_CLK_ENABLE();
+  /* Configure PA0 pin as input floating */
+  GPIO_InitStructure.Mode =  GPIO_MODE_IT_FALLING;
+  GPIO_InitStructure.Pull =GPIO_PULLUP;
+  GPIO_InitStructure.Pin = GPIO_PIN_2; //assigning button 2 to PD2 
+	//GPIO_InitStructure.Speed=GPIO_SPEED_LOW;
+  HAL_GPIO_Init(GPIOD, &GPIO_InitStructure);
+
+	//__HAL_GPIO_EXTI_CLEAR_IT(GPIO_PIN_1);   //is defined the same as the __HAL_GPIO_EXTI_CLEAR_FLAG(GPIO_PIN_1); ---check the hal_gpio.h
+	__HAL_GPIO_EXTI_CLEAR_FLAG(GPIO_PIN_2);	
+	
+	
+	
+	
+  // Enable and set EXTI Line0 Interrupt to the lowest priority 
+  HAL_NVIC_SetPriority(EXTI2_IRQn, 3, 1);
+  HAL_NVIC_EnableIRQ(EXTI2_IRQn);
+}
+
 #ifdef  USE_FULL_ASSERT
 /**
   * @brief  Reports the name of the source file and the source line number

@@ -54,7 +54,6 @@
 
 extern ADC_HandleTypeDef    Adc3_Handle;
 extern TIM_HandleTypeDef    Tim3_Handle, Tim4_Handle;
-extern TIM_OC_InitTypeDef Tim3_OCInitStructure, Tim4_OCInitStructure;
 
 
 /* Private define ------------------------------------------------------------*/
@@ -214,7 +213,7 @@ void ADC_IRQHandler(void){
 
 
 void DMA2_Stream0_IRQHandler(void) {
-	HAL_DMA_IRQHandler(Adc3_Handle.DMA_Handle);
+	 HAL_DMA_IRQHandler(Adc3_Handle.DMA_Handle);
 }
 
 
@@ -222,14 +221,12 @@ void DMA2_Stream0_IRQHandler(void) {
 
 void TIM3_IRQHandler(void)
 {
-	__HAL_TIM_SET_COUNTER(&Tim3_Handle, 0x0000);
-	HAL_TIM_IRQHandler(&Tim3_Handle);
+ 	HAL_TIM_IRQHandler(&Tim3_Handle);
 }
 
 void TIM4_IRQHandler(void)
 {		
-	__HAL_TIM_SET_COUNTER(&Tim4_Handle, 0x0000);
-	HAL_TIM_IRQHandler(&Tim4_Handle);
+		HAL_TIM_IRQHandler(&Tim4_Handle);
 }
 
 

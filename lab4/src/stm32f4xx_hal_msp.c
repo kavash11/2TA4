@@ -67,7 +67,7 @@
   * @retval None
   */
 
-/*
+
 void HAL_TIM_Base_MspInit (TIM_HandleTypeDef *htim)
 {
   //Enable peripherals and GPIO Clocks 
@@ -82,7 +82,7 @@ __HAL_RCC_TIM3_CLK_ENABLE(); //this is defined in stm32f4xx_hal_rcc.h
 	HAL_NVIC_EnableIRQ(TIM3_IRQn);
 }
 
-*/
+
 
 void HAL_TIM_OC_MspInit(TIM_HandleTypeDef *htim)
 { 

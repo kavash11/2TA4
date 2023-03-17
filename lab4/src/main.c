@@ -31,8 +31,11 @@
 
 ADC_HandleTypeDef Adc3_Handle;
 ADC_ChannelConfTypeDef sConfig;
-TIM_HandleTypeDef    Tim3_Handle;
-TIM_OC_InitTypeDef Tim3_OCInitStructure, Tim4_OcInitStructure;
+TIM_HandleTypeDef    Tim3_Handle, Tim4_Handle;
+TIM_OC_InitTypeDef Tim3_OCInitStructure, Tim4_OCInitStructure;
+uint16_t Tim3_PrescalerValue,Tim4_PrescalerValue;
+
+__IO uint16_t Tim4_CCR; // the pulse of the TIM4
 
 int state = 0; //0 for show temp, 1 for set temp
 double temp; //showed temp

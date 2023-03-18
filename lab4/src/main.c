@@ -149,12 +149,22 @@ int main(void){
 		LCD_DisplayFloat(10, 10, 23.55, 2);
 	*/
 	
+		LCD_DisplayString(3, 2, (uint8_t *) "Lab4 Starter ");
+	
+		LCD_DisplayString(9, 0, (uint8_t *) "Current ");
+		LCD_DisplayString(10, 0, (uint8_t *)"setPoint");
+	
+	
+
+		LCD_DisplayFloat(10, 10, setPoint, 2);
+		
 	
 		
 	while(1) {	
-			measuredTemp = HAL_ADC_GetValue(&Adc3_Handle); //display temp
+			HAL_ADC_Start_DMA(&Adc3_Handle, (uint32_t *)&ADC3ConvertedValue, 1); 
+			measuredTemp = HAL_ADC_GetValue(&Adc3_Handle)*0.02441; //display temp
 			sprintf((char*)lcd_buffer, "%.2f", measuredTemp);
-			LCD_DisplayString(9,10,(uint8_t*)lcd_buffer);
+			LCD_DisplayString(5,10,(uint8_t*)lcd_buffer);
 
 		
 	} // end of while loop

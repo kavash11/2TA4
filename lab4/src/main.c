@@ -35,11 +35,12 @@ TIM_HandleTypeDef    Tim3_Handle, Tim4_Handle;
 TIM_OC_InitTypeDef Tim3_OCInitStructure, Tim4_OCInitStructure;
 uint16_t Tim3_PrescalerValue,Tim4_PrescalerValue;
 
-__IO uint16_t Tim4_CCR; // the pulse of the TIM4
+__IO uint16_t Tim4_CCR = 500; // the pulse of the TIM4
 __IO uint16_t Tim3_CCR; // the pulse of the TIM3 Noor
 
 int state = 0; //0 for show temp, 1 for set temp
 double temp; //showed temp
+int tick = 0; 
 
 
 char lcd_buffer[6]; //lcd display buffer
@@ -70,6 +71,8 @@ uint16_t TIM3Prescaler;
 	//		-----MODIFY the system_stm32f4xx.c in the above way, will also fix the "float" type problem mentioned above. 												
 												
 double measuredTemp;
+uint16_t bc1, bc2 = 0; 
+
 	/*
 	according to the reference manual of STM32f4Discovery, the Vref+ should =VDD=VDDA=3.0V, while Vref-=VSSA=0
 	so the voltage of 3V is mapped to 12 bits ADC result, which ranges from 0 to 4095.  
@@ -79,7 +82,7 @@ double measuredTemp;
 	ADC_convertedvalue* (3/4095) /3. 
 	
 	since the temperature sensor sensitity is 10mV/C ,that is:  (0.01V/C)
-	so the temperature is: ADC_convertedvalue* (3/4095) /3 /0.01 = ADC_convertedvalue * 0.02442 (Kabir)
+	so the temperature is: ADC_convertedvalue* (3/4095) /3 /0.01 = ADC_convertedvalue * 0.02441 (Kabir)
 	
 	NOTE: you'd better not, or cannot, let the MCU to the calculation becuase its power is limited. Otherwise your program may not work as expected. 
 	*/
@@ -102,6 +105,11 @@ void ADC_DMA_Config(void);
 void ExtBtn1_Config(void);
 void ExtBtn2_Config(void);
 void PWM_Config(void);
+void TIM3_Config(void); 
+void TIM4_Config(void);
+void TIM4_OC_Config(void);
+
+
 
 
 static void SystemClock_Config(void);
@@ -153,11 +161,16 @@ int main(void){
 		LCD_DisplayString(3, 2, (uint8_t *) "Lab4 Starter ");
 	
 		LCD_DisplayString(9, 0, (uint8_t *) "Current ");
-		LCD_DisplayString(10, 0, (uint8_t *)"setPoint");
-	
-	
-
+		LCD_DisplayString(10, 0, (uint8_t *)"setPoint");	
 		LCD_DisplayFloat(10, 10, setPoint, 2);
+		
+		ADC_DMA_Config(); 
+		ExtBtn1_Config(); 
+		ExtBtn2_Config(); 
+		PWM_Config(); 
+		TIM3_Config(); 
+		TIM4_Config();	
+		TIM4_OC_Config();
 		
 	
 		
@@ -167,6 +180,8 @@ int main(void){
 			sprintf((char*)lcd_buffer, "%.2f", measuredTemp);
 			LCD_DisplayString(5,10,(uint8_t*)lcd_buffer);
 
+		
+			
 		
 	} // end of while loop
 	
@@ -308,11 +323,14 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 	if(GPIO_Pin == GPIO_PIN_1)
   {
 		
+		//LEDs_Toggle(); 
+		bc1+=1;
+		
 	}  //end of PIN_1
 
 	if(GPIO_Pin == GPIO_PIN_2)
   {
-			
+		bc2+=1;
 	} //end of if PIN_2	
 	
 	
@@ -322,18 +340,84 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 
 void HAL_TIM_OC_DelayElapsedCallback(TIM_HandleTypeDef * htim) //see  stm32fxx_hal_tim.c for different callback function names. 
 {																																//for timer4 
-	//	if ((*htim).Instance==TIM4) {
-			
-	//	}	
+	if ((*htim).Instance==TIM4) {
+			if(HAL_GPIO_ReadPin(GPIOC,GPIO_PIN_1)==0){
+				if(tick == 0){
+					tick = HAL_GetTick(); 
+				} else{
+					if(HAL_GetTick() - 500 > tick){
+						LEDs_Toggle();
+						tick = 0;
+					}
+			}
+		}
+			else{
+				tick = 0;
+				LEDs_Off();
+			}
+//			//assuming a tick rate of every ms
+//			if(bc1>0 && HAL_GPIO_ReadPin(GPIOC,GPIO_PIN_1)==1){
+//				bc1+=1;
+//			}
+//			if(bc2>0 && HAL_GPIO_ReadPin(GPIOD,GPIO_PIN_2)==1){
+//				bc2+=1;
+//			}
+//			//LEDs_Toggle();
+//			
+//			if(bc1>=501 && HAL_GPIO_ReadPin(GPIOC,GPIO_PIN_1)==1){
+//				LEDs_Toggle();//do action1
+//				bc1=0;
+//			}
+//			if(bc2>=501 && HAL_GPIO_ReadPin(GPIOD,GPIO_PIN_2)==1){
+//				LEDs_Toggle();//do action2
+//				bc2=0;
+//			}
+//			if(HAL_GPIO_ReadPin(GPIOC,GPIO_PIN_1)==0){
+//				bc1=0;
+//			}
+//			if(HAL_GPIO_ReadPin(GPIOD,GPIO_PIN_2)==0){
+//				bc2=0;
+//			}
+//		}	
 		//clear the timer counter!  in stm32f4xx_hal_tim.c, the counter is not cleared after  OC interrupt
 		__HAL_TIM_SET_COUNTER(htim, 0x0000);   //this maro is defined in stm32f4xx_hal_tim.h
 	
-}
+}}
  
 void HAL_TIM_PWM_PulseFinishedCallback(TIM_HandleTypeDef * htim){  //this is for TIM3_pwm
 	
 	//__HAL_TIM_SET_COUNTER(htim, 0x0000);  not necessary
 }
+
+//Configure Timer 3
+//This timer will be used to determine if the buttons have been held down for 1/2 a second
+void TIM3_Config(void)
+{
+	Tim3_Handle.Init.Period = 65535;
+	//Calculates the prescaler value for timer 3. We want the timer to overflow 16 times a second
+	Tim3_PrescalerValue = (uint32_t) (SystemCoreClock / (16*(Tim3_Handle.Init.Period + 1)))-1;
+	Tim3_Handle.Instance = TIM3;
+	
+	Tim3_Handle.Init.Prescaler = Tim3_PrescalerValue;
+	Tim3_Handle.Init.ClockDivision = 0;
+  Tim3_Handle.Init.CounterMode = TIM_COUNTERMODE_UP;
+	
+	
+	if(HAL_TIM_Base_Init(&Tim3_Handle) != HAL_OK) // this line need to call the callback function _MspInit() in stm32f4xx_hal_msp.c to set up peripheral clock and NVIC..
+  {
+    Error_Handler();
+  }
+	
+	if(HAL_TIM_Base_Start_IT(&Tim3_Handle) != HAL_OK)   //the TIM_XXX_Start_IT function enable IT, and also enable Timer
+																											//so do not need HAL_TIM_BASE_Start() any more.
+  {
+		//BSP_LED_Toggle(LED3);
+    Error_Handler();
+  }
+	
+	//BSP_LED_Toggle(LED4);
+}
+
 
 // configure Timer4 base.
 void  TIM4_Config(void)

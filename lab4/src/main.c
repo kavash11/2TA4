@@ -301,7 +301,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
   {
 			//Noor: for testing
       Tim3_CCR=Tim3_CCR+100;
-      __HAL_TIM_SET_COMPARE(&Tim3_Handle, TIM_CHANNEL_1,Tim3_CCR);
+		__HAL_TIM_SET_COMPARE(&Tim3_Handle, TIM_CHANNEL_2,Tim3_CCR); //Noor: we're using tim3 channel 2 according to stm32 manual (this is what corresponds to PA7)
   }
 	
 	

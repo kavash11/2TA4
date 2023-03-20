@@ -36,6 +36,7 @@ TIM_OC_InitTypeDef Tim3_OCInitStructure, Tim4_OCInitStructure;
 uint16_t Tim3_PrescalerValue,Tim4_PrescalerValue;
 
 __IO uint16_t Tim4_CCR; // the pulse of the TIM4
+__IO uint16_t Tim3_CCR; // the pulse of the TIM3 Noor
 
 int state = 0; //0 for show temp, 1 for set temp
 double temp; //showed temp
@@ -298,7 +299,9 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 	
   if(GPIO_Pin == KEY_BUTTON_PIN)  //GPIO_PIN_0
   {
-			
+			//Noor: for testing
+      Tim3_CCR=Tim3_CCR+100;
+      __HAL_TIM_SET_COMPARE(&Tim3_Handle, TIM_CHANNEL_1,Tim3_CCR);
   }
 	
 	
@@ -545,6 +548,8 @@ void PWM_Config(){
 																	//This parameter is valid only for TIM1 and TIM8.
 	//Tim3_OCInitStructure.OCIdleState = TIM_OCIDLESTATE_SET; //This parameter is valid only for TIM1 and TIM8.
   //Tim3_OCInitStructure.OCNIdleState= TIM_OCNIDLESTATE_RESET; //This parameter is valid only for TIM1 and TIM8.
+
+  Tim3_OCInitStructure.Pulse=Tim3_CCR;   //200 Noor
 	
 	
 	if(HAL_TIM_PWM_ConfigChannel(&Tim3_Handle, &Tim3_OCInitStructure, TIM_CHANNEL_1) != HAL_OK)

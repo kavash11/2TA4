@@ -87,13 +87,13 @@ __HAL_RCC_TIM3_CLK_ENABLE(); //this is defined in stm32f4xx_hal_rcc.h
 void HAL_TIM_OC_MspInit(TIM_HandleTypeDef *htim)
 { 
   //Enable peripherals and GPIO Clocks
- __HAL_RCC_TIM3_CLK_ENABLE();
+ __HAL_RCC_TIM4_CLK_ENABLE();
     
   //Configure the NVIC for TIMx 
 	HAL_NVIC_SetPriority(TIM4_IRQn, 0, 2);
   
   // Enable the TIM global Interrupt 
-	HAL_NVIC_EnableIRQ(TIM3_IRQn);
+	HAL_NVIC_EnableIRQ(TIM4_IRQn);
 }
 
 
@@ -132,7 +132,7 @@ void HAL_TIM_PWM_MspInit(TIM_HandleTypeDef *htim)
 	
 	
 	
-	GPIO_InitStruct.Pin = GPIO_PIN_7;
+	GPIO_InitStruct.Pin = GPIO_PIN_7; //Kabir - using pin A7 so need GPIO_PIN_7
   HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 	
 	

@@ -42,10 +42,6 @@ int state = 0; //0 for show temp, 1 for set temp
 double temp; //displayed temp
 int tick = 0; //variable used to keep track of how long an external button has been pressed (used in tim 4 oc external callback)
 
-
-char lcd_buffer[6]; //lcd display buffer
-
-
 __IO uint16_t ADC3ConvertedValue=0;
 uint16_t TIM3Prescaler; 
 
@@ -70,7 +66,7 @@ uint16_t TIM3Prescaler;
 	//							...											
 	//		-----MODIFY the system_stm32f4xx.c in the above way, will also fix the "float" type problem mentioned above. 												
 												
-double measuredTemp;
+double measuredTemp = 0;
 uint16_t bc1, bc2 = 0; 
 
 	/*
@@ -100,7 +96,7 @@ void LCD_DisplayString(uint16_t LineNumber, uint16_t ColumnNumber, uint8_t *ptr)
 void LCD_DisplayInt(uint16_t LineNumber, uint16_t ColumnNumber, int Number);
 void LCD_DisplayFloat(uint16_t LineNumber, uint16_t ColumnNumber, float Number, int DigitAfterDecimalPoint);
 
-void ADC_DMA_Config(void);
+void ADC_Config(void);
 
 void ExtBtn1_Config(void);
 void ExtBtn2_Config(void);
@@ -108,8 +104,6 @@ void PWM_Config(void);
 void TIM3_Config(void); 
 void TIM4_Config(void);
 void TIM4_OC_Config(void);
-
-
 
 
 static void SystemClock_Config(void);
@@ -147,24 +141,14 @@ int main(void){
 		BSP_LCD_DisplayOn();
 	 
 		BSP_LCD_SetFont(&Font20);  //the default font,  LCD_DEFAULT_FONT, which is defined in _lcd.h, is Font24
-	/*
-		LCD_DisplayString(3, 2, (uint8_t *) "Lab4 Starter ");
-		
-		LCD_DisplayString(9, 0, (uint8_t *) "Current ");
-		LCD_DisplayString(10, 0, (uint8_t *)"setPoint");
-	
-	
-		LCD_DisplayFloat(9, 10, 23.55, 2);
-		LCD_DisplayFloat(10, 10, 23.55, 2);
-	*/
 	
 		LCD_DisplayString(3, 2, (uint8_t *) "Lab4 Starter ");
 	
-	LCD_DisplayString(9, 0, (uint8_t *) "Current: ");
-	LCD_DisplayString(10, 0, (uint8_t *)"Set point: ");	
-		LCD_DisplayFloat(10, 10, setPoint, 2);
+		LCD_DisplayString(9, 0, (uint8_t *) "Current: ");
+		LCD_DisplayString(10, 0, (uint8_t *)"Set point: ");	
+		LCD_DisplayFloat(10, 11, setPoint, 2);
 		
-		ADC_DMA_Config(); 
+		ADC_Config(); 
 		ExtBtn1_Config(); 
 		ExtBtn2_Config(); 
 		PWM_Config(); 
@@ -172,14 +156,10 @@ int main(void){
 		TIM4_Config();	
 		TIM4_OC_Config();
 		
-	
 		
 	while(1) {	
-			measuredTemp = HAL_ADC_GetValue(&Adc3_Handle)*0.02441; //display temp
-			sprintf((char*)lcd_buffer, "%.2f", measuredTemp);
-			LCD_DisplayString(9,10,(uint8_t*)lcd_buffer);
-
-		
+		measuredTemp = HAL_ADC_GetValue(&Adc3_Handle)*0.02441; //Getting the temperature and converting
+		LCD_DisplayFloat(9,11,measuredTemp, 2);		//displaying the temperature to 2 decimal places
 			
 		
 	} // end of while loop
@@ -216,48 +196,6 @@ int main(void){
   * @param  None
   * @retval None
   */
-//static void SystemClock_Config(void)
-//{
-//  RCC_ClkInitTypeDef RCC_ClkInitStruct;
-//  RCC_OscInitTypeDef RCC_OscInitStruct;
-
-//  /* Enable Power Control clock */
-//  __HAL_RCC_PWR_CLK_ENABLE();
-//  
-//  /* The voltage scaling allows optimizing the power consumption when the device is 
-//     clocked below the maximum system frequency, to update the voltage scaling value 
-//     regarding system frequency refer to product datasheet.  */
-//  __HAL_PWR_VOLTAGESCALING_CONFIG(PWR_REGULATOR_VOLTAGE_SCALE1);
-//  
-//  /* Enable HSE Oscillator and activate PLL with HSE as source */
-//  RCC_OscInitStruct.OscillatorType = RCC_OSCILLATORTYPE_HSE;
-//  RCC_OscInitStruct.HSEState = RCC_HSE_ON;
-//  RCC_OscInitStruct.PLL.PLLState = RCC_PLL_ON;
-//  RCC_OscInitStruct.PLL.PLLSource = RCC_PLLSOURCE_HSE;
-//  RCC_OscInitStruct.PLL.PLLM = 4;
-//  RCC_OscInitStruct.PLL.PLLN = 72;
-//  RCC_OscInitStruct.PLL.PLLP = RCC_PLLP_DIV2;
-//  RCC_OscInitStruct.PLL.PLLQ = 3;
-//  if(HAL_RCC_OscConfig(&RCC_OscInitStruct) != HAL_OK)
-//  {
-//    Error_Handler();
-//  }
-
-//  /* Activate the Over-Drive mode */
-//  HAL_PWREx_EnableOverDrive();
-// 
-//  /* Select PLL as system clock source and configure the HCLK, PCLK1 and PCLK2 
-//     clocks dividers */
-//  RCC_ClkInitStruct.ClockType = (RCC_CLOCKTYPE_SYSCLK | RCC_CLOCKTYPE_HCLK | RCC_CLOCKTYPE_PCLK1 | RCC_CLOCKTYPE_PCLK2);
-//  RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
-//  RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
-//  RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV2;  
-//  RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;  
-//  if(HAL_RCC_ClockConfig(&RCC_ClkInitStruct, FLASH_LATENCY_5) != HAL_OK)
-//  {
-//    Error_Handler();
-//  }
-//}
 
 void LEDs_Config(void)
 {
@@ -303,11 +241,6 @@ void LCD_DisplayFloat(uint16_t LineNumber, uint16_t ColumnNumber, float Number, 
 		LCD_DisplayString(LineNumber, ColumnNumber, (uint8_t *) lcd_buffer);
 }
 
-
-
-
-
-
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 {
 	
@@ -335,62 +268,35 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 	
 }
 
-
-
 void HAL_TIM_OC_DelayElapsedCallback(TIM_HandleTypeDef * htim) //see  stm32fxx_hal_tim.c for different callback function names. 
 {																																//for timer4 
 		if ((*htim).Instance==TIM4) {
-			if(HAL_GPIO_ReadPin(GPIOC,GPIO_PIN_1)==0){
-				if(tick == 0){
+			if(HAL_GPIO_ReadPin(GPIOC,GPIO_PIN_1)==0){ //if the button attached to PC1 is being pressed
+				if(tick == 0){//Get the time since the start of the program when the button is initially pressed/every half second
 					tick = HAL_GetTick(); 
 				} else{
-					if(HAL_GetTick() - 500 > tick){
+					if(HAL_GetTick() - 500 > tick){ //once half a second has passed, increment the setPoint value and display the new one
 						setPoint += 1;
-						LCD_DisplayFloat(10,10,setPoint,2); 
-						tick = 0;
+						LCD_DisplayFloat(10,11,setPoint,2); 
+						tick = 0;//reset tick 
 					}
 				}
-			} else if(HAL_GPIO_ReadPin(GPIOD, GPIO_PIN_2)==0) {
-				if(tick == 0){
+			} else if(HAL_GPIO_ReadPin(GPIOD, GPIO_PIN_2)==0) { //if the button attached to PD2 is pressed
+				if(tick == 0){//Get the time since the start of the program when the button is initially pressed/every half second
 					tick = HAL_GetTick(); 
 				} else{
-					if(HAL_GetTick() - 500 > tick){
+					if(HAL_GetTick() - 500 > tick){//Once half a second has passed, decrement the setPoint value and display the new one
 						setPoint -= 1; 
-						LCD_DisplayFloat(10,10,setPoint,2); 
-						tick = 0;
+						LCD_DisplayFloat(10,11,setPoint,2); 
+						tick = 0; //reset tick
 					}
 				}
 			}
-			else{
+			else{ //when the button is no longer pressed, reset the tick
 				tick = 0;
-				LEDs_Off();
 			}
 		}
 			
-//			//assuming a tick rate of every ms
-//			if(bc1>0 && HAL_GPIO_ReadPin(GPIOC,GPIO_PIN_1)==1){
-//				bc1+=1;
-//			}
-//			if(bc2>0 && HAL_GPIO_ReadPin(GPIOD,GPIO_PIN_2)==1){
-//				bc2+=1;
-//			}
-//			//LEDs_Toggle();
-//			
-//			if(bc1>=501 && HAL_GPIO_ReadPin(GPIOC,GPIO_PIN_1)==1){
-//				LEDs_Toggle();//do action1
-//				bc1=0;
-//			}
-//			if(bc2>=501 && HAL_GPIO_ReadPin(GPIOD,GPIO_PIN_2)==1){
-//				LEDs_Toggle();//do action2
-//				bc2=0;
-//			}
-//			if(HAL_GPIO_ReadPin(GPIOC,GPIO_PIN_1)==0){
-//				bc1=0;
-//			}
-//			if(HAL_GPIO_ReadPin(GPIOD,GPIO_PIN_2)==0){
-//				bc2=0;
-//			}
-//		}	
 		//clear the timer counter!  in stm32f4xx_hal_tim.c, the counter is not cleared after  OC interrupt
 		__HAL_TIM_SET_COUNTER(htim, 0x0000);   //this maro is defined in stm32f4xx_hal_tim.h
 	
@@ -524,7 +430,7 @@ static void Error_Handler(void)
   }
 }
 
-void ADC_DMA_Config(void){ //Kabir
+void ADC_Config(void){ //Kabir
 	 Adc3_Handle.Instance          = ADCx;
   
   Adc3_Handle.Init.ClockPrescaler = ADC_CLOCKPRESCALER_PCLK_DIV2;
@@ -540,6 +446,8 @@ void ADC_DMA_Config(void){ //Kabir
   Adc3_Handle.Init.DMAContinuousRequests = ENABLE;
   Adc3_Handle.Init.EOCSelection = DISABLE;
       
+	//HAL_ADC_PollForConversion(&Adc3_Handle,1000); //was testing smth out - idk if it made it better or worse
+	
   if(HAL_ADC_Init(&Adc3_Handle) != HAL_OK)
   {
     /* Initialization Error */

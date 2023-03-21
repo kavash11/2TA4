@@ -87,13 +87,13 @@ __HAL_RCC_TIM3_CLK_ENABLE(); //this is defined in stm32f4xx_hal_rcc.h
 void HAL_TIM_OC_MspInit(TIM_HandleTypeDef *htim)
 { 
   //Enable peripherals and GPIO Clocks
- __HAL_RCC_TIM4_CLK_ENABLE();
+ __HAL_RCC_TIM3_CLK_ENABLE();
     
   //Configure the NVIC for TIMx 
-	HAL_NVIC_SetPriority(TIM4_IRQn, 2, 0);
+	HAL_NVIC_SetPriority(TIM4_IRQn, 0, 2);
   
   // Enable the TIM global Interrupt 
-	HAL_NVIC_EnableIRQ(TIM4_IRQn);
+	HAL_NVIC_EnableIRQ(TIM3_IRQn);
 }
 
 
@@ -109,6 +109,7 @@ void HAL_TIM_PWM_MspInit(TIM_HandleTypeDef *htim)
 	GPIO_InitTypeDef   GPIO_InitStruct;
   
   //- Enable Timer's  Clock 
+		__HAL_RCC_TIM3_CLK_ENABLE();
 	__HAL_RCC_GPIOA_CLK_ENABLE(); //For ADC3_IN13, the pin is PC3 - Kabir - was GPIOC but made it GPIOA because I think that's what we are using
     
   // Enable GPIO Port Clock 

@@ -41,7 +41,7 @@ __IO uint16_t Tim3_CCR; // the pulse of the TIM3 Noor
 int state = 0; //0 for show temp, 1 for set temp
 double temp; //displayed temp
 int tick = 0; //variable used to keep track of how long an external button has been pressed (used in tim 4 oc external callback)
-
+int displayWait = 0;
 __IO uint16_t ADC3ConvertedValue=0;
 uint16_t TIM3Prescaler; 
 
@@ -156,10 +156,16 @@ int main(void){
 		TIM4_Config();	
 		TIM4_OC_Config();
 		
+		HAL_ADC_Start_DMA(&Adc3_Handle, (uint32_t*)&ADC3ConvertedValue, 1);
+		measuredTemp = HAL_ADC_GetValue(&Adc3_Handle)*0.02441; //Getting the temperature and converting
+		setPoint = measuredTemp + 3;
+		LCD_DisplayFloat(9, 11,measuredTemp, 2);	
+		LCD_DisplayFloat(10, 11, setPoint, 2);	
 		
 	while(1) {	
+		HAL_ADC_Start_DMA(&Adc3_Handle, (uint32_t*)&ADC3ConvertedValue, 1);
 		measuredTemp = HAL_ADC_GetValue(&Adc3_Handle)*0.02441; //Getting the temperature and converting
-		LCD_DisplayFloat(9,11,measuredTemp, 2);		//displaying the temperature to 2 decimal places
+		//LCD_DisplayFloat(9,11,measuredTemp, 2);		//displaying the temperature to 2 decimal places
 			
 		
 	} // end of while loop
@@ -295,6 +301,12 @@ void HAL_TIM_OC_DelayElapsedCallback(TIM_HandleTypeDef * htim) //see  stm32fxx_h
 			else{ //when the button is no longer pressed, reset the tick
 				tick = 0;
 			}
+			if(displayWait == 500){
+			LCD_DisplayFloat(9,11,measuredTemp, 2);	
+				displayWait = 0;
+			}
+				else{
+					displayWait++;}
 		}
 			
 		//clear the timer counter!  in stm32f4xx_hal_tim.c, the counter is not cleared after  OC interrupt

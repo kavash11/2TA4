@@ -1865,27 +1865,27 @@
       <ActiveTab>0</ActiveTab>
       <Doc>
         <Name>.\src\main.c</Name>
-        <ColumnNumber>17</ColumnNumber>
-        <TopLine>294</TopLine>
-        <CurrentLine>296</CurrentLine>
+        <ColumnNumber>35</ColumnNumber>
+        <TopLine>154</TopLine>
+        <CurrentLine>163</CurrentLine>
         <Folding>1</Folding>
-        <ContractedFolders></ContractedFolders>
+        <ContractedFolders>205,213,230,239,315,323,352,407,443,492,513,536,583,625,631,636</ContractedFolders>
         <PaneID>0</PaneID>
       </Doc>
       <Doc>
         <Name>.\inc\main.h</Name>
-        <ColumnNumber>36</ColumnNumber>
-        <TopLine>35</TopLine>
-        <CurrentLine>50</CurrentLine>
+        <ColumnNumber>0</ColumnNumber>
+        <TopLine>59</TopLine>
+        <CurrentLine>73</CurrentLine>
         <Folding>1</Folding>
         <ContractedFolders></ContractedFolders>
         <PaneID>0</PaneID>
       </Doc>
       <Doc>
         <Name>.\src\stm32f4xx_hal_msp.c</Name>
-        <ColumnNumber>2</ColumnNumber>
-        <TopLine>146</TopLine>
-        <CurrentLine>164</CurrentLine>
+        <ColumnNumber>36</ColumnNumber>
+        <TopLine>143</TopLine>
+        <CurrentLine>156</CurrentLine>
         <Folding>1</Folding>
         <ContractedFolders></ContractedFolders>
         <PaneID>0</PaneID>

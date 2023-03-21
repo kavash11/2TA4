@@ -39,8 +39,8 @@ __IO uint16_t Tim4_CCR = 500; // the pulse of the TIM4
 __IO uint16_t Tim3_CCR; // the pulse of the TIM3 Noor
 
 int state = 0; //0 for show temp, 1 for set temp
-double temp; //showed temp
-int tick = 0; 
+double temp; //displayed temp
+int tick = 0; //variable used to keep track of how long an external button has been pressed (used in tim 4 oc external callback)
 
 
 char lcd_buffer[6]; //lcd display buffer
@@ -160,8 +160,8 @@ int main(void){
 	
 		LCD_DisplayString(3, 2, (uint8_t *) "Lab4 Starter ");
 	
-		LCD_DisplayString(9, 0, (uint8_t *) "Current ");
-		LCD_DisplayString(10, 0, (uint8_t *)"setPoint");	
+	LCD_DisplayString(9, 0, (uint8_t *) "Current: ");
+	LCD_DisplayString(10, 0, (uint8_t *)"Set point: ");	
 		LCD_DisplayFloat(10, 10, setPoint, 2);
 		
 		ADC_DMA_Config(); 
@@ -175,10 +175,9 @@ int main(void){
 	
 		
 	while(1) {	
-			HAL_ADC_Start_DMA(&Adc3_Handle, (uint32_t *)&ADC3ConvertedValue, 1); 
 			measuredTemp = HAL_ADC_GetValue(&Adc3_Handle)*0.02441; //display temp
 			sprintf((char*)lcd_buffer, "%.2f", measuredTemp);
-			LCD_DisplayString(5,10,(uint8_t*)lcd_buffer);
+			LCD_DisplayString(9,10,(uint8_t*)lcd_buffer);
 
 		
 			

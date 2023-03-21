@@ -340,21 +340,34 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 
 void HAL_TIM_OC_DelayElapsedCallback(TIM_HandleTypeDef * htim) //see  stm32fxx_hal_tim.c for different callback function names. 
 {																																//for timer4 
-	if ((*htim).Instance==TIM4) {
+		if ((*htim).Instance==TIM4) {
 			if(HAL_GPIO_ReadPin(GPIOC,GPIO_PIN_1)==0){
 				if(tick == 0){
 					tick = HAL_GetTick(); 
 				} else{
 					if(HAL_GetTick() - 500 > tick){
-						LEDs_Toggle();
+						setPoint += 1;
+						LCD_DisplayFloat(10,10,setPoint,2); 
 						tick = 0;
 					}
+				}
+			} else if(HAL_GPIO_ReadPin(GPIOD, GPIO_PIN_2)==0) {
+				if(tick == 0){
+					tick = HAL_GetTick(); 
+				} else{
+					if(HAL_GetTick() - 500 > tick){
+						setPoint -= 1; 
+						LCD_DisplayFloat(10,10,setPoint,2); 
+						tick = 0;
+					}
+				}
 			}
-		}
 			else{
 				tick = 0;
 				LEDs_Off();
 			}
+		}
+			
 //			//assuming a tick rate of every ms
 //			if(bc1>0 && HAL_GPIO_ReadPin(GPIOC,GPIO_PIN_1)==1){
 //				bc1+=1;
@@ -382,7 +395,7 @@ void HAL_TIM_OC_DelayElapsedCallback(TIM_HandleTypeDef * htim) //see  stm32fxx_h
 		//clear the timer counter!  in stm32f4xx_hal_tim.c, the counter is not cleared after  OC interrupt
 		__HAL_TIM_SET_COUNTER(htim, 0x0000);   //this maro is defined in stm32f4xx_hal_tim.h
 	
-}}
+}
  
 void HAL_TIM_PWM_PulseFinishedCallback(TIM_HandleTypeDef * htim){  //this is for TIM3_pwm
 	

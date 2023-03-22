@@ -100,10 +100,12 @@ void ADC_Config(void);
 
 void ExtBtn1_Config(void);
 void ExtBtn2_Config(void);
-void PWM_Config(void);
-void TIM3_Config(void); 
+//void PWM_Config(void);
+//void TIM3_Config(void); 
 void TIM4_Config(void);
 void TIM4_OC_Config(void);
+void HAL_TIM_MspPostInit(TIM_HandleTypeDef* htim);
+
 
 
 static void SystemClock_Config(void);
@@ -151,8 +153,8 @@ int main(void){
 		ADC_Config(); 
 		ExtBtn1_Config(); 
 		ExtBtn2_Config(); 
-		PWM_Config(); 
-		TIM3_Config(); 
+		//PWM_Config(); 
+		//TIM3_Config(); 
 		TIM4_Config();	
 		TIM4_OC_Config();
 		
@@ -253,8 +255,12 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
   if(GPIO_Pin == KEY_BUTTON_PIN)  //GPIO_PIN_0
   {
 			//Noor: for testing
-      Tim3_CCR=Tim3_CCR+100;
-		__HAL_TIM_SET_COMPARE(&Tim3_Handle, TIM_CHANNEL_2,Tim3_CCR); //Noor: we're using tim3 channel 2 according to stm32 manual (this is what corresponds to PA7)
+		HAL_TIM_PWM_Stop(&Tim3_Handle,TIM_CHANNEL_1);
+		GPIOA->BSRR = GPIO_BSRR_BR6;
+		
+		LEDs_Toggle();
+      //Tim3_CCR=Tim3_CCR+100;
+		//__HAL_TIM_SET_COMPARE(&Tim3_Handle, TIM_CHANNEL_2,Tim3_CCR); //Noor: we're using tim3 channel 2 according to stm32 manual (this is what corresponds to PA7)
   }
 	
 	
@@ -329,29 +335,58 @@ void HAL_TIM_PWM_PulseFinishedCallback(TIM_HandleTypeDef * htim){  //this is for
 //This timer will be used to determine if the buttons have been held down for 1/2 a second
 void TIM3_Config(void)
 {
-	Tim3_Handle.Init.Period = 65535;
-	//Calculates the prescaler value for timer 3. We want the timer to overflow 16 times a second
-	Tim3_PrescalerValue = (SystemCoreClock  /(50000000)) - 1;
-	LCD_DisplayInt(0,0,Tim3_PrescalerValue);
-	Tim3_Handle.Instance = TIM3;
-	
-	Tim3_Handle.Init.Prescaler = Tim3_PrescalerValue;
-	Tim3_Handle.Init.ClockDivision = 0;
-  Tim3_Handle.Init.CounterMode = TIM_COUNTERMODE_UP;
-	
-	
-	if(HAL_TIM_Base_Init(&Tim3_Handle) != HAL_OK) // this line need to call the callback function _MspInit() in stm32f4xx_hal_msp.c to set up peripheral clock and NVIC..
-  {
-    Error_Handler();
-  }
-	
-	if(HAL_TIM_Base_Start_IT(&Tim3_Handle) != HAL_OK)   //the TIM_XXX_Start_IT function enable IT, and also enable Timer
-																											//so do not need HAL_TIM_BASE_Start() any more.
-  {
-		//BSP_LED_Toggle(LED3);
-    Error_Handler();
-  }
+	//cubemx code
+	/* USER CODE BEGIN TIM3_Init 0 */
 
+  /* USER CODE END TIM3_Init 0 */
+
+  TIM_ClockConfigTypeDef sClockSourceConfig = {0};
+  TIM_MasterConfigTypeDef sMasterConfig = {0};
+  TIM_OC_InitTypeDef sConfigOC = {0};
+
+  /* USER CODE BEGIN TIM3_Init 1 */
+
+  /* USER CODE END TIM3_Init 1 */
+  Tim3_Handle.Instance = TIM3;
+  Tim3_Handle.Init.Prescaler = 7199;
+  Tim3_Handle.Init.CounterMode = TIM_COUNTERMODE_UP;
+  Tim3_Handle.Init.Period = 9999;
+  Tim3_Handle.Init.ClockDivision = TIM_CLOCKDIVISION_DIV1;
+  Tim3_Handle.Init.AutoReloadPreload = TIM_AUTORELOAD_PRELOAD_DISABLE;
+  if (HAL_TIM_Base_Init(&Tim3_Handle) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sClockSourceConfig.ClockSource = TIM_CLOCKSOURCE_INTERNAL;
+  if (HAL_TIM_ConfigClockSource(&Tim3_Handle, &sClockSourceConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  if (HAL_TIM_PWM_Init(&Tim3_Handle) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sMasterConfig.MasterOutputTrigger = TIM_TRGO_RESET;
+  sMasterConfig.MasterSlaveMode = TIM_MASTERSLAVEMODE_DISABLE;
+  if (HAL_TIMEx_MasterConfigSynchronization(&Tim3_Handle, &sMasterConfig) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  sConfigOC.OCMode = TIM_OCMODE_PWM1;
+  sConfigOC.Pulse = 65000;
+  sConfigOC.OCPolarity = TIM_OCPOLARITY_HIGH;
+  sConfigOC.OCFastMode = TIM_OCFAST_DISABLE;
+  if (HAL_TIM_PWM_ConfigChannel(&Tim3_Handle, &sConfigOC, TIM_CHANNEL_1) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN TIM3_Init 2 */
+
+  /* USER CODE END TIM3_Init 2 */
+  //HAL_TIM_MspPostInit(&Tim3_Handle);
+	//TIM3->CCR1=100;
+	//TIM3->ARR=65000;
+	HAL_TIM_MspPostInit(&Tim3_Handle);
 	
 }
 
@@ -408,6 +443,9 @@ void  TIM4_Config(void)
     /* Initialization Error */
   //  Error_Handler();
   //} 
+	
+	//cubemx code
+	
 }
 
 
@@ -439,6 +477,32 @@ void  TIM4_OC_Config(void)
 
 
 
+void HAL_TIM_MspPostInit(TIM_HandleTypeDef* htim)
+{
+  GPIO_InitTypeDef GPIO_InitStruct = {0};
+  if(htim->Instance==TIM3)
+  {
+  /* USER CODE BEGIN TIM3_MspPostInit 0 */
+
+  /* USER CODE END TIM3_MspPostInit 0 */
+
+    __HAL_RCC_GPIOB_CLK_ENABLE();
+    /**TIM3 GPIO Configuration
+    PB4     ------> TIM3_CH1
+    */
+    GPIO_InitStruct.Pin = GPIO_PIN_4;
+    GPIO_InitStruct.Mode = GPIO_MODE_AF_PP;
+    GPIO_InitStruct.Pull = GPIO_NOPULL;
+    GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+    GPIO_InitStruct.Alternate = GPIO_AF2_TIM3;
+    HAL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+
+  /* USER CODE BEGIN TIM3_MspPostInit 1 */
+
+  /* USER CODE END TIM3_MspPostInit 1 */
+  }
+
+}
 
 static void Error_Handler(void)
 {

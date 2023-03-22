@@ -222,6 +222,7 @@ void DMA2_Stream0_IRQHandler(void) {
 void TIM3_IRQHandler(void)
 {
  	HAL_TIM_IRQHandler(&Tim3_Handle);
+	BSP_LED_Toggle(LED3);
 }
 
 void TIM4_IRQHandler(void)

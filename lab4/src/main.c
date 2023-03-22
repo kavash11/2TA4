@@ -313,10 +313,16 @@ void HAL_TIM_OC_DelayElapsedCallback(TIM_HandleTypeDef * htim) //see  stm32fxx_h
 		__HAL_TIM_SET_COUNTER(htim, 0x0000);   //this maro is defined in stm32f4xx_hal_tim.h
 	
 }
- 
+ int i=0;
 void HAL_TIM_PWM_PulseFinishedCallback(TIM_HandleTypeDef * htim){  //this is for TIM3_pwm
 	
 	//__HAL_TIM_SET_COUNTER(htim, 0x0000);  not necessary
+	if((*htim).Instance==TIM3){
+		i+=1;
+		if(i>=600){
+		LEDs_Toggle();}
+	}
+	
 }
 
 //Configure Timer 3
@@ -325,7 +331,8 @@ void TIM3_Config(void)
 {
 	Tim3_Handle.Init.Period = 65535;
 	//Calculates the prescaler value for timer 3. We want the timer to overflow 16 times a second
-	Tim3_PrescalerValue = (uint32_t) (SystemCoreClock / (16*(Tim3_Handle.Init.Period + 1)))-1;
+	Tim3_PrescalerValue = (SystemCoreClock  /(50000000)) - 1;
+	LCD_DisplayInt(0,0,Tim3_PrescalerValue);
 	Tim3_Handle.Instance = TIM3;
 	
 	Tim3_Handle.Init.Prescaler = Tim3_PrescalerValue;
@@ -344,8 +351,8 @@ void TIM3_Config(void)
 		//BSP_LED_Toggle(LED3);
     Error_Handler();
   }
+
 	
-	//BSP_LED_Toggle(LED4);
 }
 
 
@@ -565,16 +572,16 @@ void PWM_Config(){
 	//Tim3_OCInitStructure.OCIdleState = TIM_OCIDLESTATE_SET; //This parameter is valid only for TIM1 and TIM8.
   //Tim3_OCInitStructure.OCNIdleState= TIM_OCNIDLESTATE_RESET; //This parameter is valid only for TIM1 and TIM8.
 
-  Tim3_OCInitStructure.Pulse=Tim3_CCR;   //200 Noor
+  //Tim3_OCInitStructure.Pulse=Tim3_CCR;   //200 Noor
 	
 	
-	if(HAL_TIM_PWM_ConfigChannel(&Tim3_Handle, &Tim3_OCInitStructure, TIM_CHANNEL_1) != HAL_OK)
+	if(HAL_TIM_PWM_ConfigChannel(&Tim3_Handle, &Tim3_OCInitStructure, TIM_CHANNEL_2) != HAL_OK)
   {
     /* Configuration Error */
     Error_Handler();
   }
 	
-	if(HAL_TIM_PWM_Start(&Tim3_Handle, TIM_CHANNEL_1) != HAL_OK)
+	if(HAL_TIM_PWM_Start(&Tim3_Handle, TIM_CHANNEL_2) != HAL_OK)
   {
     /* Starting Error */
     Error_Handler();

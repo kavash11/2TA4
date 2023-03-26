@@ -20,6 +20,31 @@ void LCD_DisplayFloat(uint16_t LineNumber, uint16_t ColumnNumber, float Number, 
 static void SystemClock_Config(void);
 static void Error_Handler(void);
 
+TIM_HandleTypeDef    Tim3_Handle,Tim4_Handle; //kavya start
+TIM_OC_InitTypeDef Tim4_OCInitStructure;
+uint16_t Tim3_PrescalerVal,Tim4_PrescalerVal;
+
+__IO uint16_t Tim4_CCR;
+
+void TIM3_Config(void);
+void TIM4_Config(void);
+void TIM4_OC_Config(void);
+
+void ExtBtn1_Config(void); 
+void ExtBtn2_Config(void);
+void ExtBtn3_Config(void);
+void Pin_Config(void);
+
+void FullStep(void);
+void HalfStep(void);
+
+uint32_t orientation = 0; //0 = cw, 1 = ccw
+uint32_t step_type = 0; //0 = full, 1 = half
+
+uint32_t step = 0;
+uint32_t count = 0;
+uint32_t prescaler; // kavya end
+
 int main(void){
 	
 		/* STM32F4xx HAL library initialization:
@@ -36,6 +61,15 @@ int main(void){
 		
 		HAL_InitTick(0x0000); // set systick's priority to the highest.
 	
+	//kavya tim3 &tim4 config
+		Tim3_Handle.Init.Period = 36*(10000/48)-1; //full step
+		prescaler = (uint32_t) ((SystemCoreClock /2) / 10000) - 1;
+		TIM3_Config();
+		HAL_TIM_Base_Start_IT(&Tim3_Handle);
+		TIM4_Config();
+	
+		Tim4_CCR=500;       //  with clock counter freq as 500,000, this will make OC Freq as 1ms.
+		TIM4_OC_Config();	
 	
 		BSP_LCD_Init();
 		//BSP_LCD_LayerDefaultInit(uint16_t LayerIndex, uint32_t FB_Address);
@@ -53,9 +87,17 @@ int main(void){
 		LCD_DisplayString(2, 3, (uint8_t *)"Lab");
 	
 		LCD_DisplayInt(2, 8, 5);
-			
-	
 		
+		//kavya button config
+		ExtBtn1_Config(); 
+		ExtBtn2_Config();
+		ExtBtn3_Config();
+		Pin_Config();
+			
+		HAL_GPIO_WritePin(GPIOE,GPIO_PIN_2,GPIO_PIN_RESET);
+		HAL_GPIO_WritePin(GPIOE,GPIO_PIN_3,GPIO_PIN_RESET);
+		HAL_GPIO_WritePin(GPIOE,GPIO_PIN_4,GPIO_PIN_RESET);
+		HAL_GPIO_WritePin(GPIOE,GPIO_PIN_5,GPIO_PIN_RESET);		
 		
 		while(1) {	
 

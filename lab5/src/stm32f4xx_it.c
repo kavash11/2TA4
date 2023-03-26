@@ -38,8 +38,8 @@
   */
 
 /* Includes ------------------------------------------------------------------*/
-//#include "stm32f4xx_it.h"
-//#include "stm32f429i_discovery.h"
+#include "stm32f4xx_it.h"
+#include "stm32f429i_discovery.h"
 #include "main.h"
 
 /** @addtogroup STM32F4xx_HAL_Examples
@@ -53,14 +53,15 @@
 /* Private typedef -----------------------------------------------------------*/
 
 
-extern TIM_HandleTypeDef    Tim3_Handle;
+
 
 
 /* Private define ------------------------------------------------------------*/
 /* Private macro -------------------------------------------------------------*/
 
 /* Private variables ---------------------------------------------------------*/
-
+extern TIM_HandleTypeDef    Tim3_Handle, Tim4_Handle;
+extern TIM_OC_InitTypeDef Tim3OCInitStructure, Tim4_OCInitStructure;
 
 /* Private function prototypes -----------------------------------------------*/
 /* Private functions ---------------------------------------------------------*/
@@ -188,7 +189,7 @@ void EXTI0_IRQHandler(void)
 void EXTI1_IRQHandler(void)
 {	
 	HAL_Delay(100);
-	if (HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_1)==0) {		
+	if (HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_1)==0) {		//PC1
 		HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_1);
 	} else {
 		  __HAL_GPIO_EXTI_CLEAR_FLAG(GPIO_PIN_1);
@@ -200,7 +201,7 @@ void EXTI1_IRQHandler(void)
 void EXTI2_IRQHandler(void)
 {
   HAL_Delay(100); 
-	if (HAL_GPIO_ReadPin(GPIOD, GPIO_PIN_2)==0) {		
+	if (HAL_GPIO_ReadPin(GPIOD, GPIO_PIN_2)==0) {		//PD2
 		HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_2); 
 	} else {
 			__HAL_GPIO_EXTI_CLEAR_FLAG(GPIO_PIN_2);
@@ -211,7 +212,7 @@ void EXTI2_IRQHandler(void)
 void EXTI3_IRQHandler(void)
 {
   HAL_Delay(100); 
-	if (HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_3)==0) {		
+	if (HAL_GPIO_ReadPin(GPIOC, GPIO_PIN_3)==0) {		 //PC3
 		HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_3); 
 	} else {
 			__HAL_GPIO_EXTI_CLEAR_FLAG(GPIO_PIN_3);
@@ -225,11 +226,13 @@ void ADC_IRQHandler(void){
 void TIM3_IRQHandler(void)
 {
   
-	//HAL_TIM_IRQHandler(&Tim3_Handle);
+	HAL_TIM_IRQHandler(&Tim3_Handle);
 }
 
 
-
+void TIM4_IRQHandler(void) {
+	HAL_TIM_IRQHandler(&Tim4_Handle);
+}
 
 /**
   * @brief  This function handles PPP interrupt request.

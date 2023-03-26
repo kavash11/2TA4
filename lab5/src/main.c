@@ -22,7 +22,7 @@ static void Error_Handler(void);
 
 TIM_HandleTypeDef    Tim3_Handle,Tim4_Handle; //kavya start
 TIM_OC_InitTypeDef Tim4_OCInitStructure;
-uint16_t Tim3_PrescalerVal,Tim4_PrescalerVal;
+uint16_t Tim3_PrescalerValue,Tim4_PrescalerValue;
 
 __IO uint16_t Tim4_CCR;
 
@@ -217,6 +217,178 @@ void LCD_DisplayFloat(uint16_t LineNumber, uint16_t ColumnNumber, float Number, 
 		LCD_DisplayString(LineNumber, ColumnNumber, (uint8_t *) lcd_buffer);
 }
 
+
+//kavya button configs
+
+void ExtBtn1_Config(void)     //PC1
+{
+  GPIO_InitTypeDef   GPIO_InitStructure;
+
+  /* Enable GPIOC clock */
+  __HAL_RCC_GPIOC_CLK_ENABLE();
+  
+  /* Configure PC1 pin as input floating */
+  GPIO_InitStructure.Mode =  GPIO_MODE_IT_FALLING;
+  GPIO_InitStructure.Pull =GPIO_PULLUP;
+  GPIO_InitStructure.Pin = GPIO_PIN_1;
+	//GPIO_InitStructure.Speed=GPIO_SPEED_LOW;
+  HAL_GPIO_Init(GPIOC, &GPIO_InitStructure);
+
+	//__HAL_GPIO_EXTI_CLEAR_IT(GPIO_PIN_1);   
+	__HAL_GPIO_EXTI_CLEAR_FLAG(GPIO_PIN_1);
+  HAL_NVIC_SetPriority(EXTI1_IRQn, 3, 0);
+  HAL_NVIC_EnableIRQ(EXTI1_IRQn);
+}
+
+void ExtBtn2_Config(void){  //PD2
+	GPIO_InitTypeDef   GPIO_InitStructure;
+
+  /* Enable GPIOD clock */
+  __HAL_RCC_GPIOD_CLK_ENABLE();
+  
+  /* Configure PD2 pin as input floating */
+  GPIO_InitStructure.Mode =  GPIO_MODE_IT_FALLING;
+  GPIO_InitStructure.Pull =GPIO_PULLUP;
+  GPIO_InitStructure.Pin = GPIO_PIN_2;
+	//GPIO_InitStructure.Speed=GPIO_SPEED_LOW;
+  HAL_GPIO_Init(GPIOD, &GPIO_InitStructure);
+
+	//__HAL_GPIO_EXTI_CLEAR_IT(GPIO_PIN_1);  
+	__HAL_GPIO_EXTI_CLEAR_FLAG(GPIO_PIN_2);
+  HAL_NVIC_SetPriority(EXTI2_IRQn, 3, 0);
+  HAL_NVIC_EnableIRQ(EXTI2_IRQn);
+	
+	
+}
+
+void ExtBtn3_Config(void){  //PC3
+	GPIO_InitTypeDef   GPIO_InitStructure;
+
+  /* Enable GPIOC clock */
+  __HAL_RCC_GPIOC_CLK_ENABLE();
+  
+  /* Configure PC3 pin as input floating */
+  GPIO_InitStructure.Mode =  GPIO_MODE_IT_FALLING;
+  GPIO_InitStructure.Pull =GPIO_PULLUP;
+  GPIO_InitStructure.Pin = GPIO_PIN_3;
+	//GPIO_InitStructure.Speed=GPIO_SPEED_LOW;
+  HAL_GPIO_Init(GPIOD, &GPIO_InitStructure);
+
+	//__HAL_GPIO_EXTI_CLEAR_IT(GPIO_PIN_1); 
+	__HAL_GPIO_EXTI_CLEAR_FLAG(GPIO_PIN_2);
+  HAL_NVIC_SetPriority(EXTI2_IRQn, 3, 0);
+  HAL_NVIC_EnableIRQ(EXTI2_IRQn);
+	
+	
+}
+
+
+void TIM3_Config(void)
+{
+
+	Tim3_PrescalerValue = (uint32_t) ((SystemCoreClock /2) / 10000) - 1;
+	Tim3_Handle.Instance = TIM3;
+	
+	Tim3_Handle.Init.Prescaler = Tim3_PrescalerValue;
+	Tim3_Handle.Init.ClockDivision = 0;
+  Tim3_Handle.Init.CounterMode = TIM_COUNTERMODE_UP;
+	
+	
+	if(HAL_TIM_Base_Init(&Tim3_Handle) != HAL_OK) // this line need to call the callback function _MspInit() in stm32f4xx_hal_msp.c to set up peripheral clock and NVIC..
+  {
+    Error_Handler();
+  }
+	
+	if(HAL_TIM_Base_Start_IT(&Tim3_Handle) != HAL_OK)   //the TIM_XXX_Start_IT function enable IT, and also enable Timer
+																											//so do not need HAL_TIM_BASE_Start() any more.
+  {
+		//BSP_LED_Toggle(LED3);
+    Error_Handler();
+  }
+	
+	//BSP_LED_Toggle(LED4);
+}
+
+
+// configure Timer4 base.
+void  TIM4_Config(void)
+{
+
+		/* -----------------------------------------------------------------------
+    In this example TIM4 input clock (TIM4CLK) is set to 2 * APB1 clock (PCLK1), 
+    since APB1 prescaler is different from 1.   
+      TIM4CLK = 2 * PCLK1  
+      PCLK1 = HCLK / 2
+      => TIM4CLK = HCLK = SystemCoreClock
+    To get TIM4 counter clock at 500 KHz, the Prescaler is computed as following:
+    Prescaler = (TIM4CLK / TIM4 counter clock) - 1
+    Prescaler = (SystemCoreClock  /500 KHz) - 1
+       
+    Note: 
+     SystemCoreClock variable holds HCLK frequency and is defined in system_stm32f4xx.c file.
+     Each time the core clock (HCLK) changes, user had to update SystemCoreClock 
+     variable value. Otherwise, any configuration based on this variable will be incorrect.
+     This variable is updated in three ways:
+      1) by calling CMSIS function SystemCoreClockUpdate()
+      2) by calling HAL API function HAL_RCC_GetSysClockFreq()
+      3) each time HAL_RCC_ClockConfig() is called to configure the system clock frequency  
+  ----------------------------------------------------------------------- */  
+  
+  /* -----------------------------------------------------------------------
+    TIM4 Configuration: Output Compare Timing Mode:
+                                               
+    (if CCR1_Val=500, then every 1 ms second will have an interrupt. If count 500 times of interrupt, thta is  0.5 seconds.
+		 ----------------------------------------------------------------------- */ 	
+
+
+  Tim4_PrescalerValue = (uint32_t) ((SystemCoreClock /2) / 500000) - 1;
+  
+  /* Set TIM3 instance */
+  Tim4_Handle.Instance = TIM4; //TIM3 is defined in stm32f429xx.h
+  
+  /* Initialize TIM4 peripheral as follows:
+       + Period = 65535
+       + Prescaler = ((SystemCoreClock/2)/10000) - 1
+       + ClockDivision = 0
+       + Counter direction = Up
+  */
+	
+	Tim4_Handle.Init.Period = 65535;  //does no matter, so set it to max.
+  Tim4_Handle.Init.Prescaler = Tim4_PrescalerValue;
+  Tim4_Handle.Init.ClockDivision = 0;
+  Tim4_Handle.Init.CounterMode = TIM_COUNTERMODE_UP;
+  //if(HAL_TIM_Base_Init(&Tim4_Handle) != HAL_OK)
+  //{
+    /* Initialization Error */
+  //  Error_Handler();
+  //} 
+}
+
+
+
+void  TIM4_OC_Config(void)
+{
+		Tim4_OCInitStructure.OCMode=  TIM_OCMODE_TIMING;
+		Tim4_OCInitStructure.Pulse=Tim4_CCR;    // 500, this means every 1/1000 second generate an inerrupt
+		Tim4_OCInitStructure.OCPolarity=TIM_OCPOLARITY_HIGH;
+		
+		HAL_TIM_OC_Init(&Tim4_Handle); // if the TIM4 has not been set, then this line will call the callback function _MspInit() 
+													//in stm32f4xx_hal_msp.c to set up peripheral clock and NVIC.
+	
+		HAL_TIM_OC_ConfigChannel(&Tim4_Handle, &Tim4_OCInitStructure, TIM_CHANNEL_1); //must add this line to make OC work.!!!
+	
+	   /* **********see the top part of the hal_tim.c**********
+		++ HAL_TIM_OC_Init and HAL_TIM_OC_ConfigChannel: to use the Timer to generate an 
+              Output Compare signal. 
+			similar to PWD mode and Onepulse mode!!!
+	
+	*******************/
+	
+	 	HAL_TIM_OC_Start_IT(&Tim4_Handle, TIM_CHANNEL_1); //this function enable IT and enable the timer. so do not need
+				//HAL_TIM_OC_Start() any more
+				
+		
+}
 
 
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)

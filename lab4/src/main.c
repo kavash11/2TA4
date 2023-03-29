@@ -42,6 +42,7 @@ int state = 0; //0 for show temp, 1 for set temp
 double temp; //displayed temp
 int tick = 0; //variable used to keep track of how long an external button has been pressed (used in tim 4 oc external callback)
 int displayWait = 0;
+int pwmSet = 0; //setting the level that the fan will be running at
 __IO uint16_t ADC3ConvertedValue=0;
 uint16_t TIM3Prescaler; 
 
@@ -167,6 +168,38 @@ int main(void){
 		measuredTemp = HAL_ADC_GetValue(&Adc3_Handle)*0.02441; //Getting the temperature and converting
 		//LCD_DisplayFloat(9,11,measuredTemp, 2);		//displaying the temperature to 2 decimal places
 			
+		if(measuredTemp >= setPoint+5){
+			Tim3_OCInitStructure.Pulse = 600;
+			//Tim3->CCR2 = 1000;
+		} else {
+			Tim3_OCInitStructure.Pulse = 200; 
+			//Tim3->CCR2 = 200;
+		}
+		
+		int tempDiff = measuredTemp - setPoint;
+		if (tempDiff < 0) { // measured temp is less than set point --> don't need fan
+			pwmSet = 0;
+			LCD_DisplayString(13, 2, (uint8_t *) "off");
+		}
+		else if (tempDiff < 1) { // measured temp is not that much more than set point --> low fan
+			pwmSet = 250;
+			LCD_DisplayString(13, 2, (uint8_t *) "low ");
+		}
+		else if (tempDiff < 3) { // measured temp is a bit more than set point --> med fan
+			pwmSet = 500;
+			LCD_DisplayString(13, 2, (uint8_t *) "med ");
+		}
+		else if (tempDiff < 6) { // measured temp is decently higher than set point --> high fan
+			pwmSet = 750;
+			Tim3_OCInitStructure.Pulse = 750;
+			LCD_DisplayString(13, 2, (uint8_t *) "high");
+		}
+		else { // measured temp is not a lot more than set point --> max fan
+			pwmSet = 1000;
+			Tim3_OCInitStructure.Pulse = 1000;
+			LCD_DisplayString(13, 2, (uint8_t *) "max ");
+		}
+		
 		
 	} // end of while loop
 	
@@ -320,7 +353,6 @@ void HAL_TIM_PWM_PulseFinishedCallback(TIM_HandleTypeDef * htim){  //this is for
 }
 
 //Configure Timer 3
-//This timer will be used to determine if the buttons have been held down for 1/2 a second
 void TIM3_Config(void)
 {
 	Tim3_Handle.Init.Period = 65535;
@@ -536,7 +568,7 @@ void ExtBtn2_Config(void){  //**********PD2.***********
 }
 
 void PWM_Config(){
-	TIM3Prescaler = (uint16_t)(SystemCoreClock/160000)-1;
+	//TIM3Prescaler = (uint16_t)(SystemCoreClock/160000)-1;
 	
 	Tim3_Handle.Instance = TIM3; //TIM3 is defined in stm32f429xx.h
    
@@ -568,13 +600,13 @@ void PWM_Config(){
   Tim3_OCInitStructure.Pulse=Tim3_CCR;   //200 Noor
 	
 	
-	if(HAL_TIM_PWM_ConfigChannel(&Tim3_Handle, &Tim3_OCInitStructure, TIM_CHANNEL_1) != HAL_OK)
+	if(HAL_TIM_PWM_ConfigChannel(&Tim3_Handle, &Tim3_OCInitStructure, TIM_CHANNEL_2) != HAL_OK)
   {
     /* Configuration Error */
     Error_Handler();
   }
 	
-	if(HAL_TIM_PWM_Start(&Tim3_Handle, TIM_CHANNEL_1) != HAL_OK)
+	if(HAL_TIM_PWM_Start(&Tim3_Handle, TIM_CHANNEL_2) != HAL_OK)
   {
     /* Starting Error */
     Error_Handler();

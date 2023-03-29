@@ -113,7 +113,7 @@ void HAL_TIM_PWM_MspInit(TIM_HandleTypeDef *htim)
 	__HAL_RCC_GPIOA_CLK_ENABLE(); //For ADC3_IN13, the pin is PC3 - Kabir - was GPIOC but made it GPIOA because I think that's what we are using
     
   // Enable GPIO Port Clock 
-	__HAL_RCC_ADC3_CLK_ENABLE();
+	//__HAL_RCC_ADC3_CLK_ENABLE();
     
   // configuration for GPIO pin for PWM
   

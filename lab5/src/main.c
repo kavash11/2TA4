@@ -288,7 +288,7 @@ void TIM3_Config(void)
 
 	Tim3_PrescalerValue = (uint32_t) ((SystemCoreClock /2) / 10000) - 1;
 	Tim3_Handle.Instance = TIM3;
-	Tim3_Handle.Init.Period = 36*(10000/96)-1;
+	Tim3_Handle.Init.Period = 36*(10000/48)-1;
 	Tim3_Handle.Init.Prescaler = Tim3_PrescalerValue;
 	Tim3_Handle.Init.ClockDivision = 0;
   Tim3_Handle.Init.CounterMode = TIM_COUNTERMODE_UP;

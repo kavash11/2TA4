@@ -400,10 +400,15 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 		}
 		
 		
-		if(GPIO_Pin == GPIO_PIN_1)
+		if(GPIO_Pin == GPIO_PIN_1) //orientation button
 		{
-				
-				
+				//kavya
+				if (orientation ==0) { //swap orientation direction on button click
+					orientation =1;
+				}
+				else if (orientation ==1) {
+					orientation =0;
+				}
 			
 		}  //end of PIN_1
 

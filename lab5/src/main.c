@@ -92,7 +92,7 @@ int main(void){
 		ExtBtn1_Config(); 
 		ExtBtn2_Config();
 		ExtBtn3_Config();
-		Pin_Config();
+		//Pin_Config();
 			
 		HAL_GPIO_WritePin(GPIOE,GPIO_PIN_2,GPIO_PIN_RESET);
 		HAL_GPIO_WritePin(GPIOE,GPIO_PIN_3,GPIO_PIN_RESET);

@@ -206,19 +206,20 @@ int main(void){
 		ExtBtn3_Config();
 		//Pin_Config();
 		
+		/*Configure GPIO pins : PE2 PE3 PE4 PE5 */ //Noor CubeMX start
 		GPIO_InitTypeDef GPIO_InitStruct = {0};
 		__HAL_RCC_GPIOE_CLK_ENABLE();
+		
 		HAL_GPIO_WritePin(GPIOE, GPIO_PIN_2|GPIO_PIN_3|GPIO_PIN_4|GPIO_PIN_5, GPIO_PIN_RESET);
-		/*Configure GPIO pins : PE2 PE3 PE4 PE5 */
 		GPIO_InitStruct.Pin = GPIO_PIN_2|GPIO_PIN_3|GPIO_PIN_4|GPIO_PIN_5;
 		GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
 		GPIO_InitStruct.Pull = GPIO_NOPULL;
 		GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-		HAL_GPIO_Init(GPIOE, &GPIO_InitStruct);
+		HAL_GPIO_Init(GPIOE, &GPIO_InitStruct); //Noor CubeMX end
 			
-		HAL_GPIO_WritePin(GPIOE,GPIO_PIN_2,GPIO_PIN_SET);
+		HAL_GPIO_WritePin(GPIOE,GPIO_PIN_2,GPIO_PIN_RESET);
 		HAL_GPIO_WritePin(GPIOE,GPIO_PIN_3,GPIO_PIN_RESET);
-		HAL_GPIO_WritePin(GPIOE,GPIO_PIN_4,GPIO_PIN_SET);
+		HAL_GPIO_WritePin(GPIOE,GPIO_PIN_4,GPIO_PIN_RESET);
 		HAL_GPIO_WritePin(GPIOE,GPIO_PIN_5,GPIO_PIN_RESET);	
 		BSP_LED_Init(LED3);
 		BSP_LED_Init(LED4);
@@ -578,7 +579,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)   //see  stm32fxx_ha
 				LCD_DisplayInt(4, 0, state);
 				BSP_LED_Toggle(LED3);
 				tim3_ctr=0;
-				//FullStep(); //Noor
+				FullStep(); //Noor
 			}
 		}
 	

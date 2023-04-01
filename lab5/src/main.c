@@ -45,6 +45,19 @@ uint32_t step = 0;
 uint32_t count = 0;
 uint32_t prescaler; // kavya end
 
+//Noor start
+uint8_t redCW[4] = {1,1,0,0}; //SW1
+uint8_t grayCW[4] = {0,0,1,1}; //SW2
+uint8_t blackCW[4] = {0,1,1,0}; //SW3
+uint8_t yellowCW[4] = {1,0,0,1}; //SW4
+
+uint8_t redCCW[4] = {0,0,1,1}; //SW1
+uint8_t grayCCW[4] = {1,1,0,0}; //SW2
+uint8_t blackCCW[4] = {0,1,1,0}; //SW3
+uint8_t yellowCCW[4] = {1,0,0,1}; //SW4
+//Noor end
+
+
 int main(void){
 	
 		/* STM32F4xx HAL library initialization:

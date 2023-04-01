@@ -41,12 +41,14 @@ void HalfStep(void);
 uint32_t orientation = 0; //0 = cw, 1 = ccw
 uint32_t step_type = 0; //0 = full, 1 = half
 
+uint32_t tim3_ctr; //Noor lol
 uint32_t step = 0;
 uint32_t count = 0;
 uint32_t prescaler; // kavya end
 
 //Noor start
 uint32_t state;
+uint32_t state_temp;
 
 uint8_t redCWfull[8] = {1,1,1,1,0,0,0,0}; //SW1
 uint8_t grayCWfull[8] = {0,0,0,0,1,1,1,1}; //SW2
@@ -68,7 +70,7 @@ uint8_t grayCCWhalf[8] = {0,1,1,1,0,0,0,0}; //SW2
 uint8_t blackCCWhalf[8] = {0,0,0,1,1,1,0,0}; //SW3
 uint8_t yellowCCWhalf[8] = {1,1,0,0,0,0,0,1}; //SW4
 
-int getCurrentIndex(uint8_t orient, uint8_t steptype, uint8_t SW1, uint8_t SW2, uint8_t SW3, uint8_t SW4){ //For smooth transition between modes, it finds the index in the arrays of the NEW mode so that it starts from a similar state
+int getNewIndex(uint8_t orient, uint8_t steptype, uint8_t SW1, uint8_t SW2, uint8_t SW3, uint8_t SW4){ //For smooth transition between modes, it finds the index in the arrays of the NEW mode so that it starts from a similar state
 	if(orient==0){
 		if(steptype==0){
 			for(int i=0; i<8; i++){
@@ -111,6 +113,7 @@ int getCurrentIndex(uint8_t orient, uint8_t steptype, uint8_t SW1, uint8_t SW2, 
 void FullStep(void){
 	state+=1;
 	if(state>=8){state=0;}
+	
 	if(orientation==0){
 		HAL_GPIO_WritePin(GPIOE, GPIO_PIN_2, redCWfull[state]);
 		HAL_GPIO_WritePin(GPIOE, GPIO_PIN_3, grayCWfull[state]);
@@ -131,6 +134,7 @@ void FullStep(void){
 void HalfStep(void){
 	state+=1;
 	if(state>=8){state=0;}
+	
 	if(orientation==0){
 		HAL_GPIO_WritePin(GPIOE, GPIO_PIN_2, redCWhalf[state]);
 		HAL_GPIO_WritePin(GPIOE, GPIO_PIN_3, grayCWhalf[state]);
@@ -153,6 +157,7 @@ void HalfStep(void){
 int main(void){
 	
 		state=0; //Noor
+		tim3_ctr=0; //Noor
 	
 		/* STM32F4xx HAL library initialization:
        - Configure the Flash prefetch, instruction and Data caches
@@ -200,11 +205,24 @@ int main(void){
 		ExtBtn2_Config();
 		ExtBtn3_Config();
 		//Pin_Config();
+		
+		GPIO_InitTypeDef GPIO_InitStruct = {0};
+		__HAL_RCC_GPIOE_CLK_ENABLE();
+		HAL_GPIO_WritePin(GPIOE, GPIO_PIN_2|GPIO_PIN_3|GPIO_PIN_4|GPIO_PIN_5, GPIO_PIN_RESET);
+		/*Configure GPIO pins : PE2 PE3 PE4 PE5 */
+		GPIO_InitStruct.Pin = GPIO_PIN_2|GPIO_PIN_3|GPIO_PIN_4|GPIO_PIN_5;
+		GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+		GPIO_InitStruct.Pull = GPIO_NOPULL;
+		GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+		HAL_GPIO_Init(GPIOE, &GPIO_InitStruct);
 			
-		HAL_GPIO_WritePin(GPIOE,GPIO_PIN_2,GPIO_PIN_RESET);
+		HAL_GPIO_WritePin(GPIOE,GPIO_PIN_2,GPIO_PIN_SET);
 		HAL_GPIO_WritePin(GPIOE,GPIO_PIN_3,GPIO_PIN_RESET);
-		HAL_GPIO_WritePin(GPIOE,GPIO_PIN_4,GPIO_PIN_RESET);
-		HAL_GPIO_WritePin(GPIOE,GPIO_PIN_5,GPIO_PIN_RESET);		
+		HAL_GPIO_WritePin(GPIOE,GPIO_PIN_4,GPIO_PIN_SET);
+		HAL_GPIO_WritePin(GPIOE,GPIO_PIN_5,GPIO_PIN_RESET);	
+		BSP_LED_Init(LED3);
+		BSP_LED_Init(LED4);
+
 		
 		while(1) {	
 
@@ -393,7 +411,7 @@ void ExtBtn3_Config(void){  //PC3
 void TIM3_Config(void)
 {
 
-	Tim3_PrescalerValue = (uint32_t) ((SystemCoreClock /2) / 10000) - 1;
+	Tim3_PrescalerValue = (uint32_t) ((SystemCoreClock /2) / (10000*(15*1000/40))) - 1;
 	Tim3_Handle.Instance = TIM3;
 	Tim3_Handle.Init.Period = 36*(10000/48)-1;
 	Tim3_Handle.Init.Prescaler = Tim3_PrescalerValue;
@@ -511,9 +529,17 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 		{
 				//kavya
 				if (orientation ==0) { //swap orientation direction on button click
+					if(step_type==0){state_temp = getNewIndex(1,step_type,redCWfull[state],grayCWfull[state],blackCWfull[state],yellowCWfull[state]);}//Noor
+					else{state_temp = getNewIndex(1,step_type,redCWhalf[state],grayCWhalf[state],blackCWhalf[state],yellowCWhalf[state]);}//Noor
+					state=state_temp;//Noor - please see explanation on getNewIndex func
+					
 					orientation =1;
 				}
 				else if (orientation ==1) {
+					if(step_type==0){state_temp = getNewIndex(1,step_type,redCCWfull[state],grayCCWfull[state],blackCCWfull[state],yellowCCWfull[state]);}//Noor
+					else{state_temp = getNewIndex(1,step_type,redCCWhalf[state],grayCCWhalf[state],blackCCWhalf[state],yellowCCWhalf[state]);}//Noor
+					state=state_temp;//Noor - please see explanation on getNewIndex func
+					
 					orientation =0;
 				}
 			
@@ -538,8 +564,23 @@ void HAL_TIM_OC_DelayElapsedCallback(TIM_HandleTypeDef * htim) //see  stm32fxx_h
 {																																//for timer4 
 				//clear the timer counter!  in stm32f4xx_hal_tim.c, the counter is not cleared after  OC interrupt
 				__HAL_TIM_SET_COUNTER(htim, 0x0000);   //this maro is defined in stm32f4xx_hal_tim.h
-
+				
 			
+	
+}
+
+void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)   //see  stm32fxx_hal_tim.c for different callback function names. 
+																															//for timer 3 , Timer 3 use update event initerrupt
+{
+		if ((*htim).Instance==TIM3){    //since only one timer use this interrupt, this line is actually not needed	
+			tim3_ctr+=1;
+			if(tim3_ctr>=1000){
+				LCD_DisplayInt(4, 0, state);
+				BSP_LED_Toggle(LED3);
+				tim3_ctr=0;
+				//FullStep(); //Noor
+			}
+		}
 	
 }
  

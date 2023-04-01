@@ -46,19 +46,113 @@ uint32_t count = 0;
 uint32_t prescaler; // kavya end
 
 //Noor start
-uint8_t redCW[4] = {1,1,0,0}; //SW1
-uint8_t grayCW[4] = {0,0,1,1}; //SW2
-uint8_t blackCW[4] = {0,1,1,0}; //SW3
-uint8_t yellowCW[4] = {1,0,0,1}; //SW4
+uint32_t state;
 
-uint8_t redCCW[4] = {0,0,1,1}; //SW1
-uint8_t grayCCW[4] = {1,1,0,0}; //SW2
-uint8_t blackCCW[4] = {0,1,1,0}; //SW3
-uint8_t yellowCCW[4] = {1,0,0,1}; //SW4
+uint8_t redCWfull[8] = {1,1,1,1,0,0,0,0}; //SW1
+uint8_t grayCWfull[8] = {0,0,0,0,1,1,1,1}; //SW2
+uint8_t blackCWfull[8] = {0,0,1,1,1,1,0,0}; //SW3
+uint8_t yellowCWfull[8] = {1,1,0,0,0,0,1,1}; //SW4
+
+uint8_t redCCWfull[8] = {0,0,0,0,1,1,1,1}; //SW1
+uint8_t grayCCWfull[8] = {1,1,1,1,0,0,0,0}; //SW2
+uint8_t blackCCWfull[8] = {0,0,1,1,1,1,0,0}; //SW3
+uint8_t yellowCCWfull[8] = {1,1,0,0,0,0,1,1}; //SW4
+
+uint8_t redCWhalf[8] = {1,1,1,0,0,0,0,0}; //SW1
+uint8_t grayCWhalf[8] = {0,0,0,0,1,1,1,0}; //SW2
+uint8_t blackCWhalf[8] = {0,0,1,1,1,0,0,0}; //SW3
+uint8_t yellowCWhalf[8] = {1,0,0,0,0,0,1,1}; //SW4
+
+uint8_t redCCWhalf[8] = {0,0,0,0,0,1,1,1}; //SW1
+uint8_t grayCCWhalf[8] = {0,1,1,1,0,0,0,0}; //SW2
+uint8_t blackCCWhalf[8] = {0,0,0,1,1,1,0,0}; //SW3
+uint8_t yellowCCWhalf[8] = {1,1,0,0,0,0,0,1}; //SW4
+
+int getCurrentIndex(uint8_t orient, uint8_t steptype, uint8_t SW1, uint8_t SW2, uint8_t SW3, uint8_t SW4){ //For smooth transition between modes, it finds the index in the arrays of the NEW mode so that it starts from a similar state
+	if(orient==0){
+		if(steptype==0){
+			for(int i=0; i<8; i++){
+				if(redCWfull[i]==SW1 && grayCWfull[i]==SW2 && blackCWfull[i]==SW3 && yellowCWfull[i]==SW4){
+					return i;
+				}
+			}
+		}
+		
+		if(steptype==1){
+			for(int i=0; i<8; i++){
+				if(redCWhalf[i]==SW1 && grayCWhalf[i]==SW2 && blackCWhalf[i]==SW3 && yellowCWhalf[i]==SW4){
+					return i;
+				}
+			}
+		}
+	}
+	
+	if(orient==1){
+		if(steptype==0){
+			for(int i=0; i<8; i++){
+				if(redCCWfull[i]==SW1 && grayCCWfull[i]==SW2 && blackCCWfull[i]==SW3 && yellowCCWfull[i]==SW4){
+					return i;
+				}
+			}
+		}
+		
+		if(steptype==1){
+			for(int i=0; i<8; i++){
+				if(redCCWhalf[i]==SW1 && grayCCWhalf[i]==SW2 && blackCCWhalf[i]==SW3 && yellowCCWhalf[i]==SW4){
+					return i;
+				}
+			}
+		}
+	}
+
+	return 0; // if it can't find the index, just start from beginning
+}
+
+void FullStep(void){
+	state+=1;
+	if(state>=8){state=0;}
+	if(orientation==0){
+		HAL_GPIO_WritePin(GPIOE, GPIO_PIN_2, redCWfull[state]);
+		HAL_GPIO_WritePin(GPIOE, GPIO_PIN_3, grayCWfull[state]);
+		HAL_GPIO_WritePin(GPIOE, GPIO_PIN_4, blackCWfull[state]);
+		HAL_GPIO_WritePin(GPIOE, GPIO_PIN_5, yellowCWfull[state]);
+	}
+	
+	if(orientation==1){
+		HAL_GPIO_WritePin(GPIOE, GPIO_PIN_2, redCCWfull[state]);
+		HAL_GPIO_WritePin(GPIOE, GPIO_PIN_3, grayCCWfull[state]);
+		HAL_GPIO_WritePin(GPIOE, GPIO_PIN_4, blackCCWfull[state]);
+		HAL_GPIO_WritePin(GPIOE, GPIO_PIN_5, yellowCCWfull[state]);
+	}
+	
+
+}
+
+void HalfStep(void){
+	state+=1;
+	if(state>=8){state=0;}
+	if(orientation==0){
+		HAL_GPIO_WritePin(GPIOE, GPIO_PIN_2, redCWhalf[state]);
+		HAL_GPIO_WritePin(GPIOE, GPIO_PIN_3, grayCWhalf[state]);
+		HAL_GPIO_WritePin(GPIOE, GPIO_PIN_4, blackCWhalf[state]);
+		HAL_GPIO_WritePin(GPIOE, GPIO_PIN_5, yellowCWhalf[state]);
+	}
+	
+	if(orientation==1){
+		HAL_GPIO_WritePin(GPIOE, GPIO_PIN_2, redCCWhalf[state]);
+		HAL_GPIO_WritePin(GPIOE, GPIO_PIN_3, grayCCWhalf[state]);
+		HAL_GPIO_WritePin(GPIOE, GPIO_PIN_4, blackCCWhalf[state]);
+		HAL_GPIO_WritePin(GPIOE, GPIO_PIN_5, yellowCCWhalf[state]);
+	}
+	
+
+}
 //Noor end
 
 
 int main(void){
+	
+		state=0; //Noor
 	
 		/* STM32F4xx HAL library initialization:
        - Configure the Flash prefetch, instruction and Data caches

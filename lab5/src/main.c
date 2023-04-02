@@ -607,7 +607,22 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 		}  //end of PIN_1
 
 		if(GPIO_Pin == GPIO_PIN_2) { //step type switch
-		
+				if(step_type==0){
+					if(orientation==0){state_temp=getNewIndex(0,1,redCWfull[state],grayCWfull[state],blackCWfull[state],yellowCWfull[state]);}
+					else{state_temp=getNewIndex(1,1,redCCWfull[state],grayCCWfull[state],blackCCWfull[state],yellowCCWfull[state]);}
+					state=state_temp;
+					step_type=1;
+				}
+				else //if step_type ==1
+				{
+					if(orientation==0){state_temp=getNewIndex(0,0,redCWhalf[state],grayCWhalf[state],blackCWhalf[state],yellowCWhalf[state]);}
+					else{state_temp=getNewIndex(1,0,redCCWhalf[state],grayCCWhalf[state],blackCCWhalf[state],yellowCCWhalf[state]);}
+					state=state_temp;
+					step_type=0;
+				}
+				
+				
+				
 				//BSP_LED_Toggle(LED4);
 		} //end of if PIN_2	
 		

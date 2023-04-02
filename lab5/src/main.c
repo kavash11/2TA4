@@ -46,6 +46,7 @@ uint32_t tim3_ctr; //Noor lol
 uint32_t step = 0;
 uint32_t count = 0;
 uint32_t prescaler; // kavya end
+uint32_t tim3_threshold;
 
 //Noor start
 uint32_t state;
@@ -168,6 +169,7 @@ int main(void){
 	
 		state=0; //Noor
 		tim3_ctr=0; //Noor
+		tim3_threshold=500; //Noor
 	
 		/* STM32F4xx HAL library initialization:
        - Configure the Flash prefetch, instruction and Data caches
@@ -627,7 +629,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 		} //end of if PIN_2	
 		
 		if(GPIO_Pin == GPIO_PIN_3) //increase speed
-		{
+		{			if(tim3_threshold>=50){tim3_threshold-=50;}
 						
 					//BSP_LED_Toggle(LED4);
 				
@@ -635,6 +637,7 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 		
 		if(GPIO_Pin == GPIO_PIN_4) //decrease speed
 		{
+				if(tim3_threshold<=1000){tim3_threshold+=50;}
 						
 					
 				//BSP_LED_Toggle(LED4);
@@ -657,7 +660,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)   //see  stm32fxx_ha
 {
 		if ((*htim).Instance==TIM3){    //since only one timer use this interrupt, this line is actually not needed	
 			tim3_ctr+=1;
-			if(tim3_ctr>=1000){
+			if(tim3_ctr>=tim3_threshold){
 				LCD_DisplayInt(4, 0, state);
 				BSP_LED_Toggle(LED3);
 				tim3_ctr=0;

@@ -218,6 +218,16 @@ void EXTI3_IRQHandler(void)
 			__HAL_GPIO_EXTI_CLEAR_FLAG(GPIO_PIN_3);
 	}
 }
+
+void EXTI4_IRQHandler(void)
+{
+  HAL_Delay(100); 
+	if (HAL_GPIO_ReadPin(GPIOD, GPIO_PIN_4)==0) {		 //PD4
+		HAL_GPIO_EXTI_IRQHandler(GPIO_PIN_4); 
+	} else {
+			__HAL_GPIO_EXTI_CLEAR_FLAG(GPIO_PIN_4);
+	}
+}
 void ADC_IRQHandler(void){
 
 }

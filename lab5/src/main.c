@@ -33,6 +33,7 @@ void TIM4_OC_Config(void);
 void ExtBtn1_Config(void); 
 void ExtBtn2_Config(void);
 void ExtBtn3_Config(void);
+void ExtBtn4_Config(void);
 void Pin_Config(void); //need to config pins later kavya
 
 void FullStep(void);
@@ -213,6 +214,7 @@ int main(void){
 		ExtBtn1_Config(); 
 		ExtBtn2_Config();
 		ExtBtn3_Config();
+		ExtBtn4_Config();
 		//Pin_Config();
 		
 		/*Configure GPIO pins : PE2 PE3 PE4 PE5 */ //Noor CubeMX start
@@ -362,6 +364,26 @@ void LCD_DisplayFloat(uint16_t LineNumber, uint16_t ColumnNumber, float Number, 
 
 //kavya button configs
 
+void UserBtn_Config(void)     //user btn //Noor
+{
+  GPIO_InitTypeDef   GPIO_InitStructure;
+
+  /* Enable GPIOC clock */
+  __HAL_RCC_GPIOA_CLK_ENABLE();
+  
+  /* Configure user btn pin as input floating */
+  GPIO_InitStructure.Mode =  GPIO_MODE_IT_FALLING;
+  GPIO_InitStructure.Pull =GPIO_PULLUP;
+  GPIO_InitStructure.Pin = GPIO_PIN_0;
+	//GPIO_InitStructure.Speed=GPIO_SPEED_LOW;
+  HAL_GPIO_Init(GPIOA, &GPIO_InitStructure);
+
+	//__HAL_GPIO_EXTI_CLEAR_IT(GPIO_PIN_0);   
+	__HAL_GPIO_EXTI_CLEAR_FLAG(GPIO_PIN_0);
+  HAL_NVIC_SetPriority(EXTI0_IRQn, 3, 0);
+  HAL_NVIC_EnableIRQ(EXTI0_IRQn);
+}
+
 void ExtBtn1_Config(void)     //PC1
 {
   GPIO_InitTypeDef   GPIO_InitStructure;
@@ -414,12 +436,33 @@ void ExtBtn3_Config(void){  //PC3
   GPIO_InitStructure.Pull =GPIO_PULLUP;
   GPIO_InitStructure.Pin = GPIO_PIN_3;
 	//GPIO_InitStructure.Speed=GPIO_SPEED_LOW;
+  HAL_GPIO_Init(GPIOC, &GPIO_InitStructure);
+
+	//__HAL_GPIO_EXTI_CLEAR_IT(GPIO_PIN_1); 
+	__HAL_GPIO_EXTI_CLEAR_FLAG(GPIO_PIN_3);
+  HAL_NVIC_SetPriority(EXTI3_IRQn, 3, 0);
+  HAL_NVIC_EnableIRQ(EXTI3_IRQn);
+	
+	
+}
+
+void ExtBtn4_Config(void){  //PD4
+	GPIO_InitTypeDef   GPIO_InitStructure;
+
+  /* Enable GPIOC clock */
+  __HAL_RCC_GPIOD_CLK_ENABLE();
+  
+  /* Configure PC3 pin as input floating */
+  GPIO_InitStructure.Mode =  GPIO_MODE_IT_FALLING;
+  GPIO_InitStructure.Pull =GPIO_PULLUP;
+  GPIO_InitStructure.Pin = GPIO_PIN_4;
+	//GPIO_InitStructure.Speed=GPIO_SPEED_LOW;
   HAL_GPIO_Init(GPIOD, &GPIO_InitStructure);
 
 	//__HAL_GPIO_EXTI_CLEAR_IT(GPIO_PIN_1); 
-	__HAL_GPIO_EXTI_CLEAR_FLAG(GPIO_PIN_2);
-  HAL_NVIC_SetPriority(EXTI2_IRQn, 3, 0);
-  HAL_NVIC_EnableIRQ(EXTI2_IRQn);
+	__HAL_GPIO_EXTI_CLEAR_FLAG(GPIO_PIN_4);
+  HAL_NVIC_SetPriority(EXTI4_IRQn, 3, 0);
+  HAL_NVIC_EnableIRQ(EXTI4_IRQn);
 	
 	
 }
@@ -534,18 +577,19 @@ void  TIM4_OC_Config(void)
 
 
 void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
-{
+	{		
 	
 		if(GPIO_Pin == KEY_BUTTON_PIN)  //GPIO_PIN_0
 		{
-	
+					
 		}
 		
 		
-		if(GPIO_Pin == GPIO_PIN_1) //orientation button
-		{
+		if(GPIO_Pin == GPIO_PIN_1) //orientation switch
+		{		
+				//BSP_LED_Toggle(LED4);
 				//kavya
-				if (orientation ==0) { //swap orientation direction on button click
+				if (orientation ==0) { 
 					if(step_type==0){state_temp = getNewIndex(1,step_type,redCWfull[state],grayCWfull[state],blackCWfull[state],yellowCWfull[state]);}//Noor
 					else{state_temp = getNewIndex(1,step_type,redCWhalf[state],grayCWhalf[state],blackCWhalf[state],yellowCWhalf[state]);}//Noor
 					state=state_temp;//Noor - please see explanation on getNewIndex func
@@ -562,16 +606,23 @@ void HAL_GPIO_EXTI_Callback(uint16_t GPIO_Pin)
 			
 		}  //end of PIN_1
 
-		if(GPIO_Pin == GPIO_PIN_2) {
+		if(GPIO_Pin == GPIO_PIN_2) { //step type switch
 		
-				
+				//BSP_LED_Toggle(LED4);
 		} //end of if PIN_2	
 		
-		if(GPIO_Pin == GPIO_PIN_3)
+		if(GPIO_Pin == GPIO_PIN_3) //increase speed
+		{
+						
+					//BSP_LED_Toggle(LED4);
+				
+		} //end of if PIN_3
+		
+		if(GPIO_Pin == GPIO_PIN_4) //decrease speed
 		{
 						
 					
-				
+				//BSP_LED_Toggle(LED4);
 		} //end of if PIN_3
 }
 
@@ -595,7 +646,10 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)   //see  stm32fxx_ha
 				LCD_DisplayInt(4, 0, state);
 				BSP_LED_Toggle(LED3);
 				tim3_ctr=0;
-				FullStep(); //Noor
+				if(step_type==0){
+					FullStep(); //Noor
+				}
+				else{HalfStep();}
 			}
 		}
 	

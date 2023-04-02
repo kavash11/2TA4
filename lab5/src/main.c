@@ -151,6 +151,15 @@ void HalfStep(void){
 	
 
 }
+
+void GPIO_Clock_Enable(){RCC->AHB2ENR |= 0x00010000;}
+void GPIO_Pin_Init(){
+	GPIOE->MODER &=~(3UL<<4);
+	GPIOE->MODER |=1UL<<4;
+	GPIOE->OTYPER &= ~(1<<2);
+	GPIOE->OSPEEDR &= ~(3UL<<4);
+	GPIOE->PUPDR &= ~(3UL<<4);
+}
 //Noor end
 
 
@@ -207,22 +216,29 @@ int main(void){
 		//Pin_Config();
 		
 		/*Configure GPIO pins : PE2 PE3 PE4 PE5 */ //Noor CubeMX start
-		GPIO_InitTypeDef GPIO_InitStruct = {0};
-		__HAL_RCC_GPIOE_CLK_ENABLE();
+		//GPIO_InitTypeDef GPIO_InitStruct = {0};
+		//__HAL_RCC_GPIOE_CLK_ENABLE();
+		GPIO_Clock_Enable();
+		GPIO_Pin_Init();
 		
-		HAL_GPIO_WritePin(GPIOE, GPIO_PIN_2|GPIO_PIN_3|GPIO_PIN_4|GPIO_PIN_5, GPIO_PIN_RESET);
+		/*HAL_GPIO_WritePin(GPIOE, GPIO_PIN_2|GPIO_PIN_3|GPIO_PIN_4|GPIO_PIN_5, GPIO_PIN_RESET);
 		GPIO_InitStruct.Pin = GPIO_PIN_2|GPIO_PIN_3|GPIO_PIN_4|GPIO_PIN_5;
 		GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
 		GPIO_InitStruct.Pull = GPIO_NOPULL;
 		GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
-		HAL_GPIO_Init(GPIOE, &GPIO_InitStruct); //Noor CubeMX end
+		HAL_GPIO_Init(GPIOE, &GPIO_InitStruct); //Noor CubeMX end*/
+		
 			
 		HAL_GPIO_WritePin(GPIOE,GPIO_PIN_2,GPIO_PIN_RESET);
 		HAL_GPIO_WritePin(GPIOE,GPIO_PIN_3,GPIO_PIN_RESET);
-		HAL_GPIO_WritePin(GPIOE,GPIO_PIN_4,GPIO_PIN_RESET);
-		HAL_GPIO_WritePin(GPIOE,GPIO_PIN_5,GPIO_PIN_RESET);	
+		HAL_GPIO_WritePin(GPIOE,GPIO_PIN_4,GPIO_PIN_SET);
+		HAL_GPIO_WritePin(GPIOE,GPIO_PIN_5,GPIO_PIN_SET);	
+		GPIOE->ODR|=1UL<<4;
+		//*((volatile uint32_t*)GPIOE)|=1UL<<5;
 		BSP_LED_Init(LED3);
 		BSP_LED_Init(LED4);
+		
+		HAL_GPIO_TogglePin(GPIOE,GPIO_PIN_5);
 
 		
 		while(1) {	
@@ -579,7 +595,7 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)   //see  stm32fxx_ha
 				LCD_DisplayInt(4, 0, state);
 				BSP_LED_Toggle(LED3);
 				tim3_ctr=0;
-				FullStep(); //Noor
+				//FullStep(); //Noor
 			}
 		}
 	
